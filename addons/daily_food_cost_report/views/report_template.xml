@@ -1,0 +1,347 @@
+<odoo>
+    <template id="report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <style type="text/css">
+                        th, td, tr {
+                        padding: 5px;
+                        }
+                    </style>
+
+                    <h2>Daily Food Cost Report -
+                        <t t-esc="analytic.code"/>
+                    </h2>
+                    <p>Date:
+                        <t t-esc="report_date"/>
+                    </p>
+
+                    <table class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr style="border-left:0px;border-right:0px;border-top:0px">
+                              <th colspan="4">
+                                <h4>Income Table</h4>
+                              </th>
+                            </tr>
+                            <tr>
+                                <th>Product Category</th>
+                                <th style="width: 10%">Total Qty</th>
+                                <th style="width: 15%">Total Price</th>
+                                <th style="width: 10%">% of Total Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="income_total_qty" t-value="0"/>
+                            <t t-set="income_total_price" t-value="0"/>
+                            <t t-set="income_percentage_total" t-value="0"/>
+
+                            <t t-foreach="grouped_income_rows.items()" t-as="group">
+                                <tr>
+                                    <td style="font-weight: bold">
+                                        <t t-esc="group[0]"/>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <t t-esc="group[1]['total_qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="group[1]['total_price']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td class="text-right"><t t-esc="group[1]['total_percentage_income']" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                    </td>
+
+                                </tr>
+                                <t t-foreach="group[1]['lines']" t-as="line">
+                                   <tr>
+                                        <td>
+                                            <t t-esc="line['product']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="line['qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="line['price']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right"><t t-esc="line['percent']" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                        </td>
+
+                                    </tr>
+
+                                    <t t-set="income_total_qty" t-value="income_total_qty + line['qty']"/>
+                                    <t t-set="income_total_price" t-value="income_total_price + line['price']"/>
+                                    <t t-set="income_percentage_total" t-value="income_percentage_total + line['percent']"/>
+                                </t>
+                                <!-- Category totals row -->
+                            </t>
+
+                            <tr>
+                                <td>
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="income_total_qty" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="income_total_price" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="income_percentage_total" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        %
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr style="border-left:0px;border-right:0px;border-top:0px">
+                              <th colspan="3">
+                                <h4>Cost Table</h4>
+                              </th>
+                              <th colspan="3" style="text-align: right; font-size: 11px;">
+                                <span style="display:inline-block; width:10px; height:10px; background-color:#ffffcc; border:1px solid #999; margin-right:5px;"></span>
+                                Top 80%
+                                <span style="display:inline-block; width:15px;"/>
+                                <span style="display:inline-block; width:10px; height:10px; background-color:#ffcccc; border:1px solid #999; margin-right:5px;"></span>
+                                Tidak ada SOK
+                              </th>
+                            </tr>
+
+
+                            <tr>
+                                <th>Category</th>
+                                <th>UoM</th>
+                                <th style="width:10%">Total Qty</th>
+                                <th style="width:15%">Total Value</th>
+                                <th style="width:10%">% of Total Cost</th>
+                                <th style="width:10%">% of Total Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="cost_total_qty" t-value="0"/>
+                            <t t-set="cost_total_value" t-value="0"/>
+                            <t t-set="percentage_cost_total_value" t-value="0"/>
+                            <t t-set="percentage_income_total_value" t-value="0"/>
+
+                            <t t-foreach="cost_rows" t-as="line">
+                                <tr>
+                                    <td>
+                                        <b>
+                                            <t t-esc="line['category']"/>
+                                        </b>
+                                    </td>
+                                    <td/>
+                                    <!--                                <td>-->
+                                    <!--                                    <t t-esc="line['uom']"/>-->
+                                    <!--                                </td>-->
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="line['qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="line['value']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><t t-esc="line['percent_cost']"/>%
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><t t-esc="line['percent_income']"/>%
+                                        </b>
+                                    </td>
+                                </tr>
+                                <t t-set="cost_total_qty" t-value="cost_total_qty + line['qty']"/>
+                                <t t-set="cost_total_value" t-value="cost_total_value + line['value']"/>
+                                <t t-set="percentage_cost_total_value" t-value="percentage_cost_total_value + line['percent_cost']"/>
+                                <t t-set="percentage_income_total_value" t-value="percentage_income_total_value + line['percent_income']"/>
+
+                                <!-- Products under this category -->
+                                <t t-foreach="line.get('products', [])" t-as="product">
+                                   <tr t-att-style="
+                                            product['missing_sok'] and product['depleted_confirmed'] and 'background-color: #ccffcc;' or
+                                            product['missing_sok'] and 'background-color: #ffcccc;' or
+                                            product['highlighted'] and 'background-color: #ffffcc;' or ''
+                                        ">
+
+                                        <td>
+                                            <t t-esc="product['name']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="product['uom']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="product['qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="product['value']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right"><t t-esc="product['percent_cost']"/>%
+                                        </td>
+                                        <td class="text-right"><t t-esc="product['percent_income']"/>%
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr>
+                                <td>
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td/>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="cost_total_qty" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="cost_total_value" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="percentage_cost_total_value" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="percentage_income_total_value" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                    </strong>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr style="border-left:0px;border-right:0px;border-top:0px">
+                              <th colspan="6">
+                                <h4>Excluded Categories (Misc, Packaging)</h4>
+                              </th>
+                            </tr>
+                            <tr>
+                                <th>Category</th>
+                                <th>UoM</th>
+                                <th style="width:10%">Total Qty</th>
+                                <th style="width:15%">Total Value</th>
+                                <th style="width:10%">% of Category Cost</th>
+                                <th style="width:10%">% of Total Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="excluded_total_qty" t-value="0"/>
+                            <t t-set="excluded_total_value" t-value="0"/>
+                            <t t-set="percentage_excluded_cost_total_value" t-value="0"/>
+                            <t t-set="percentage_excluded_income_total_value" t-value="0"/>
+                            <t t-foreach="excluded_rows" t-as="line">
+                                <tr>
+                                    <td>
+                                        <t t-esc="line['category']"/>
+                                    </td>
+                                    <td/>
+                                    <td>
+                                        <t t-esc="line['uom']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="line['qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="line['value']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td class="text-right"><t t-esc="line['percent_cost']"/>%
+                                    </td>
+                                    <td class="text-right"><t t-esc="line['percent_income']"/>%
+                                    </td>
+                                </tr>
+                                <t t-set="excluded_total_qty" t-value="excluded_total_qty + line['qty']"/>
+                                <t t-set="excluded_total_value" t-value="excluded_total_value + line['value']"/>
+                                <t t-set="percentage_excluded_cost_total_value" t-value="percentage_excluded_cost_total_value + line['percent_cost']"/>
+                                <t t-set="percentage_excluded_income_total_value" t-value="percentage_excluded_income_total_value + line['percent_income']"/>
+
+                                <!-- Products under this category -->
+                                <t t-foreach="line.get('products', [])" t-as="product">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="product['name']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="product['uom']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="product['qty']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="product['value']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                        </td>
+                                        <td class="text-right"><t t-esc="product['percent_cost']"/>%
+                                        </td>
+                                        <td class="text-right"><t t-esc="product['percent_income']"/>%
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr>
+                                <td>
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td/>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="excluded_total_qty" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="excluded_total_value" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="percentage_excluded_cost_total_value" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="percentage_excluded_income_total_value" t-options="{'widget': 'float', 'precision': 2}"/>%
+                                    </strong>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <p>
+                        <strong>Total Income:</strong>
+                        <t t-esc="total_income" t-options="{'widget': 'float', 'precision': 2}"/>
+                    </p>
+
+
+                    <p>
+                        <strong>Total Cost:</strong>
+                        <t t-esc="total_cost" t-options="{'widget': 'float', 'precision': 2}"/>
+                    </p>
+
+
+                    <p>
+                        <strong>Overall % Cost / Income:</strong>
+                        <t t-esc="overall_percent"/>%
+                    </p>
+
+
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

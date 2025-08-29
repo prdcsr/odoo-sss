@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_archive_form_view" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='discount']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/form/group/group/label[@for='discount']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="before">
+                <field name="multiple_discount"/>
+                <!-- field name="discount_name"/-->
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/form/group/group/label[@for='discount']" position="before">
+            <!-- xpath expr="//field[@name='order_line']/form//field[@name='discount']/.." position="before" -->
+                <label for="multiple_discount" groups="product.group_discount_per_so_line"/>
+                <div groups="product.group_discount_per_so_line">
+                    <field name="multiple_discount"/>
+                </div>
+                <!-- label for="discount_name" groups="sale.group_discount_per_so_line"/>
+                <div groups="sale.group_discount_per_so_line">
+                    <field name="discount_name"/>
+                </div -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

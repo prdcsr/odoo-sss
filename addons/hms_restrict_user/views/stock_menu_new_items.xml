@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <!-- Action to Open a New Inventory Adjustment -->
+        <record id="action_new_inventory_adjustment" model="ir.actions.act_window">
+            <field name="name">Inventory Adjustment - Create</field>
+            <field name="res_model">stock.inventory</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'form_view_initial_mode': 'edit'}</field>
+        </record>
+
+        <!-- New Menu Item under "Operations" -->
+        <menuitem id="menu_new_inventory_adjustment"
+                  name="Inventory Adjustment - Create"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  action="action_new_inventory_adjustment"
+                  sequence="16"/>
+    </data>
+</odoo>

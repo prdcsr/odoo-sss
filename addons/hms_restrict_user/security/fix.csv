@@ -1,0 +1,30 @@
+access_stock_rule_alsut,stock.rule.alsut,stock.model_stock_rule,hms_restrict_user.group_inventory_alsut,1,1,1,0
+access_stock_warehouse_alsut,stock.warehouse.alsut,stock.model_stock_warehouse,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_location_alsut,stock.location.alsut,stock.model_stock_location,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_picking_alsut,stock.picking alsut,stock.model_stock_picking,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_picking_type_all_alsut,stock.picking.type all alsut,stock.model_stock_picking_type,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_picking_type_alsut,stock.picking.type alsut,stock.model_stock_picking_type,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_production_lot_alsut,stock.production.lot alsut,stock.model_stock_production_lot,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_move_alsut,stock.move alsut,stock.model_stock_move,hms_restrict_user.group_inventory_alsut,1,1,1,0
+access_stock_inventory_alsut,stock.inventory alsut,stock.model_stock_inventory,hms_restrict_user.group_inventory_alsut,1,1,1,0
+access_stock_inventory_line_alsut,stock.inventory.line alsut,stock.model_stock_inventory_line,hms_restrict_user.group_inventory_alsut,1,1,1,0
+access_product_product_stock_alsut,product_product_stock_alsut,product.model_product_product,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_product_template_stock_alsut,product.template stock alsut,product.model_product_template,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_warehouse_orderpoint_alsut,stock.warehouse.orderpoint_alsut,stock.model_stock_warehouse_orderpoint,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_quant_alsut,stock.quant alsut,stock.model_stock_quant,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_quant_all_alsut,stock.quant all alsut,stock.model_stock_quant,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_quant_package_all_alsut,stock.quant.package all alsut,stock.model_stock_quant_package,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_quant_package_stock_alsut,stock.quant.package stock alsut,stock.model_stock_quant_package,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_package_level_all_alsut,stock.package_level all alsut,stock.model_stock_package_level,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_package_level_stock_alsut,stock.package_level stock alsut,stock.model_stock_package_level,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_rule_alsut,stock_rule alsut,stock.model_stock_rule,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_location_route,stock.location.route_alsut,stock.model_stock_location_route,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_rule_internal,stock.rule.flow internal_alsut,stock.model_stock_rule,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_move_line_alsut,stock.move.line alsut,stock.model_stock_move_line,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_move_line_all,stock.move.line all alsut,stock.model_stock_move_line,hms_restrict_user.group_inventory_alsut,1,1,1,1
+access_stock_putaway_all,stock.putaway.rule all alsut,stock.model_stock_putaway_rule,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_removal_all,product.removal all alsut,stock.model_product_removal,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_barcode_nomenclature_stock_alsut,barcode.nomenclature.stock.alsut,barcodes.model_barcode_nomenclature,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_barcode_rule_stock_alsut,barcode.rule.stock.alsut,barcodes.model_barcode_rule,hms_restrict_user.group_inventory_alsut,1,0,0,0
+access_stock_scrap_alsut,stock.scrap.alsut,stock.model_stock_scrap,hms_restrict_user.group_inventory_alsut,1,1,1,0
+access_report_stock_quantity,access_report_stock_quantity_alsut,stock.model_report_stock_quantity,hms_restrict_user.group_inventory_alsut,1,0,0,0

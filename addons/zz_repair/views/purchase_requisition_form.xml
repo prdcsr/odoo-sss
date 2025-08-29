@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_requisition_repair_form">
+            <field name="name">purchase.requisition.repair.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vendor_id']" position="after" >
+                    <field name="port_of_loading"/>
+                    <field name="port_of_destination"/> 
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="after" >
+                    <field name="product_description_variants"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

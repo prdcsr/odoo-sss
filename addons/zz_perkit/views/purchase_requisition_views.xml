@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_requisition_perkit_form">
+            <field name="name">purchase.requisition.perkit.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <button name="action_requisition_send" string="Send by Email" type="object" class="btn-primary"/>
+                    <field name="payment_term_id"/>
+                    <field name="incoterm_id"/>
+                    <field name="qty_container"/>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="port_of_loading"/>
+                    <field name="port_of_destination"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']" position="inside">
+
+                    <kanban class="o_kanban_mobile">
+                        <field name="product_id"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom_id" groups="uom.group_uom"/>
+                        <field name="price_unit"/>
+                        <field name="company_id" invisible="1"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <strong>
+                                                <span>
+                                                    <t t-esc="record.product_id.value"/>
+                                                </span>
+                                            </strong>
+                                        </div>
+                                        <!-- div class="col-4">
+                                            <strong>
+                                                <span class="float-right text-right">
+                                                    <t t-esc="record.price_subtotal.value"/>
+                                                </span>
+                                            </strong>
+                                        </div -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 text-muted">
+                                            <span>
+                                                Quantity:
+                                                <t t-esc="record.product_qty.value"/>
+                                                <t t-esc="record.product_uom_id.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 text-muted">
+                                            <span>
+                                                Unit Price:
+                                                <t t-esc="record.price_unit.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </xpath>
+
+                <xpath expr="//field[@name='qty_ordered']" position="after">
+                    <field name="not_ordered_total"/>
+                </xpath>
+                <xpath expr="//field[@name='price_unit']" position="after">
+                    <field name="product_image" widget='image_popup' class="oe_avatar"/>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="after">
+                    <field name="product_description_variants"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_requisition_perkit_tree">
+            <field name="name">view_purchase_requisition_perkit_tree</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <!-- field name="rfq_bld_date"/ -->
+                    <field name="rfq_bld_date_txt"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_purchase_requisition_line_pivot" model="ir.ui.view">
+            <field name="name">purchase.requisition.line.pivot</field>
+            <field name="model">purchase.requisition.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Agreeement">
+                    <field name="product_id" type="row"/>
+                    <field name="schedule_date" type="col"/>
+                    <field name="product_qty" type="measure"/>
+                    <field name="qty_ordered" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="purchase_requisition_line_tree" model="ir.ui.view">
+            <field name="name">purchase.requisition.line.tree</field>
+            <field name="model">purchase.requisition.line</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Agreement Lines" create="false">
+                    <field name="requisition_id"/>
+                    <!-- field name="name"/>
+                    <field name="partner_id" string="Vendor" / -->
+                    <field name="product_id"/>
+                    <field name="price_unit"/>
+                    <field name="product_qty"/>
+                    <field name="qty_ordered"/>
+                    <!-- field name="product_uom" groups="uom.group_uom"/>
+                    <field name="price_subtotal" widget="monetary"/ -->
+                    <field name="schedule_date" widget="date"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

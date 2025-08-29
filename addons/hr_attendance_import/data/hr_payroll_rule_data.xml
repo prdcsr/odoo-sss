@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="hr_rule_outside_salary" model="hr.salary.rule">
+            <field name="name">Uang Makan Luar Kota</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">dinasluarkota_23</field>
+            <field name="category_id" ref="hr_payroll_community.Meal"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+number_of_days = 0
+for line in payslip.worked_days_line_ids:
+    if line.code == 'dinasluarkota_23':
+        number_of_days += line.number_of_days
+result = contract.outside_meal_allowance * number_of_days
+            </field>
+        </record>
+
+        <record id="hr_rule_meal_allowance_net" model="hr.salary.rule">
+            <field name="name">Net Uang Makan</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll_community.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.Meal+categories.DED</field>
+        </record>
+
+         <record id="hr_rule_meal_allowance" model="hr.salary.rule">
+            <field name="name">Uang Makan</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">Meal</field>
+            <field name="category_id" ref="hr_payroll_community.Meal"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+number_of_days = 0
+for line in payslip.worked_days_line_ids:
+    if line.code ==  'WORK100':
+         number_of_days += line.number_of_days
+result = contract.meal_allowance/20 * number_of_days
+            </field>
+        </record>
+
+         <record id="hr_rule_off_late_deduction" model="hr.salary.rule">
+            <field name="name">CUTI,IZIN,TELAT</field>
+            <field name="sequence" eval="5"/>
+            <field name="code">CDT</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+number_of_days = 0
+for line in payslip.worked_days_line_ids:
+    if  line.code=="cuti2022" or line.code=="cuti2023":
+         number_of_days += line.number_of_days
+    if  line.code=="skt_2022" or line.code=="skt_2023":
+         number_of_days += line.number_of_days
+    if  line.code=="telat2022" or line.code=="telat2023":
+         number_of_days += line.number_of_days*0.5
+    if  line.code=="izin2022" or line.code=="izin2023":
+         number_of_days += line.number_of_days
+    if  line.code=="WFH"  or line.code=="izin052023":
+         number_of_days += line.number_of_days*0.5
+    if  line.code=="GLOBAL":
+          number_of_days += 1
+result = contract.meal_allowance/20  * number_of_days * -1
+            </field>
+        </record>
+
+    </data>
+</odoo>

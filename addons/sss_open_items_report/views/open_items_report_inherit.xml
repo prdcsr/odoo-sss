@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_open_items_filters_inherit" inherit_id="account_financial_report.report_open_items_filters">
+        <!-- Add Operating Unit filter to the labels row -->
+        <xpath expr="//div[hasclass('act_as_row') and hasclass('labels')]" position="inside">
+            <div class="act_as_cell">Operating Unit filter</div>
+            <div class="act_as_cell">Salesperson filter</div>
+            <div class="act_as_cell">Child Partners Only</div>
+            <div class="act_as_cell">Date To filter</div>
+        </xpath>
+        <!-- Add filter values to the data row -->
+        <xpath expr="//div[hasclass('act_as_row') and not(hasclass('labels'))]" position="inside">
+            <div class="act_as_cell">
+                <span t-esc="operating_unit_name or 'All'" />
+            </div>
+            <div class="act_as_cell">
+                <span t-esc="salesperson_name or 'All'" />
+            </div>
+            <div class="act_as_cell">
+                <span t-if="child_partners_only">Yes</span>
+                <span t-if="not child_partners_only">No</span>
+            </div>
+            <div class="act_as_cell">
+                <span t-esc="date_to or 'All'" />
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_open_items_lines_header_inherit" inherit_id="account_financial_report.report_open_items_lines_header">
+        <!-- Add salesperson header after the 5th column (partner) -->
+        <xpath expr="//div[@class='act_as_row labels']/div[5]" position="after">
+            <div class="act_as_cell" style="width: 6%;">Salesperson</div>
+        </xpath>
+        <!-- Adjust the width of ref-label column (6th column, now 7th) to accommodate salesperson -->
+        <xpath expr="//div[@class='act_as_row labels']/div[6]" position="attributes">
+            <attribute name="style">width: 8%;</attribute>
+        </xpath>
+        <xpath expr="//div[@class='act_as_row labels']/div[7]" position="attributes">
+            <attribute name="style">width: 8%;</attribute>
+        </xpath>
+        <!-- Add amount paid header after residual column -->
+        <xpath expr="//div[@style='width: 6.57%;' and contains(text(), 'Residual')]" position="after">
+            <div class="act_as_cell" style="width: 6.57%;">Paid</div>
+        </xpath>
+    </template>
+
+    <template id="report_open_items_lines_inherit" inherit_id="account_financial_report.report_open_items_lines">
+        <!-- Add salesperson data after partner data -->
+        <xpath expr="//span[@res-model='res.partner']/.." position="after">
+            <div class="act_as_cell left">
+                <span t-if="line.get('salesperson_name', False)" t-esc="line['salesperson_name']" />
+            </div>
+        </xpath>
+        <!-- Add amount paid data after residual data (9th column in the row) -->
+        <xpath expr="//div[@class='act_as_row lines']/div[10]" position="after">
+            <div class="act_as_cell amount">
+                <span
+                    t-esc="line['amount_paid']"
+                    t-options="{'widget': 'monetary', 'display_currency': company_currency}"
+                />
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Update ending balance template to account for the salesperson column -->
+    <template id="report_open_items_ending_cumul_inherit" inherit_id="account_financial_report.report_open_items_ending_cumul">
+        <xpath expr="//div[@style='width: 36.34%;']" position="attributes">
+            <attribute name="style">width: 30.34%;</attribute>
+        </xpath>
+        <xpath expr="//div[@style='width: 28.66%;']" position="attributes">
+            <attribute name="style">width: 22.66%;</attribute>
+        </xpath>
+        <!-- Add empty cell for salesperson column in totals -->
+        <xpath expr="//div[@style='width: 6.47%;'][1]" position="after">
+            <div class="act_as_cell" style="width: 6%;" />
+        </xpath>
+        <!-- Add empty cell for amount paid column in totals -->
+        <xpath expr="//div[@style='width: 6.57%;'][last()]" position="after">
+            <div class="act_as_cell" style="width: 6.57%;" />
+        </xpath>
+    </template>
+</odoo>

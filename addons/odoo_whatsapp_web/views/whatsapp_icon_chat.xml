@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="whatsapp_icon_res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">whatsapp.icon.res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <button type="object" name="whatsapp_person_chat_mobile"
+                            class="btn btn-sm btn-link mb4 fa fa-whatsapp"
+                            attrs="{'invisible':[('mobile','=', False)]}"/>
+                </field>
+
+                <field name="phone" position="after">
+                    <button type="object" name="whatsapp_person_chat_phone"
+                            class="btn btn-sm btn-link mb4 fa fa-whatsapp"
+                            attrs="{'invisible':[('phone','=', False)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+

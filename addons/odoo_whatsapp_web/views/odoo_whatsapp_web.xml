@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="whatsapp_mail_compose_message_form_inherit" model="ir.ui.view">
+            <field name="name">whatsapp.mail.compose.message.form.inherit</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <button name="action_send_mail" position="after">
+                    <button name="action_share_whatsapp" string="Share In Whatsapp" type="object" class="btn-success"
+                            icon="fa-whatsapp"/>
+                </button>
+            </field>
+        </record>
+
+        <record id="whatsapp_account_invoice_send_form_inherit" model="ir.ui.view">
+            <field name="name">whatsapp.account.invoice.send.form.inherit</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <button name="send_and_print_action" position="after">
+                    <button name="action_share_whatsapp_Invoice" string="Share In Whatsapp" type="object"
+                            class="btn-success" icon="fa-whatsapp"/>
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>

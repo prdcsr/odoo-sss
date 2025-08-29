@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="efaktur_tree_view" model="ir.ui.view">     
+            <field name="name">l10n_id_efaktur.efaktur.zz_sss.range.tree.view</field>
+            <field name="model">l10n_id_efaktur.efaktur.range</field>
+            <field name="inherit_id" ref="l10n_id_efaktur_sss.efaktur_tree_view" />
+            <field name="arch" type="xml">
+                <field name="available" position="after">
+                    <field
+                    name="operating_unit_id"
+                    groups="operating_unit.group_multi_operating_unit"
+                    />                   
+                </field>   
+            </field>
+        </record>
+    </data>
+</odoo>

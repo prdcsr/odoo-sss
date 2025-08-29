@@ -1,0 +1,57 @@
+<odoo>
+    <template id="report_inventory_movement_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <div class="page">
+                    <h2>Inventory Movement Report</h2>
+                    <p>
+                        <strong>Date:</strong>
+                        <t t-esc="wizard.report_date"/>
+                    </p>
+
+                    <table class="table table-sm table-bordered mt16">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 5%;">No</th>
+                                <th>Product</th>
+                                <th>UoM</th>
+                                <th>Closing Stock (Yesterday)</th>
+                                <th>Stock In (Today)</th>
+                                <th>Stock Out (Today)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <t t-foreach="wizard._get_inventory_movements()" t-as="line">
+                                <tr>
+
+                                    <td class="text-center">
+                                        <t t-esc="i"/>  <!-- Because idx starts from 0 -->
+                                    </td>
+
+                                    <td>
+                                        <t t-esc="line['product'].display_name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="line['product'].uom_id.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['closing']" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['in']" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['out']" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                </tr>
+
+                                <t t-set="i" t-value="i + 1"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

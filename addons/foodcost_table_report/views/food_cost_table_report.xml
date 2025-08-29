@@ -1,0 +1,55 @@
+<odoo>
+  <template id="report_food_cost_table">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="wizard">
+        <div class="page">
+          <h2>Highlighted Product Cost Report</h2>
+          <p>
+            <strong>Warehouse:</strong> <t t-esc="wizard.warehouse_id.name"/><br/>
+            <strong>Period:</strong>
+            <t t-esc="wizard.start_date.strftime('%d %b %Y')"/> -
+            <t t-esc="wizard.end_date.strftime('%d %b %Y')"/>
+          </p>
+
+          <t t-set="date_range" t-value="wizard._get_date_range()"/>
+          <t t-set="products" t-value="wizard._get_highlighted_products()"/>
+          <t t-set="line_map" t-value="wizard._get_line_map()"/>
+
+          <div style="overflow-x: auto; max-width: 100%;">
+            <table class="table table-bordered table-sm" style="min-width: 1500px;">
+              <thead>
+                <tr>
+                  <th rowspan="2">Product</th>
+                  <th rowspan="2">UOM</th>
+                  <t t-foreach="date_range" t-as="day">
+                    <th colspan="2"><t t-esc="day.strftime('%d %b')"/></th>
+                  </t>
+                </tr>
+                <tr>
+                  <t t-foreach="date_range" t-as="day">
+                    <th>Qty</th>
+                    <th>Bal</th>
+                  </t>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-foreach="products" t-as="product">
+                  <tr>
+                    <td><t t-esc="product.name"/></td>
+                    <td><t t-esc="product.uom_id.name"/></td>
+                    <t t-foreach="date_range" t-as="day">
+                      <t t-set="key" t-value="'%s_%s' % (product.id, day.strftime('%Y-%m-%d'))"/>
+                      <t t-set="cell" t-value="line_map.get(key, {'qty': 0.0, 'value': 0.0})"/>
+                      <td><t t-esc="cell['qty']"/></td>
+                      <td><t t-esc="cell['value']"/></td>
+                    </t>
+                  </tr>
+                </t>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="product_sale">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="sale_product_report.internal_layout">
+                    <t t-call="sale_product_report.report_product_sale_base"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="sale_product_report.report_product_sale_base">
+        <t t-set="title">-
+            <t t-raw="company_name"/>
+        </t>
+        <t t-set="company_name" t-value="Company_Name"/>
+
+        <div class="page py-1">
+            <div class="row">
+                <h4
+                        class="mt0"
+                        t-esc="title or 'Odoo Report'"
+                        style="text-align: center;"
+                />
+            </div>
+            <!-- Display filters -->
+            <t t-foreach="product_sale.keys()" t-as="product_sale_id">
+                <div class="page_break pt-2">
+                    <div class="act_as_caption account_title">
+                        <span t-esc="partners_data[product_sale_id]['display_name']"/>
+                    </div>
+                </div>
+
+                <div class="page_break">
+                    <t t-foreach="product_sale[product_sale_id]" t-as="product_id">
+                        <div class="act_as_caption account_title">
+                            <span t-esc="products_data[product_id]['full_name']" />
+                        </div>
+
+                         <div class="act_as_table data_table" style="width: 100%;">
+                            <t
+                                    t-call="sale_product_report.product_sale_report_lines_header"
+                            />
+
+                            <t
+                                    t-foreach="product_sale[product_sale_id][product_id]"
+                                    t-as="product_sold"
+                            >
+                                <t
+                                        t-call="sale_product_report.product_sale_report_lines"
+                                />
+                            </t>
+                    </div>
+                    </t>
+
+                </div>
+
+            </t>
+
+        </div>
+    </template>
+
+    <template id="sale_product_report.product_sale_report_lines_header">
+        <!-- Display table headers for lines -->
+        <div class="act_as_thead">
+            <div class="act_as_row labels">
+                <!--## Transaction Date-->
+                <div class="act_as_cell" style="width: 9.76%;">Tanggal Transaksi</div>
+                <!--## Transaction Number-->
+                <div class="act_as_cell" style="width: 9.76%;">No Transaksi</div>
+                <!--## part no-->
+                <div class="act_as_cell" style="width: 9.76%;">Nomor Part</div>
+                <!--## product name-->
+                <div class="act_as_cell" style="width: 4.78%;">Nama Barang</div>
+                <!--## qty-->
+                <div class="act_as_cell" style="width: 15.07%;">Jumlah</div>
+<!--                price Unit-->
+                <div class="act_as_cell" style="width: 15.07%;">Harga Satuan</div>
+<!--                subtotal-->
+                <div class="act_as_cell" style="width: 15.07%;">Harga Total</div>
+            </div>
+        </div>
+    </template>
+
+    <template id="sale_product_report.product_sale_report_lines">
+        <!-- # lines or centralized lines -->
+        <div class="act_as_row lines">
+
+            <div class="act_as_cell left">
+<!--                transaction date-->
+                <span
+                        t-att-res-id="product_sold['order_id']"
+                        res-model="sale.order"
+                        view-type="form"
+                >
+                    <t t-esc="product_sold['order_date']"/>
+                </span>
+
+            </div>
+
+            <div class="act_as_cell left">
+<!--                transaction Number-->
+                <span
+                        t-att-res-id="product_sold['order_id']"
+                        res-model="sale.order"
+                        view-type="form"
+                >
+                    <t t-esc="product_sold['order_name']"/>
+                </span>
+
+            </div>
+
+            <div class="act_as_cell left">
+<!--                product code-->
+                <span
+                        t-att-res-id="product_sold['product_id']"
+                        res-model="product.product"
+                        view-type="form"
+                >
+                    <t t-esc="products_data[product_sold['product_id']]['product_code']"/>
+                </span>
+
+            </div>
+
+             <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="product_sold['product_id']"
+                        res-model="product.product"
+                        view-type="form"
+                >
+                    <t t-esc="products_data[product_sold['product_id']]['name']"/>
+                </span>
+
+            </div>
+
+             <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="product_sold['product_id']"
+                        res-model="sale.order.line"
+                        view-type="form"
+                >
+                    <t t-esc="product_sold['product_uom_qty']"/>
+                </span>
+
+            </div>
+
+            <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="product_sold['id']"
+                        res-model="sale.order.line"
+                        view-type="form"
+                >
+                    <t t-esc="product_sold['price_unit']"/>
+                </span>
+
+            </div>
+
+            <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="product_sold['id']"
+                        res-model="sale.order.line"
+                        view-type="form"
+                >
+                    <t t-esc="product_sold['price_subtotal']"/>
+                </span>
+
+            </div>
+        </div>
+    </template>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- stock.inventory.line inherit form view -->
+        <record id="inherit_stock_inventory_line_tree2" model="ir.ui.view">
+            <field name="name">stock.inventory.line.inherit.view.tree</field>
+            <field name="model">stock.inventory.line</field>
+            <field name="inherit_id" ref="stock.stock_inventory_line_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_id']" position="after" >
+                    <field name="remark"/>
+                </xpath>
+                
+            </field>
+        </record>
+
+<!--        <report-->
+<!--            string="Stock Adjustment"-->
+<!--            id="action_stock_adjustment"-->
+<!--            model="stock.inventory"-->
+<!--            report_type="qweb-pdf"-->
+<!--            name="zz_sss.report_stock_adjustment"-->
+<!--            file="zz_sss.report_stock_adjustment"-->
+<!--            print_report_name="'Stock Adjustment - %s - %s' % (object.location_ids.name or '', object.name)"-->
+<!--        />-->
+        
+<!--        <template id="report_stock_adjustment">-->
+<!--            <t t-foreach="docs" t-as="o">-->
+<!--                <t t-call="zz_sss.report_stock_adjustment_document"/>-->
+<!--            </t>-->
+<!--        </template>-->
+
+<!--        <template id="report_stock_adjustment_document">-->
+<!--            <t t-call="web.html_container">-->
+<!--                <t t-foreach="docs" t-as="o">-->
+<!--                    <t t-call="web.external_layout">-->
+<!--                        <div class="page" style="font-family:'Lato'">-->
+<!--                            <br/>-->
+<!--                            <h2 t-field="o.name"/>-->
+
+<!--                            <div class="row mt32 mb32" id="informations">-->
+<!--                                <div t-if="o.date" class="col-auto mw-100 mb-2">-->
+<!--                                    <strong>Date:</strong>-->
+<!--                                    <p class="m-0" t-field="o.date"/>-->
+<!--                                </div>-->
+<!--                                <div class="col-auto mw-100 mb-2">-->
+<!--                                    <t t-set="parent" t-value="o.location_ids.location_id.name"/>-->
+<!--                                    <t t-set="location" t-value="o.location_ids.name"/>-->
+<!--                                    <strong>Location:</strong><br/>-->
+<!--                                    <span t-esc="parent"/>/-->
+<!--                                    <span class="m-0" t-esc="location"/>-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>-->
+<!--                            <table class="table table-sm">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        &lt;!&ndash;<th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>&ndash;&gt;-->
+<!--                                        <th><strong>No</strong></th>-->
+<!--                                        <th><strong>Kogrup</strong></th>-->
+<!--                                        <th><strong>Part No</strong></th>-->
+<!--                                        <th><strong>Product</strong></th>-->
+<!--                                        <th t-if="o.line_ids and any(line.partner_id for line in o.line_ids)"><strong>Owner</strong></th>-->
+<!--                                        <th class="text-right"><strong>On Hand Quantity</strong></th>-->
+<!--                                        <th class="text-right"><strong>Counted Quantity</strong></th>-->
+<!--                                        <th class="text-right"><strong>Different</strong></th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                <t t-set="line_no" t-value="0"/>-->
+<!--                                    <t t-foreach="locations" t-as="location">-->
+<!--                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id)" t-as="line">-->
+<!--                                        <t t-set="line_no" t-value="line_no+1"/>-->
+<!--                                            <td t-esc="line_no"/>-->
+<!--                                            <td> <span t-esc="line.product_id.categ_id.name"/></td>-->
+<!--                                            <td t-if="line.product_id.default_code"> -->
+<!--                                            <t t-set="code" t-value="line.product_id.default_code.find('-')"/>-->
+<!--                                                <t t-set="code" t-value="code+2"/>-->
+<!--                                                <span t-esc="str(line.product_id.default_code[code:])"/></td>-->
+<!--                                            <td> <span t-esc="line.product_id.name"/> </td>-->
+<!--                                            <td t-if="line.partner_id"><span t-esc="line.partner_id.name"/></td>-->
+<!--                                            <td class="text-right"><span t-esc="int(line.theoretical_qty)"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>-->
+<!--                                            <td class="text-right"><span t-esc="int(line.product_qty)"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>-->
+<!--                                            <td class="text-right"><span t-esc="int(line.difference_qty)"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+
+<!--                            <div style="display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: center; color: black; font-family:'Lato'; margin-bottom: 3mm">-->
+<!--                                <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                                    <span>Disetujui oleh</span>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                                    <span>Diperiksa oleh</span>-->
+<!--                                </div> &ndash;&gt;-->
+<!--                                <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                                    <span>Dibuat oleh</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                </t>-->
+<!--            </t>-->
+<!--            -->
+<!--        </template>-->
+    </data>
+</odoo>

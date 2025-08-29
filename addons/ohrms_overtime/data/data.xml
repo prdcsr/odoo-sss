@@ -1,0 +1,91 @@
+<odoo>
+    <data>
+
+        <record id="hr_salary_rule_overtime" model="hr.salary.rule">
+            <field name="name">Overtime</field>
+            <field name="code">OT100</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT100</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT100.amount</field>
+        </record>
+
+         <record id="hr_salary_rule_outside_daily" model="hr.salary.rule">
+            <field name="name">DINAS</field>
+            <field name="code">dinasluarkota_25</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.dinasluarkota_25</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.dinasluarkota_25.amount</field>
+        </record>
+
+        <record id="hr_salary_rule_overtime_hour" model="hr.salary.rule">
+            <field name="name">LEMBUR JAM</field>
+            <field name="code">OVTHOUR</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OVTHOUR</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OVTHOUR.amount</field>
+        </record>
+
+         <record id="hr_salary_rule_overtime_outside" model="hr.salary.rule">
+            <field name="name">LEMBUR ALL</field>
+            <field name="code">OVT_OUT</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+             <field name="condition_python">result = payslip.input_line_ids</field>
+            <field name="amount_select">code</field>
+             <field name="amount_python_compute">
+total = 0
+for line in payslip.input_line_ids:
+    if  line.code!="OVTHOUR" and line.code != 'dinasluarkota_25' and line.code != "OT100":
+         total += line.amount
+
+result = total
+            </field>
+        </record>
+
+
+
+         <record id="hr_salary_rule_outside_jabodetabek" model="hr.salary.rule">
+            <field name="name">LEMBUR LUAR KOTA SUPIR DAN KENEK</field>
+            <field name="code">LEMBUR_LUAR_KOTA_SUPIR_DAN_KENEK</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.LEMBUR_LUAR_KOTA_SUPIR_DAN_KENEK</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.LEMBUR_LUAR_KOTA_SUPIR_DAN_KENEK.amount</field>
+        </record>
+
+        <record id="hr_salary_rule_outside_non_overnight" model="hr.salary.rule">
+            <field name="name">DINAS LUAR KOTA TIDAK MENGINAP AREA 1</field>
+            <field name="code">DINASLUARKOTA_NON_INAP_AREA1</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.DINASLUARKOTA_NON_INAP_AREA1</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.DINASLUARKOTA_NON_INAP_AREA1.amount</field>
+        </record>
+
+        <record id="hr_salary_rule_outside_non_overnight_area2" model="hr.salary.rule">
+            <field name="name">DINAS LUAR KOTA TIDAK MENGINAP AREA 2</field>
+            <field name="code">DINASLUARKOTA_NON_INAP_AREA2</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.DINASLUARKOTA_NON_INAP_AREA2</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.DINASLUARKOTA_NON_INAP_AREA2.amount</field>
+        </record>
+
+    </data>
+</odoo>

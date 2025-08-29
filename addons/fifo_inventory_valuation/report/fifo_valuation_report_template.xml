@@ -1,0 +1,53 @@
+<odoo>
+    <template id="report_fifo_inventory_valuation">
+        <t t-call="web.html_container">
+            <t t-foreach="doc_ids" t-as="doc_id">
+                <t t-set="doc" t-value="env['fifo.valuation.wizard'].browse(doc_id)"/>
+                <div class="page">
+                    <h2>FIFO Inventory Valuation</h2>
+                    <p>
+                        Date: <t t-esc="doc.date"/><br/>
+                        Location: <t t-esc="doc.location_id.display_name"/>
+                    </p>
+                    <table class="table table-sm mt32">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Product</th>
+                                <th>UoM</th>
+                                <th>Quantity</th>
+                                <th>Value</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="lines" t-value="doc._get_valuation_lines()"/>
+                            <t t-foreach="lines" t-as="line">
+                                <tr t-if="line['product_id'].type == 'product'">
+                                    <td><t t-esc="line['product_id'].default_code"/></td>
+                                    <td><t t-esc="line['product_id'].name"/></td>
+                                    <td><t t-esc="line['uom']"/></td>
+                                    <td><t t-esc="line['quantity']"/></td>
+                                    <td><t t-esc="line['value']"/></td>
+                                    <td><t t-esc="line['date']"/></td>
+                                    <td><t t-esc="line['location']"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_fifo_inventory_valuation_report"
+        string="FIFO Inventory Valuation"
+        model="fifo.valuation.wizard"
+        report_type="qweb-html"
+        name="fifo_inventory_valuation.report_fifo_inventory_valuation"
+        file="fifo_inventory_valuation.report_fifo_inventory_valuation"
+        print_report_name="'FIFO_Valuation_' + object.date.strftime('%Y%m%d')"
+    />
+</odoo>

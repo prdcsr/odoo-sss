@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_picking_kanban_restrict">
+            <field name="name">stock.picking_kanban.restrict</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="attributes">
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,hms_restrict_user.group_inventory_alsut,hms_restrict_user.group_inventory_btr,hms_restrict_user.group_inventory_gs, hms_restrict_user.group_production_gs, hms_restrict_user.group_production_alsut, hms_restrict_user.group_production_btr</attribute>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="attributes">
+                    <attribute name="groups">
+                        stock.group_stock_user,stock.group_stock_manager,hms_restrict_user.group_inventory_alsut,hms_restrict_user.group_inventory_btr,hms_restrict_user.group_inventory_gs,
+                        hms_restrict_user.group_inventory_alsut_manager,
+                        hms_restrict_user.group_inventory_gs_manager,
+                        hms_restrict_user.group_inventory_btr_manager
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

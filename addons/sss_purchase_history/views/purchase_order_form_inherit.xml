@@ -1,0 +1,18 @@
+<odoo>
+    <record id="view_purchase_order_form_inherit_history_button" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.history.button</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(sss_purchase_history.action_order_history_tree)d"
+                        string="View History"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-clock-o"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

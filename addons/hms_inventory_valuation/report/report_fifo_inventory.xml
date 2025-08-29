@@ -1,0 +1,12 @@
+<odoo>
+  <data>
+    <record id="action_fifo_inventory_report" model="ir.actions.report">
+      <field name="name">FIFO Inventory Valuation</field>
+      <field name="model">fifo.inventory.valuation.wizard</field>
+      <field name="report_type">qweb-html</field>
+      <field name="report_name">hms_inventory_valuation.report_fifo_inventory_template</field>
+      <field name="report_file">hms_inventory_valuation.report_fifo_inventory_template</field>
+      <field name="print_report_name">'FIFO_Inventory_Valuation_' + object.valuation_date.strftime('%Y_%m_%d')</field>
+    </record>
+  </data>
+</odoo>

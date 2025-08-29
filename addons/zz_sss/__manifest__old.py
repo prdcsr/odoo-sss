@@ -1,0 +1,35 @@
+{
+  'name': 'SSS Addons',
+  'author': 'SSS Group',
+  'version': '0.1',
+  'depends': ['account','purchase','sale','sales_team', 'payment', 'portal', 'utm','hr',],
+  'data': [
+    'wizard/purchase_make_payment_request_views.xml',
+    'views/purchase_requisition_form.xml',
+    'views/purchase_form.xml',
+    'views/purchase_agreement_report.xml',
+    'views/report_purchaseagreement.xml',    
+    'views/res_partner_form.xml',
+    'views/product.xml',
+    'views/sale.xml',
+    'views/mrp_view.xml',
+    'views/stock_picking_form.xml',
+    'wizard/print_payment_summary_view.xml',    
+    'views/account_move_form.xml',
+    'wizard/sale_make_invoice_advance_views.xml',
+    #'views/product_view.xml',    
+    #'views/templates.xml',
+    
+  ],
+  'qweb': [
+  ],
+  'sequence': 3,
+  'auto_install': False,
+  'installable': True,
+  'application': True,
+  'category': 'SSS Odoo Addons',
+  'summary': 'Odoo Addons Special For SSS Group',
+  'license': 'OPL-1',
+  'website': 'https://sss-id.yasukapower.com/',
+  'description': '-'
+}

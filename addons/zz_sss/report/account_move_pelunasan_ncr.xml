@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <report
+            string="Pelunasan NCR"
+            id="action_pelunasan_ncr"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="zz_sss.report_pelunasan_ncr"
+            file="zz_sss.report_pelunasan_ncr"
+            print_report_name="'Pelunasan NCR - %s - %s' % (object.partner_id.name or '', object.name)"
+    />
+
+    <template id="report_pelunasan_ncr">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>
+            <t t-set="company" t-value="o.company_id"/>
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="o_boxed_header"
+                     style="font-family: 'Lato'; color: black; font-size: 11pt; margin-bottom: 4mm">
+                    <div class="row mb8">
+                        <div class="col-9">
+                            <div name="company_address" class="mb4">
+                                <strong>
+                                    <!-- img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" class="img-fluid"/ -->
+                                    <span t-field="company.name"/>
+                                </strong>
+                                <span class="company_address" t-field="company.partner_id"
+                                      t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                <div>
+                                    <!-- Telp. <span t-field="company.phone"/>, -->
+                                    <t t-if="company.vat">
+                                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+                                        :
+                                        <span t-esc="company.partner_id.npwp_string(company.vat)"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-if="partner" name="partner_header">
+                    <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">
+                        <div>
+                            <span style="color: black; font-size: 11pt; margin-left: 4.5mm">
+                                Kepada YTH :
+                            </span>
+                            <br/>
+                            <!-- <div class="col-6" t-if="o.partner_id.type"> -->
+                            <!-- <t t-if="o.partner_id.type == 'customer'"> -->
+                            <!-- <strong>Customer: </strong> -->
+                            <!-- </t> -->
+                            <!-- </div> -->
+                            <strong class="col-12 mb4" style="color: black; font-size: 10pt">
+                                <span style="font-family:'Lato'; font-size:11pt" t-field="o.partner_id.name">
+                                </span>
+                            </strong>
+                            [
+                            <span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.ref"/>
+                            /
+                            <span style="font-family:'Lato'; color: black; font-size: 11pt"
+                                  t-field="o.partner_id.parent_id.ref"/>
+                            ]
+                            <t t-if="o.partner_id.vat">
+                                <div class="col-12" style="color: black; font-size: 11pt">
+                                    NPWP :
+                                    <span t-field="o.partner_id.vat"/>
+                                </div>
+                            </t>
+                            <t t-elif="not o.partner_id.vat">
+                                <div class="col-12" style="color: black; font-size: 11pt">
+                                    NIK :
+                                    <span t-field="o.partner_id.l10n_id_nik"/>
+                                </div>
+                            </t>
+                            <div class="col-auto"
+                                 style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;"
+                                 t-esc="partner"
+                                 t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                        </div>
+                    </div>
+                </t>
+                <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 11pt; margin-bottom: 3mm">
+                    <span>
+                        Perihal: Pelunasan Faktur
+                    </span>
+                    <br/>
+                    <br/>
+                    <span>
+                        Dengan hormat,
+                    </span>
+                    <br/>
+                    <span>
+                        Bersama ini kami kirimkan nota pembelian Bapak/Ibu yang sudah lunas dengan perincian sebagai
+                        berikut:
+                    </span>
+                </div>
+                <table class="table table-sm o_main_table"
+                       style="border-color: black; background-color:white; font-family:'Lato'; font-size: 11pt;">
+                    <thead style="border-color: black; background-color:white;">
+                        <tr style="border-color: black; background-color:white">
+                            <t t-set="colspan" t-value="0"/>
+                            <th name="th_sequence" class="text-left" style="border-color: black; width: 10mm">
+                                <span>
+                                    No.
+                                </span>
+                            </th>
+                            <th name="th_nota" class="text-left" style="border-color: black">
+                                <span>
+                                    No. Nota
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-left" style="border-color: black">
+                                <span>
+                                    Tanggal
+                                </span>
+                            </th>
+                            <th name="th_price" class="text-left" style="border-color: black">
+                                <span>
+                                    Jumlah
+                                </span>
+                            </th>
+                            <th name="th_notes" class="text-left" style="border-color: black">
+                                <span>
+                                    Keterangan
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: black; border-color: black">
+                        <t t-set="line_no" t-value="0"/>
+                        <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">
+                            <tr style="color: black; border-color: black">
+                                <t t-set="line_no" t-value="line_no+1"/>
+                                <td style="border-color: black" t-esc="line_no"/>
+                                <td>
+                                    <span t-field="doc.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="doc.date"/>
+                                </td>
+                                <td>
+                                    <span t-field="doc.amount_total_signed"/>
+                                </td>
+                                <td/>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <!-- <tfoot style="color: black; border-color: black"> -->
+                    <!-- <td style="color: black; border-color: black"> </td> -->
+                    <!-- <td style="color: black; border-color: black"> </td> -->
+                    <!-- <td style="color: black; border-color: black"> <strong> TOTAL</strong> </td> -->
+                    <!-- <td style="color: black; border-color: black"> </td> -->
+                    <!-- <td style="color: black; border-color: black"> </td> -->
+                    <!-- </tfoot> -->
+                </table>
+                <div style="color: black; font-family:'Lato'; font-size: 11pt; margin-bottom: 3mm; text-align:center">
+                    <strong>
+                        DETAIL PEMBAYARAN
+                    </strong>
+                </div>
+                <t t-set="custom_payment_vals" t-value="o._get_reconciled_info_JSON_values()"/>
+                <table class="table table-sm o_main_table" t-if="custom_payment_vals"
+                       style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">
+                    <thead>
+                        <tr style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">
+                            <th style="color: black; border-color: black">
+                                No
+                            </th>
+                            <th style="color: black; border-color: black">
+                                Tanggal
+                            </th>
+                            <th style="color: black; border-color: black">
+                                Reference
+                            </th>
+                            <th style="color: black; border-color: black">
+                                No. Invoice
+                            </th>
+                            <th class="text-right" style="color: black; border-color: black">
+                                Jumlah Pembayaran
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <t t-foreach="o.reconciled_invoice_ids" t-as="inv"> -->
+                        <!-- <td><span t-field="inv.invoice_date"/></td> -->
+                        <!-- </t> -->
+                        <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">
+                            <tr t-foreach="custom_payment_vals" t-as="payment_detail"
+                                style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">
+                                <t t-set="payment_id"
+                                   t-value="env['account.payment'].browse(payment_detail.get('account_payment_id'))"
+                                   style="color: black; border-color: black"/>
+                                <td style="color: black; border-color: black">
+                                    <span t-esc="payment_detail_index + 1"/>
+                                </td>
+                                <!-- <td style="color: black; border-color: black"> -->
+                                <!-- <span t-esc="doc.payment_id.name"/> -->
+                                <!-- </td> -->
+                                <td style="color: black; border-color: black">
+                                    <span t-esc="payment_detail.get('date')"/>
+                                </td>
+                                <td style="color: black; border-color: black">
+                                    <t t-set="payment_id" t-value="env['account.journal']"/>
+                                    <t t-if="payment_detail.get('journal_name') == 'Miscellaneous Operations'">
+                                        <span>
+                                            Potongan
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="payment_detail.get('journal_name')"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <!-- <t t-set="o.inv" t-value="env['account.move']"> -->
+                                    <span t-field="doc.name"/>
+                                    <!-- </t> -->
+                                </td>
+                                <td class="text-right" style="color: black; border-color: black">
+                                    <span t-esc="payment_detail.get('amount')"
+                                          t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="row" t-if="custom_payment_vals">
+                    <div style="background-color: white"
+                         t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                        <table class="table table-sm"
+                               style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">
+                            <tr class="border-black o_subtotal">
+                                <td colspan="99" style="background-color: white">
+                                    <strong style="background-color: white">
+                                        Total Pembayaran
+                                    </strong>
+                                </td>
+                                <td colspan="99" class="text-right" style="background-color: white">
+                                    <span t-esc="o.amount_total - o.amount_residual"
+                                          t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <!-- <t t-foreach="docs" t-as="o">
+            <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+            <t t-call="zz_sss.report_pelunasan_ncr_document" t-lang="o.partner_id.lang"/>
+        </t> -->
+    </template>
+</odoo>

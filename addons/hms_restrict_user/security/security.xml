@@ -1,0 +1,175 @@
+<odoo>
+    <data>
+        <record id="group_inventory_alsut" model="res.groups">
+            <field name="name">Alsut</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_inventory_gs" model="res.groups">
+            <field name="name">Gading</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_inventory_btr" model="res.groups">
+            <field name="name">Bintaro</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+
+        <record id="group_production_alsut" model="res.groups">
+            <field name="name">Production: Alsut</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_production_gs" model="res.groups">
+            <field name="name">Production: Gading</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_production_btr" model="res.groups">
+            <field name="name">Production: Bintaro</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+
+        <record id="group_inventory_alsut_manager" model="res.groups">
+            <field name="name">Alsut Manager</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_inventory_gs_manager" model="res.groups">
+            <field name="name">Gading Manager</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+        <record id="group_inventory_btr_manager" model="res.groups">
+            <field name="name">Bintaro Manager</field>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
+        </record>
+
+        <record id="production_alsut_picking_type_rule" model="ir.rule">
+            <field name="name">Production:ALSUT (hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in',['ALAM SUTRA']),("name","in",["Production","Waste"])]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('hms_restrict_user.group_production_alsut'))]"/>
+        </record>
+
+        <record id="alsut_picking_type_rule" model="ir.rule">
+            <field name="name">Picking Type ALSUT(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in','ALAM SUTRA'),("name","in",["STOCK OUT GUDANG UTAMA","SO KITCHEN HARIAN","STOCK OPNAME ECER","Receipts"])]
+            </field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_alsut')), (4, ref('hms_restrict_user.group_inventory_alsut_manager'))]"/>
+        </record>
+
+        <record id="alsut_location_stock_rule" model="ir.rule">
+            <field name="name">Location Stock ALSUT(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="domain_force">[("location_id","in",["ALSUT/Kitchen","ALSUT/Stock"])]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_alsut')), (4, ref('hms_restrict_user.group_inventory_alsut_manager'))]"/>
+        </record>
+
+        <record id="alsut_personal_transfer_rule" model="ir.rule">
+            <field name="name">Personal Transfer ALSUT(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="domain_force">[('picking_type_id.warehouse_id','in','ALAM SUTRA')]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_alsut')), (4, ref('hms_restrict_user.group_inventory_alsut_manager')), (4, ref('hms_restrict_user.group_production_alsut'))]"/>
+        </record>
+
+        <record id="btr_picking_type_rule" model="ir.rule">
+            <field name="name">Picking Type BTR(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in','BINTARO'),("name","in",["STOCK OUT GUDANG UTAMA","SO KITCHEN HARIAN","STOCK OPNAME ECER","Receipts"])]
+            </field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_btr')), (4, ref('hms_restrict_user.group_inventory_btr_manager'))]"/>
+        </record>
+
+        <record id="production_btr_picking_type_rule" model="ir.rule">
+            <field name="name">Production:BTR (hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in','BINTARO'),("name","in",["Production","Waste"])]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('hms_restrict_user.group_production_btr'))]"/>
+        </record>
+
+        <record id="btr_location_stock_rule" model="ir.rule">
+            <field name="name">Location Stock BTR(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="domain_force">[("location_id","in",["BTR/Kitchen","BTR/Stock"])]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_btr')), (4, ref('hms_restrict_user.group_inventory_btr_manager'))]"/>
+        </record>
+
+        <record id="btr_personal_transfer_rule" model="ir.rule">
+            <field name="name">Personal Transfer BTR(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="domain_force">[('picking_type_id.warehouse_id','in','BINTARO')]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_btr')), (4, ref('hms_restrict_user.group_inventory_btr_manager')), (4, ref('hms_restrict_user.group_production_gs'))]"/>
+        </record>
+
+        <record id="gs_picking_type_rule" model="ir.rule">
+            <field name="name">Picking Type GS(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in','GADING SERPONG'),("name","in",["STOCK OUT GUDANG UTAMA","SO KITCHEN HARIAN","STOCK OPNAME ECER","Receipts"])]
+            </field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_gs')), (4, ref('hms_restrict_user.group_inventory_gs_manager'))]"/>
+        </record>
+
+        <record id="production_gs_picking_type_rule" model="ir.rule">
+            <field name="name">Production:GS (hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="domain_force">[('warehouse_id','in','GADING SERPONG'),("name","in",["Production","Waste"])]
+            </field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('hms_restrict_user.group_production_gs'))]"/>
+        </record>
+
+        <record id="gs_location_stock_rule" model="ir.rule">
+            <field name="name">Location Stock GS(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="domain_force">[("location_id","in",["GS/Kitchen","GS/Stock"])]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_gs')), (4, ref('hms_restrict_user.group_inventory_gs_manager'))]"/>
+        </record>
+
+        <record id="gs_personal_transfer_rule" model="ir.rule">
+            <field name="name">Personal Transfer GS(hms_restrict_user)</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="domain_force">[('picking_type_id.warehouse_id','in','GADING SERPONG')]</field>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups"
+                   eval="[(4, ref('hms_restrict_user.group_inventory_gs')), (4, ref('hms_restrict_user.group_inventory_gs_manager')), (4, ref('hms_restrict_user.group_production_gs'))]"/>
+        </record>
+    </data>
+</odoo>

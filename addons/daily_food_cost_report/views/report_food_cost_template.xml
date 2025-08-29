@@ -1,0 +1,194 @@
+<odoo>
+    <template id="report_food_cost_template">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>Daily Food Cost Report -
+                    <t t-esc="analytic"/>
+                </h2>
+                <p>Date:
+                    <t t-esc="report_date"/>
+                </p>
+
+                <h3>Income Table</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Product</th>
+                            <th>Total Qty</th>
+                            <th>Total Price</th>
+                            <th>% of Total Income</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="income_total_qty" t-value="0"/>
+                        <t t-set="income_total_price" t-value="0"/>
+                        <t t-foreach="income_rows" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line['default_code'] or ''"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['product']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['qty']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['price']"/>
+                                </td>
+                                <td class="text-right"><t t-esc="line['percent']"/>%
+                                </td>
+                            </tr>
+                            <t t-set="income_total_qty" t-value="income_total_qty + line['qty']"/>
+                            <t t-set="income_total_price" t-value="income_total_price + line['price']"/>
+                        </t>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Grand Total</strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="income_total_qty"/>
+                                </strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="income_total_price"/>
+                                </strong>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Cost Table</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>UoM</th>
+                            <th>Total Qty</th>
+                            <th>Total Value</th>
+                            <th>% of Total Cost</th>
+                            <th>% of Total Income</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="cost_total_qty" t-value="0"/>
+                        <t t-set="cost_total_value" t-value="0"/>
+                        <t t-foreach="cost_rows" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line['category']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['uom']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['qty']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['value']"/>
+                                </td>
+                                <td class="text-right"><t t-esc="line['percent_cost']"/>%
+                                </td>
+                                <td class="text-right"><t t-esc="line['percent_income']"/>%
+                                </td>
+                            </tr>
+                            <t t-set="cost_total_qty" t-value="cost_total_qty + line['qty']"/>
+                            <t t-set="cost_total_value" t-value="cost_total_value + line['value']"/>
+                        </t>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Grand Total</strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="cost_total_qty"/>
+                                </strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="cost_total_value"/>
+                                </strong>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Excluded Categories (Misc, Packaging)</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>UoM</th>
+                            <th>Total Qty</th>
+                            <th>Total Value</th>
+                            <th>% of Category Cost</th>
+                            <th>% of Total Income</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="excluded_total_qty" t-value="0"/>
+                        <t t-set="excluded_total_value" t-value="0"/>
+                        <t t-foreach="excluded_rows" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line['category']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['uom']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['qty']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="line['value']"/>
+                                </td>
+                                <td class="text-right"><t t-esc="line['percent_cost']"/>%
+                                </td>
+                                <td class="text-right"><t t-esc="line['percent_income']"/>%
+                                </td>
+                            </tr>
+                            <t t-set="excluded_total_qty" t-value="excluded_total_qty + line['qty']"/>
+                            <t t-set="excluded_total_value" t-value="excluded_total_value + line['value']"/>
+                        </t>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Grand Total</strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="excluded_total_qty"/>
+                                </strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <t t-esc="excluded_total_value"/>
+                                </strong>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    <strong>Total Income:</strong>
+                    <t t-esc="total_income"/>
+                </p>
+                <p>
+                    <strong>Total Cost:</strong>
+                    <t t-esc="total_cost"/>
+                </p>
+                <p>
+                    <strong>Overall % Cost / Income:</strong>
+                    <t t-esc="overall_percent"/>%
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>

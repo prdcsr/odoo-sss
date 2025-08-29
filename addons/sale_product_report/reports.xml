@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- PDF/HMTL REPORTS -->
+
+    <!-- Open Items -->
+    <report
+        id="action_print_report_product_stock_qweb"
+        model="product.stock.report.wizard"
+        string="Product Stock Report"
+        menu="False"
+        report_type="qweb-pdf"
+        name="sale_product_report.product_stock"
+        file="sale_product_report.product_stock"
+    />
+    <report
+        id="action_print_report_product_stock_html"
+        model="product.stock.report.wizard"
+        string="Product Stock Report"
+        menu="False"
+        report_type="qweb-html"
+        name="sale_product_report.product_stock"
+        file="sale_product_report.product_stock"
+    />
+
+    <!-- PDF REPORTS : paperformat -->
+    <record id="report_qweb_paperformat" model="report.paperformat">
+        <field name="name">Sale Product Stock Report qweb paperformat</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">297</field>
+        <field name="page_width">210</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">10</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <record id="action_print_report_product_stock_qweb" model="ir.actions.report">
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+
+    <!-- XLSX REPORTS -->
+
+    <record id="action_report_product_stock_xlsx" model="ir.actions.report">
+        <field name="name">Product Stock Report XLSX</field>
+        <field name="model">product.stock.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">s_p_s_r.report_product_stock_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_product_stock</field>
+    </record>
+
+
+     <report
+        id="action_print_report_product_sale_qweb"
+        model="product.sale.report.wizard"
+        string="Product Sale Report"
+        menu="False"
+        report_type="qweb-pdf"
+        name="sale_product_report.product_sale"
+        file="sale_product_report.product_sale"
+    />
+    <report
+        id="action_print_report_product_sale_html"
+        model="product.sale.report.wizard"
+        string="Product Sale Report"
+        menu="False"
+        report_type="qweb-html"
+        name="sale_product_report.product_sale"
+        file="sale_product_report.product_sale"
+    />
+
+    <record id="action_print_report_product_sale_qweb" model="ir.actions.report">
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+   
+</odoo>

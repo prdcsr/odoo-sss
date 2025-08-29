@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_details_xml_wizard" model="ir.ui.view">
+        <field name="name">invoice.details.xml.wizard.form</field>
+        <field name="model">invoice.details.xml.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Invoices Details">
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="operating_unit_id"/>
+                </group>
+                <footer>
+                    <button name="download_report_xml" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_report_invoice_details_xml" model="ir.actions.act_window">
+        <field name="name">Invoice Details</field>
+        <field name="res_model">invoice.details.xml.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_report_invoice_details" name="Invoice Report XML" action="action_report_invoice_details_xml"
+              parent="account.menu_finance_reports" sequence="50"/>
+</odoo>

@@ -1,0 +1,41 @@
+# See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Green Whatsapp Client',
+    'version': '13.0.0.1.0',
+    'license': 'OPL-1',
+    'author': "SSS",
+    'sequence': 1,
+    'website': 'https://www.yasukapower.com/',
+    'images': ['images/main_screenshot.png'],
+    'summary': 'This module is used for Green Api Whatsapp Client Connection',
+    'category': 'Extra Tools',
+    'depends': [
+        'mail',
+        'base_setup',
+        'contacts',
+        'account_financial_report'
+    ],
+    'external_dependencies': {'python': ['html2text']},
+    'data': [
+        'security/ir.model.access.csv',
+        'data/whatsapp_mail_message_cron.xml',
+        'views/res_partner_view.xml',
+        'views/res_users_view.xml',
+        'views/mail_message.xml',
+        'views/mail_template.xml',
+        'views/ir_green_whatsapp_server.xml',
+        'views/menuitem_view.xml',
+        'wizard/check_partner_mobile_view.xml',
+        'wizard/whatsapp_message_view.xml',
+    ],
+    'demo': [],
+    'test': [],
+    'css': [],
+    'js': [],
+    'price': 0.0,
+    'currency': 'EUR',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

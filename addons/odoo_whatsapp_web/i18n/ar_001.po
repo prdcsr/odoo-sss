@@ -1,0 +1,46 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hamdanerp_whatsapp_web
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-28 11:09+0000\n"
+"PO-Revision-Date: 2022-11-28 11:09+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hamdanerp_whatsapp_web
+#: model:ir.model,name:hamdanerp_whatsapp_web.model_account_invoice_send
+msgid "Account Invoice Send"
+msgstr "إرسال فاتورة الحساب"
+
+#. module: hamdanerp_whatsapp_web
+#: model:ir.model,name:hamdanerp_whatsapp_web.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: hamdanerp_whatsapp_web
+#: model:ir.model,name:hamdanerp_whatsapp_web.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "معالج تكوين رسالة البريد الإلكتروني"
+
+#. module: hamdanerp_whatsapp_web
+#: model_terms:ir.ui.view,arch_db:hamdanerp_whatsapp_web.whatsapp_account_invoice_send_form_inherit
+#: model_terms:ir.ui.view,arch_db:hamdanerp_whatsapp_web.whatsapp_mail_compose_message_form_inherit
+msgid "Share In Whatsapp"
+msgstr "مشاركة على واتساب"
+
+#. module: hamdanerp_whatsapp_web
+#: code:addons/hamdanerp_whatsapp_web/models/res_partner_inherit.py:0
+#: code:addons/hamdanerp_whatsapp_web/models/res_partner_inherit.py:0
+#: code:addons/hamdanerp_whatsapp_web/models/share_whatsapp_inherit.py:0
+#: code:addons/hamdanerp_whatsapp_web/models/share_whatsapp_inherit.py:0
+#, python-format
+msgid "[%s] doesn't have phone number"
+msgstr ""

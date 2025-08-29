@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+        <record id="mrp_production_form_view" model="ir.ui.view">
+			<field name="name">mrp.production.form.zz_sss</field>
+			<field name="model">mrp.production</field>
+			<field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+			<field name='priority'>20</field>
+			<field name="arch" type="xml">			
+				<xpath expr="//field[@name='user_id']" position="after" >
+                    <field name="operator_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>                        
+                </xpath>
+            </field>    
+		</record>
+            
+        <record id="mrp_workcenter_view" model="ir.ui.view">
+			<field name="name">mrp.workcenter.form.zz_sss</field>
+			<field name="model">mrp.workcenter</field>
+			<field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+			<field name='priority'>20</field>
+			<field name="arch" type="xml">			
+				<xpath expr="//field[@name='costs_hour']" position="after" >
+                                        <field name="costs_by_product"/>
+                                        <field name="costs_hour_account_id"/>                        
+                </xpath>
+            </field>    
+		</record>
+
+      </data>
+</odoo>

@@ -1,0 +1,1032 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_picking_form">
+            <field name="name">stock.picking.sss.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after" >
+                    <field name="no_container"/>
+                      
+                    <field name="is_titipan" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing'),('picking_type_code', 'not in', ['ready','done'])]}"/>           
+                </xpath>
+            </field>    
+        </record>
+         <report
+            string="Delivery Sticker"
+            id="action_delivery_sticker"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_deliverysticker"
+            file="zz_sss.report_deliverysticker"
+            print_report_name="'Delivery Sticker - %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Delivery Slip NCR"
+            id="action_delivery_slip_ncr"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_deliveryslipncr"
+            file="zz_sss.report_deliveryslipncr"
+            print_report_name="'Delivery Slip NCR - %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Delivery Slip NCR Kecil"
+            id="action_delivery_slip_ncr_kecil"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_deliveryslipncrkecil"
+            file="zz_sss.report_deliveryslipncrkecil"
+            print_report_name="'Delivery Slip NCR Kecil- %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Delivery Slip SP"
+            id="action_delivery_slip_sp"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_deliveryslipsp"
+            file="zz_sss.report_deliveryslipsp"
+            print_report_name="'Delivery Slip NCR SP- %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Mutasi + SJ"
+            id="action_mutasisj"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_mutasisj"
+            file="zz_sss.report_mutasisj"
+            print_report_name="'Mutasi SJ- %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+
+    </data>
+    <template id="report_deliverysticker">
+    <t t-call="web.basic_layout">
+                <div class="page">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.delivery_sticker_document" t-lang="o.partner_id.lang"/>
+        </t>
+        </div>
+     </t>   
+    </template>
+
+    <template id="delivery_sticker_document">
+
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+            <div> 
+                <t t-set="qr_value" t-value="o.picking_qr_code"/>
+                <img t-att-src="'/report/qr/?value=%s&amp;error_correction=%s&amp;version=%s' % (qr_value, 3, 10)" style="width:500;height:500" />
+                <p t-field="o.origin"/>
+    </div>
+        
+    </template>  
+    
+    <template id="report_deliveryslipncr">
+    <!-- <t t-call="web.basic_layout"> -->
+                <!-- <div class="page"> -->
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.report_delivery_ncr_document" t-lang="o.partner_id.lang"/>
+        </t>
+        <!-- </div> -->
+     <!-- </t>    -->
+    </template>
+
+    <template id="report_delivery_ncr_document">
+        <t t-call="web.html_container">
+
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+                    <t t-set="company" t-value="o.company_id"/>
+                    <div t-attf-class="header o_company_#{company.id}_layout">
+                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 13pt; margin-bottom: 4mm">
+                        <div class="row mb8">
+                            <div class="col-9">
+                                <div name="company_address" class="mb4">
+                                    
+                                      <strong><span t-field="company.name"/></strong>
+                                      <p>
+                                          <t t-if="o.picking_type_id.warehouse_id.partner_id">
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.street"/>,
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.city"/>,
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.state_id.name"/>,
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.country_id.name"/>
+                                              - <t t-esc="o.picking_type_id.warehouse_id.partner_id.zip"/>
+                                          </t>
+                                          <t t-else="">
+                                          </t>
+                                      </p>
+                                      <!-- <span class="company_address" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/> -->
+                                      <!--<div>Telp. <span t-field="company.phone"/>,-->
+                                      <!--<t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+                                      
+                                </div> 
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                  
+                  <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-raw="0"/>
+                     
+                     
+                    <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                    <t t-if="partner" name="partner_header">
+                      <div class="row g-2 d-flex  mb10" style="font-family:'Lato'; margin-bottom: 5mm">
+                      <t t-if="o.sale_id">  
+                        <t t-set="partner_cus" t-value="o.sale_id.partner_id"/>
+                      </t>
+                      <t t-else="">
+                        <t t-set="partner_cus" t-value="o.move_lines[0].move_line_ids[0].owner_id or False"/>
+                      </t>
+                      <t t-if="partner_cus != partner" name="partner_cus_header">
+                            <div style="margin-bottom: 5mm;">
+                            <strong class="col-12" style="color: black; font-size: 13pt">Kepada Yth: <br/>
+                              <span class="col-12" t-field="partner_cus.name"/>-
+                              <span class="col-12" t-field="partner_cus.ref"/>
+                            </strong>
+                            <div class="col-12" style="color: black; font-size: 13pt" t-esc="partner_cus" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </t>
+                            <div>
+                            <strong class="col-12" style="color: black; font-size: 13pt">Alamat Kirim: <br/>
+                              <span class="col-12" t-field="o.partner_id.name"/>-
+                              <span class="col-12" t-field="o.partner_id.ref"/>
+                            </strong>
+                            <div class="col-12" style="color: black; font-size: 13pt" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </div>
+                    </t>
+                    
+                    
+                    
+                  
+                <div class="page mt10" style="color: black; font-family: 'Lato'; font-size: 13pt">
+                    <h4>
+                        <span t-field="o.name"/>
+                    </h4>
+                    <div class="row" style="margin-bottom: 5mm">
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                            <strong>Order:</strong>
+                            <p t-field="o.origin"/>
+                        </div>
+                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                            <strong>Shipping Date:</strong>
+                            <!--<t t-if="o.state == 'done'">-->
+                            <!--    <p t-field="o.date_done"/>-->
+                            <!--</t>-->
+                            <!--<t t-if="o.state != 'done'">-->
+                                <p t-field="o.scheduled_date"/>
+                           <!--</t>-->
+                        </div>
+                        <div class="col-auto" name="carrier" style="margin-bottom: 5mm">
+                          <strong>Ekspedisi:</strong>
+                          <p t-field="o.carrier_id"/>
+                        </div>
+                    </div>
+                  <table class="table table-sm" style="color: black; border-color: black" t-if="o.state!='done'" name="stock_move_table">
+                        <thead style="border-color: black">
+                            <tr>
+                                <th style="border-color: black; width:10mm" name="th_sm_product"><strong>No</strong></th>
+                                <th style="border-color: black" name="th_sm_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sm_product_name"><strong>Name</strong></th>
+                                <th style="border-color: black" name="th_sm_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: black; border-color: black">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <t t-set="line_no" t-value="0"/>
+                            <tr t-foreach="lines" t-as="move">
+                                <t t-set="line_no" t-value="line_no+1"/>
+                                <td t-esc="line_no"/>
+                                <td style="border-color: black">
+                                  <t t-set="grp_index" t-value="move.product_id.default_code.find('-')"/>
+                                    	<t t-set="grp_index" t-value="grp_index+2"/>
+                                    	<span style="font-size:2vw;color: black; border-color: black" class="text-wrap"><span style="" t-esc="move.product_id.default_code[grp_index:]"/>
+                                    	</span>
+                                    <!--<span t-field="move.product_id.default_code"/>-->
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move.product_uom_qty)"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm mt30" style="color: black; border-color: black; background-color:white; margin-bottom: 5mm" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"/>
+                        <thead style="color: black; border-color: black">
+                            <tr>
+                                <th style="border-color: black; width:10mm" name="th_sml_product"><strong>No</strong></th>
+                                <th style="border-color: black" name="th_sml_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sml_product_name"><strong>Name</strong></th>
+                                <!--<th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">-->
+                                <!--    Lot/Serial Number-->
+                                <!--</th>-->
+                                <th style="border-color: black; background-color: white" name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-family: 'Lato'; color: black; border-color: black; background-color: white">
+                            <t t-set="t_amount" t-value="0"/>
+                            <t t-set="line_no" t-value="0"/>
+                            <tr t-foreach="o.move_line_ids.sorted(key=lambda m: m.move_id.id)" t-as="move_line" style="color: black; background-color: white">
+                                <t t-set="line_no" t-value="line_no+1"/>
+                                <td t-esc="line_no"/>
+                                <td style="border-color: black">
+                                  <t t-set="grp_index" t-value="move_line.product_id.default_code.find('-')"/>
+                                    	<t t-set="grp_index" t-value="grp_index+2"/>
+                                    	<span style="font-size:2vw;color: black; border-color: black" class="text-wrap"><span style="" t-esc="move_line.product_id.default_code[grp_index:]"/>
+                                    	</span>
+                                    <!--<span t-field="move_line.product_id.default_code"/>-->
+                                    <!--<p t-if="move_line.move_id.description_picking != move_line.product_id.name">-->
+                                    <!--    <span t-field="move_line.move_id.description_picking"/>-->
+                                    <!--</p>-->
+                                </td>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_id.name"/>
+                                </td>
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_name"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move_line.qty_done)"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
+                            All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
+                        </t>
+                    </p>
+                    
+                    <p id="Sign" style="margin-top: 30mm">                
+                    <table class="table table-sm o_main_table" style="border-color: black">
+                        <tr style="color: black; border-color: black">
+                            <td class="text-center" style="border-color: black" name="ConfBy"><strong>Penerima</strong></td>   
+                            <td class="text-center" style="border-color: black" name="ChckBy"><strong>Pemeriksa</strong></td>
+                            <td class="text-center" style="border-color: black" name="ApprBy"><strong>Hormat Kami</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <!--<br> </br>-->
+                              <div class="col-auto" style="color: black" name="carrier">
+                                <strong>Ekspedisi:</strong>
+                                <p t-field="o.carrier_id"/>
+                              </div>
+                              <!--<br> </br>-->
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <!--<br> </br>-->
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <!--<br> </br>-->
+                            </td>
+                        </tr>
+                       
+                    </table>                
+            </p>  
+                    
+               </div> 
+         </div>
+         </t>
+    </template>
+
+    <template id="report_deliveryslipncrkecil">
+    <!-- <t t-call="web.basic_layout"> -->
+                <!-- <div class="page"> -->
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.report_delivery_ncr_kecil_document" t-lang="o.partner_id.lang"/>
+        </t>
+        <!-- </div> -->
+     <!-- </t>    -->
+    </template>
+
+    <template id="report_delivery_ncr_kecil_document">
+        <t t-call="web.html_container">
+
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+                    <t t-set="company" t-value="o.company_id"/>
+                    <div t-attf-class="header o_company_#{company.id}_layout">
+                        <div class="o_boxed_header" style="font-family: 'Roboto'; color: black; font-size: 12pt; margin-bottom: 4mm">
+                        <div class="row mb8">
+                            <!--<div class="col-9">-->
+                                <!--<div name="company_address" class="mb4">-->
+                                    
+                                      <span class="col-9"><strong><span t-field="company.name"/></strong></span>
+                                      <p>
+                                          <t t-if="o.picking_type_id.warehouse_id.partner_id">
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.street"/><br/>
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.city"/>,
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.state_id.name"/>,
+                                              <t t-esc="o.picking_type_id.warehouse_id.partner_id.country_id.name"/>
+                                              - <t t-esc="o.picking_type_id.warehouse_id.partner_id.zip"/>
+                                          </t>
+                                          <t t-else="">
+                                          </t>
+                                      </p>
+                                      <!-- <span class="company_address col-9" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/> -->
+                                      <!--<div>Telp. <span t-field="company.phone"/>,-->
+                                      <!--<t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+                                      
+                                <!--</div> -->
+                            <!--</div>-->
+                        </div>
+                        </div>
+                    </div>
+                  
+                  <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-raw="0"/>
+                     
+                     
+                    <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                    <t t-if="partner" name="partner_header">
+                      <div class="row d-flex col-7 mb10" style="font-family:'Lato'; margin-bottom: 5mm">
+                      <t t-if="o.sale_id">  
+                        <t t-set="partner_cus" t-value="o.sale_id.partner_id"/>
+                      </t>
+                      <t t-else="">
+                        <t t-set="partner_cus" t-value="o.move_lines[0].move_line_ids[0].owner_id or False"/>
+                      </t>
+                      <t t-if="partner_cus != partner" name="partner_cus_header">
+                            <div style="margin-bottom: 5mm;">
+                            <strong class="col-9" style="color: black; font-size: 13pt">Kepada Yth: <br/>
+                              <span class="col-9" t-field="partner_cus.name"/>-
+                              <span class="col-9" t-field="partner_cus.ref"/>
+                            </strong>
+                            <div class="col-9" style="color: black; font-size: 13pt" t-esc="partner_cus" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </t>
+                            <div>
+                            <strong class="col-9" style="color: black; font-size: 13pt">Alamat Kirim: <br/>
+                              <span class="col-9" t-field="o.partner_id.name"/>-
+                              <span class="col-9" t-field="o.partner_id.ref"/>
+                            </strong>
+                            <div class="col-12" style="color: black; font-size: 13pt" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </div>
+                    </t>
+                    
+                    
+                    
+                  
+                <div class="page mt5" style="color: black; font-family: 'Roboto'; font-size: 11pt">
+                    <!--<h4>-->
+                    <!--    <span t-field="o.name"/>-->
+                    <!--</h4>-->
+                    <div class="row col-6" style="margin-bottom: 5mm">
+                      <h4>
+                        <span t-field="o.name"/>
+                    </h4>
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                            <strong>Order:</strong>
+                            <p t-field="o.origin"/>
+                        </div>
+                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                            <strong>Shipping Date:</strong>
+                            <t t-if="o.state == 'done'">
+                                <p t-field="o.date_done"/>
+                            </t>
+                            <t t-if="o.state != 'done'">
+                                <p t-field="o.scheduled_date"/>
+                           </t>
+                        </div>
+                        <div class="col-auto" name="carrier" style="margin-bottom: 5mm">
+                          <strong>Ekspedisi:</strong>
+                          <p t-field="o.carrier_id"/>
+                        </div>
+                    </div>
+                  <table class="table table-sm" style="color: black; border-color: black" t-if="o.state!='done'" name="stock_move_table">
+                        <thead style="border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sm_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sm_product_name"><strong>Name</strong></th>
+                                <th style="border-color: black" name="th_sm_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: black; border-color: black">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.default_code"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move.product_uom_qty)"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                            <!--<tr>-->
+                            <!--  <td style="border-color: black">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--  <td style="border-color: black">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--  <td style="border-color: black; background-color: white">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--</tr>-->
+                        </tbody>
+                    </table>
+                    <table class="table table-sm mt30" style="color: black; border-color: black; background-color:white; margin-bottom: 5mm" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"/>
+                        <thead style="color: black; border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sml_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sml_product_name"><strong>Name</strong></th>
+                                <!--<th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">-->
+                                <!--    Lot/Serial Number-->
+                                <!--</th>-->
+                                <th style="border-color: black; background-color: white" name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-family: 'Lato'; color: black; border-color: black; background-color: white">
+                            <t t-set="t_amount" t-value="0"/>
+                            <tr t-foreach="o.move_line_ids" t-as="move_line" style="color: black; background-color: white">
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.default_code"/>
+                                    <!--<p t-if="move_line.move_id.description_picking != move_line.product_id.name">-->
+                                    <!--    <span t-field="move_line.move_id.description_picking"/>-->
+                                    <!--</p>-->
+                                </td>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_id.name"/>
+                                </td>
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_name"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move_line.qty_done)"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+                            <!--<tr>-->
+                            <!--  <td style="border-color: black">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--  <td style="border-color: black">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--  <td style="border-color: black; background-color: white">-->
+                            <!--    <br> </br>-->
+                            <!--  </td>-->
+                            <!--</tr>-->
+                        </tbody>
+                    </table>
+                    <!--<p>-->
+                    <!--    <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">-->
+                    <!--        All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.-->
+                    <!--    </t>-->
+                    <!--</p>-->
+                    
+                    <p id="Sign">                
+                    <table class="table table-sm o_main_table" style="border-color: black">
+                        <tr style="color: black; border-color: black">
+                            <td class="text-center" style="border-color: black" name="ConfBy"><strong>Penerima</strong></td>   
+                            <td class="text-center" style="border-color: black" name="ChckBy"><strong>Pemeriksa</strong></td>
+                            <td class="text-center" style="border-color: black" name="ApprBy"><strong>Hormat Kami</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                        </tr>
+                       
+                    </table>                
+            </p>  
+                    
+               </div> 
+         </div>
+         </t>
+    </template>
+
+    <template id="report_deliveryslipsp">
+    <!-- <t t-call="web.basic_layout"> -->
+                <!-- <div class="page"> -->
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.report_delivery_sp_document" t-lang="o.partner_id.lang"/>
+        </t>
+        <!-- </div> -->
+     <!-- </t>    -->
+    </template>
+
+    <template id="report_delivery_sp_document">
+        <t t-call="web.html_container">
+
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+                    <t t-set="company" t-value="o.company_id"/>
+                    <div t-attf-class="header o_company_#{company.id}_layout">
+                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 13pt; margin-bottom: 4mm">
+                        <div class="row mb8">
+                            <div class="col-9">
+                                <div name="company_address" class="mb4">
+                                    
+                                      <strong><span t-field="company.name"/></strong>
+                                      <span class="company_address" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                      <!--<div>Telp. <span t-field="company.phone"/>,-->
+                                      <!--<t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+                                      
+                                </div> 
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                  
+                  <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-raw="0"/>
+                     
+                     
+                    <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                    <t t-if="partner" name="partner_header">
+                      <div class="row d-flex col-7 mb10" style="font-family:'Lato'; margin-bottom: 5mm">
+                      <t t-set="partner_cus" t-value="o.sale_id.partner_id"/>
+                      <t t-if="partner_cus != partner" name="partner_cus_header">
+                            <div style="margin-bottom: 5mm;">
+                            <strong class="col-9" style="color: black; font-size: 13pt">Kepada Yth: <br/>
+                              <span class="col-9" t-field="o.sale_id.partner_id.name"/>-
+                              <span class="col-9" t-field="o.sale_id.partner_id.ref"/>
+                            </strong>
+                            <div class="col-9" style="color: black; font-size: 13pt" t-esc="partner_cus" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </t>
+                            <div>
+                            <strong class="col-9" style="color: black; font-size: 13pt">Alamat Kirim: <br/>
+                              <span class="col-9" t-field="o.partner_id.name"/>-
+                              <span class="col-9" t-field="o.partner_id.ref"/>
+                            </strong>
+                            <div class="col-12" style="color: black; font-size: 13pt" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </div>
+                    </t>
+                    
+                    
+                    
+                  
+                <div class="page mt10" style="color: black; font-family: 'Lato'; font-size: 13pt">
+                    <h4>
+                        <span t-field="o.name"/>
+                    </h4>
+                    <div class="row" style="margin-bottom: 5mm">
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                            <strong>Order:</strong>
+                            <p t-field="o.origin"/>
+                        </div>
+                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                            <strong>Shipping Date:</strong>
+                            <!--<t t-if="o.state == 'done'">-->
+                            <!--    <p t-field="o.date_done"/>-->
+                            <!--</t>-->
+                            <!--<t t-if="o.state != 'done'">-->
+                                <p t-field="o.scheduled_date"/>
+                           <!--</t>-->
+                        </div>
+                        <div class="col-auto" name="carrier" style="margin-bottom: 5mm">
+                          <strong>Ekspedisi:</strong>
+                          <p t-field="o.carrier_id"/>
+                        </div>
+                    </div>
+                  <table class="table table-sm" style="color: black; border-color: black" t-if="o.state!='done'" name="stock_move_table">
+                        <thead style="border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sm_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sm_product_name"><strong>Name</strong></th>
+                                <th style="border-color: black" name="th_sm_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: black; border-color: black">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
+                                <td style="border-color: black">
+                                    <span t-field="move.description_picking"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move.product_uom_qty)"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm mt30" style="color: black; border-color: black; background-color:white; margin-bottom: 5mm" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"/>
+                        <thead style="color: black; border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sml_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sml_product_name"><strong>Name</strong></th>
+                                <!--<th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">-->
+                                <!--    Lot/Serial Number-->
+                                <!--</th>-->
+                                <th style="border-color: black; background-color: white" name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-family: 'Lato'; color: black; border-color: black; background-color: white">
+                            <t t-set="t_amount" t-value="0"/>
+                            <tr t-foreach="o.move_line_ids" t-as="move_line" style="color: black; background-color: white">
+                                <td style="border-color: black">
+                                    <!-- <span t-field="move_line.product_id.default_code"/> -->
+                                    <!--<p t-if="move_line.move_id.description_picking != move_line.product_id.name">-->
+                                    <!--    <span t-field="move_line.move_id.description_picking"/>-->
+                                    <!--</p>-->
+                                    <!-- <span t-field="move_line.product_id.default_code"/> -->
+                                    <p t-if="move_line.move_id.description_picking != move_line.product_id">
+                                        <span t-field="move_line.move_id.description_picking"/>
+                                    </p>
+                                </td>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_id.name"/>
+                                </td>
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_name"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move_line.qty_done)"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
+                            All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
+                        </t>
+                    </p>
+                    
+                    <p id="Sign">                
+                    <table class="table table-sm o_main_table" style="border-color: black">
+                        <tr style="color: black; border-color: black">
+                            <td class="text-center" style="border-color: black" name="ConfBy"><strong>Penerima</strong></td>   
+                            <td class="text-center" style="border-color: black" name="ChckBy"><strong>Pemeriksa</strong></td>
+                            <td class="text-center" style="border-color: black" name="ApprBy"><strong>Hormat Kami</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                        </tr>
+                       
+                    </table>                
+            </p>  
+                    
+               </div> 
+         </div>
+         </t>
+    </template>
+
+    <template id="report_mutasisj">
+    <!-- <t t-call="web.basic_layout"> -->
+                <!-- <div class="page"> -->
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.report_mutasisj_document" t-lang="o.partner_id.lang"/>
+        </t>
+        <!-- </div> -->
+     <!-- </t>    -->
+    </template>
+
+    <template id="report_mutasisj_document">
+        <t t-call="web.html_container">
+
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+                    <t t-set="company" t-value="o.company_id"/>
+                    <div t-attf-class="header o_company_#{company.id}_layout">
+                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 13pt; margin-bottom: 4mm">
+                        <div class="row mb8">
+                            <div class="col-9">
+                                <div name="company_address" class="mb4">
+                                    
+                                      <strong><span t-field="company.name"/></strong>
+                                      <span class="company_address" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                      <!--<div>Telp. <span t-field="company.phone"/>,-->
+                                      <!--<t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+                                      
+                                </div> 
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                  
+                  <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-raw="0"/>
+                     
+                     
+                    <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                    <t t-if="partner" name="partner_header">
+                      <div class="row d-flex col-7 mb10" style="font-family:'Lato'; margin-bottom: 5mm">
+                      <t t-set="partner_cus" t-value="o.sale_id.partner_id"/>
+                      <t t-if="partner_cus != partner" name="partner_cus_header">
+                            <div style="margin-bottom: 5mm;">
+                            <strong class="col-9" style="color: black; font-size: 13pt">Kepada Yth: <br/>
+                              <span class="col-9" t-field="o.sale_id.partner_id.name"/>-
+                              <span class="col-9" t-field="o.sale_id.partner_id.ref"/>
+                            </strong>
+                            <div class="col-9" style="color: black; font-size: 13pt" t-esc="partner_cus" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </t>
+                            <div>
+                            <strong class="col-9" style="color: black; font-size: 13pt">Alamat Kirim: <br/>
+                              <span class="col-9" t-field="o.partner_id.name"/>-
+                              <span class="col-9" t-field="o.partner_id.ref"/>
+                            </strong>
+                            <div class="col-12" style="color: black; font-size: 13pt" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                      </div>
+                    </t>
+                    
+                    
+                    
+                  
+                <div class="page mt10" style="color: black; font-family: 'Lato'; font-size: 13pt">
+                    <h4>
+                        <span t-field="o.name"/>
+                    </h4>
+                    <div class="row" style="margin-bottom: 5mm">
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                            <strong>Order:</strong>
+                            <p t-field="o.origin"/>
+                        </div>
+                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                            <strong>Shipping Date:</strong>
+                            <!--<t t-if="o.state == 'done'">-->
+                            <!--    <p t-field="o.date_done"/>-->
+                            <!--</t>-->
+                            <!--<t t-if="o.state != 'done'">-->
+                                <p t-field="o.scheduled_date"/>
+                           <!--</t>-->
+                        </div>
+                        <div class="col-auto" name="carrier" style="margin-bottom: 5mm">
+                          <strong>Ekspedisi:</strong>
+                          <p t-field="o.carrier_id"/>
+                        </div>
+                    </div>
+                  <table class="table table-sm" style="color: black; border-color: black" t-if="o.state!='done'" name="stock_move_table">
+                        <thead style="border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sm_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sm_product_name"><strong>Name</strong></th>
+                                <th style="border-color: black" name="th_sm_quantity" class="text-center"><strong>Quantity</strong></th>
+                                <th style="border-color: black" name="th_sm_product_name"><strong>Notes</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: black; border-color: black">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.default_code"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move.product_uom_qty)"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                                <td style="border-color: black; background-color: white">
+                                    <span t-field="move.description_picking"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm mt30" style="color: black; border-color: black; background-color:white; margin-bottom: 5mm" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')"/>
+                        <thead style="color: black; border-color: black">
+                            <tr>
+                                <th style="border-color: black" name="th_sml_product"><strong>Part No</strong></th>
+                                <th style="border-color: black" name="th_sml_product_name"><strong>Name</strong></th>
+                                <!--<th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">-->
+                                <!--    Lot/Serial Number-->
+                                <!--</th>-->
+                                <th style="border-color: black; background-color: white" name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
+                                <th style="border-color: black; background-color: white" name="th_sml_quantity" class="text-center"><strong>Notes</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-family: 'Lato'; color: black; border-color: black; background-color: white">
+                            <t t-set="t_amount" t-value="0"/>
+                            <tr t-foreach="o.move_line_ids" t-as="move_line" style="color: black; background-color: white">
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.default_code"/>
+                                    <!--<p t-if="move_line.move_id.description_picking != move_line.product_id.name">-->
+                                    <!--    <span t-field="move_line.move_id.description_picking"/>-->
+                                    <!--</p>-->
+                                </td>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_id.name"/>
+                                </td>
+                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span style="border-color: black" t-field="move_line.lot_name"/>
+                                </td>
+                                <td style="border-color: black">
+                                    <span t-field="move_line.product_id.name"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move_line.qty_done)"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; background-color: white">
+                                    <span t-esc="int(move_line.qty_done)"/>
+                                    <span t-field="move_line.description_picking"/>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black">
+                                <br> </br>
+                              </td>
+                              <td style="border-color: black; background-color: white">
+                                <br> </br>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
+                            All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
+                        </t>
+                    </p>
+                    
+                    <p id="Sign">                
+                    <table class="table table-sm o_main_table" style="border-color: black">
+                        <tr style="color: black; border-color: black">
+                            <td class="text-center" style="border-color: black" name="ConfBy"><strong>Penerima</strong></td>   
+                            <td class="text-center" style="border-color: black" name="ChckBy"><strong>Pemeriksa</strong></td>
+                            <td class="text-center" style="border-color: black" name="ApprBy"><strong>Hormat Kami</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                            <td style="border-color: black">
+                              <br> </br>
+                              <br> </br>
+                              <br> </br>
+                            </td>
+                        </tr>
+                       
+                    </table>                
+            </p>  
+                    
+               </div> 
+         </div>
+         </t>
+    </template>
+</odoo>

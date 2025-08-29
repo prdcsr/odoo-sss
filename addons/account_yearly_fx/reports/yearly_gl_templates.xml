@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="yearly_gl_template">
+    <t t-call="web.html_container">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <h2>General Ledger — Daily vs Yearly FX</h2>
+          <p>
+            Period: <t t-esc="o.date_from"/> — <t t-esc="o.date_to"/>
+          </p>
+
+          <t t-set="company" t-value="request.env.user.company_id"/>
+          <t t-set="helper" t-value="request.env['yearly.fx.mixin']"/>
+          <t t-set="accounts"
+             t-value="o.account_ids or (o.only_flagged and request.env['account.account'].search([('use_yearly_rate','=',True)]) or request.env['account.account'].search([]))"/>
+
+          <table class="table table-sm" border="1" style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th>Account</th>
+                <t t-if="o.show_daily"><th style='text-align:right;'>Daily Balance</th></t>
+                <t t-if="o.show_yearly"><th style='text-align:right;'>Yearly Balance</th></t>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="accounts" t-as="acc">
+                <t t-set="lines" t-value="request.env['account.move.line'].sudo().search([('account_id','=',acc.id),('date','&gt;=',o.date_from),('date','&lt;=',o.date_to),('move_id.state','=','posted')], order='date, id')"/>
+                <t t-set="daily_bal" t-value="0.0"/>
+                <t t-set="yearly_bal" t-value="0.0"/>
+
+                <t t-foreach="lines" t-as="l">
+                  <t t-set="daily_bal" t-value="daily_bal + (l.debit - l.credit)"/>
+                  <t t-if="l.currency_id and l.currency_id != company.currency_id">
+                    <t t-set="yearly_bal" t-value="yearly_bal + helper._convert_amount_yearly(l.amount_currency or 0.0, l.currency_id, company, l.date)"/>
+                  </t>
+                  <t t-if="not l.currency_id or l.currency_id == company.currency_id">
+                    <t t-set="yearly_bal" t-value="yearly_bal + (l.debit - l.credit)"/>
+                  </t>
+                </t>
+                <t t-if="not acc.use_yearly_rate">
+                  <t t-set="yearly_bal" t-value="daily_bal"/>
+                </t>
+
+                <tr>
+                  <td><t t-esc="acc.code"/> — <t t-esc="acc.name"/></td>
+                  <t t-if="o.show_daily"><td style='text-align:right;'><t t-esc="('%%.%sf' %% company.currency_id.decimal_places) % daily_bal"/></td></t>
+                  <t t-if="o.show_yearly"><td style='text-align:right;'><t t-esc="('%%.%sf' %% company.currency_id.decimal_places) % yearly_bal"/></td></t>
+                </tr>
+              </t>
+            </tbody>
+          </table>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

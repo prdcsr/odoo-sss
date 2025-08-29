@@ -1,0 +1,44 @@
+<odoo>
+
+    <record id="hr_attendance_generate_time_off" model="ir.ui.view">
+        <field name="name">hr.attendance.generate.time.off.form</field>
+        <field name="model">hr.leave.wizard</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='holiday_type']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button name="create_time_off" type="object" string="Create Time Off" class="btn btn-primary"/>
+                    <button name="cancel" string="Cancel" special="cancel"/>
+
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_generate_time_off" model="ir.actions.act_window">
+        <field name="name">Generate Time Off</field>
+        <field name="type">ir.actions.act_window</field>
+        <!--        <field name="res_model">hr.attendance.generate.time.off</field>-->
+        <field name="res_model">hr.leave.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_attendance_generate_time_off"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+        <field name="help">This wizard create new time off request</field>
+        <field name="binding_model_id" ref="hr_attendance.model_hr_attendance"/>
+    </record>
+
+</odoo>

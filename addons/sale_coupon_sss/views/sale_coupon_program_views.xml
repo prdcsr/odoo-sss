@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_coupon_program_view_form_inherit_sss" model="ir.ui.view">
+        <field name="name">sale.coupon.program.common.form.inherit.sss</field>
+        <field name="model">sale.coupon.program</field>
+        <field name="inherit_id" ref="sale_coupon.sale_coupon_program_view_form_common"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='discount_specific_product_ids']" position="after">
+                <label for="incentive_total" string="Incentive Total"
+                       attrs="{'invisible': [('is_incentive', '=', False)]}"/>
+                <div attrs="{'invisible': [('is_incentive', '=', False)]}">
+                    <field name="incentive_total" class="oe_inline" widget='monetary'
+                           options="{'currency_field': 'currency_id'}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="is_incentive" class="oe_inline"/>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_currency_yearly_rate_tree" model="ir.ui.view">
+        <field name="name">res.currency.yearly.rate.tree</field>
+        <field name="model">res.currency.yearly.rate</field>
+        <field name="arch" type="xml">
+            <tree string="Currency Yearly Rates" editable="bottom">
+                <field name="year"/>
+                <field name="rate" digits="[12,12]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <act_window
+            id="act_view_currency_yearly_rates"
+            name="Currency Year Rates"
+            view_mode='tree,form'
+            view_id='view_currency_yearly_rate_tree'
+            domain="[('currency_id','=', active_id)]"
+            context="{'default_currency_id': active_id}"
+            res_model="res.currency.yearly.rate"/>
+
+    <record id="view_currency_form_inherit_yearly_fx" model="ir.ui.view">
+        <field name="name">res.currency.form.yearly.fx</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!--                <button class="oe_stat_button" string="Rates">test</button>-->
+                <button class="oe_stat_button" string="Yearly Rates" type="action" name="%(act_view_currency_yearly_rates)d"
+                        icon="fa-money" widget="statinfo"
+                        attrs="{'invisible': [('active', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

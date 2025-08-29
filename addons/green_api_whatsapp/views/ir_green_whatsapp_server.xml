@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="wa_klikodoo_wiz_view" model="ir.ui.view">
+        <field name="name">wa.greenapi.popup.view</field>
+        <field name="model">wa.greenapi.popup</field>
+        <field name="arch" type="xml">
+            <form style="height: 100%">
+                <iframe src="https://wa.klikodoo.id/" marginheight="0" marginwidth="0" frameborder="0" height="680px"
+                        width="100%" seamless="seamless"></iframe>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wa_klikodoo_wiz_view" model="ir.actions.act_window">
+        <field name="name">Scan QR</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wa.greenapi.popup</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wa_klikodoo_wiz_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+        <field name="help">This wizard will send message partner with whatsapp</field>
+    </record>
+
+    <record model="ir.ui.view" id="green_api_whatsapp_server_form">
+        <field name="model">ir.green_whatsapp_server</field>
+        <field name="arch" type="xml">
+            <form string="Whatsapp Servers">
+                <header>
+                    <!--                    <button name="greenapi_status" string="  Use Here" type="object" class="btn-primary"-->
+                    <!--                            icon="fa-check-circle-o"-->
+                    <!--                            attrs="{'invisible': ['|',('status', '=', 'authorized'),('qr_scan', '=', False)]}"/>-->
+
+                    <button name="get_instance_status" string="  Get Status" type="object" class="btn-primary"
+                            icon="fa-check-circle-o"
+                            attrs="{'invisible': [('api_token_instance','=',False),('id_instance','=',False)]}"/>
+                    <!-- <button name="greenapi_instance_status" string="  Get Status" type="object" class="btn-primary"-->
+                    <!--         icon="fa-check-circle-o"/>-->
+
+                    <!-- <button name="%(action_wa_klikodoo_wiz_view)d" string="  Scan QR Code" type="action"-->
+                    <!--         class="btn-primary" icon="fa-qrcode"-->
+                    <!--         attrs="{'invisible': ['|',('status','=','authorized'),('whatsapp_number','=',False)]}"/>-->
+
+                    <button name="load_qr_code" string="  Scan QR Code" type="object"
+                            class="btn-primary" icon="fa-qrcode"
+                            attrs="{'invisible': ['|',('status','=','authorized'),('whatsapp_number','=',False)]}"/>
+
+                    <!-- <button string="  Logout" icon="fa-power-off" type="object" class="btn-primary"-->
+                    <!--         name="greenapi_logout"-->
+                    <!--         attrs="{'invisible': [('status','!=','authorized')]}"/>-->
+
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+
+                    <group class="d-flex flex-row p-2" string="General Information">
+                        <field name="name"/>
+                        <field name="whatsapp_number" readonly="1"/>
+                        <field name="whatsapp_action"/>
+                        <field name="operating_unit_id"/>
+                    </group>
+                    <group class="d-flex flex-row p-2" string="Connection Information">
+                        <field name="id_instance"/>
+                        <field name="api_token_instance"/>
+                    </group>
+                    <div class="o_setting_box"
+                         attrs="{'invisible': ['|',('status','=','authenticated'),('qr_scan','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <div class="col-xs-3">
+                                <group string="QR Code">
+                                    <field name="qr_scan" readonly="1" widget="image"
+                                           nolabel="1"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="green_api_whatsapp_server_list">
+        <field name="model">ir.green_whatsapp_server</field>
+        <field name="arch" type="xml">
+            <tree string="Whatsapp Servers">
+                <!--                    <field name="sequence"/>-->
+                <field name="name"/>
+                <field name="operating_unit_id"/>
+                <field name="whatsapp_action"/>
+                <field name="id_instance"/>
+                <field name="api_token_instance"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_green_api_whatsapp_server_search" model="ir.ui.view">
+        <field name="model">ir.green_whatsapp_server</field>
+        <field name="arch" type="xml">
+            <search string="Whatsapp Servers">
+                <field name="name"
+                       filter_domain="[('name','ilike',self)]"
+                       string="Whatsapp Server"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_green_api_whatsapp_server_list">
+        <field name="name">Servers</field>
+        <field name="res_model">ir.green_whatsapp_server</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="green_api_whatsapp_server_list"/>
+        <field name="search_view_id" ref="view_green_api_whatsapp_server_search"/>
+    </record>
+</odoo>

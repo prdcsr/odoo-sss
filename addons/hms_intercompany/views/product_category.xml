@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_product_category_form_inherit_custom" model="ir.ui.view">
+        <field name="name">product.category.form.inherit.custom</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='account_property']/group" position="inside">
+                <field name="intercompany_account" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

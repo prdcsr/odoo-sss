@@ -1,0 +1,1 @@
+from . import fifo_inventory_report

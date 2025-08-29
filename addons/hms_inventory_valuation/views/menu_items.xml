@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="menu_inventory_fifo_root" name="Location Inventory Valuation"
+              parent="stock.menu_warehouse_report"
+              action="action_fifo_valuation_wizard"/>
+</odoo>

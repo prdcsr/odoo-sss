@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_inventory_form_restrict">
+            <field name="name">stock.inventory_form.restrict</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_ids']" position="before">
+                     <field name="line_ids" invisible="1" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside" >
+                    <button name="action_open_inventory_lines" groups="stock.group_stock_manager" type="object" string="Inventory Lines" icon="fa-exchange" class="oe_stat_button" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<odoo>
+    <record id="view_fifo_valuation_wizard_form" model="ir.ui.view">
+        <field name="name">fifo.valuation.wizard.form</field>
+        <field name="model">fifo.valuation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="FIFO Inventory Valuation">
+                <group>
+                    <field name="date"/>
+                    <field name="location_id"/>
+                    <field name="include_child_locations"
+                           attrs="{'invisible': [('location_id', '=', False)]}"
+                    />
+                    <field name="show_detailed"/>
+                </group>
+                <footer>
+                    <button name="action_generate_report" type="object" string="View Report" class="btn-primary"/>
+                    <button name="action_export_excel" type="object" string="Export to Excel"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fifo_valuation_wizard" model="ir.actions.act_window">
+        <field name="name">FIFO Inventory Valuation</field>
+        <field name="res_model">fifo.valuation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_inventory_fifo_root" name="Location Inventory Valuation"
+              parent="stock.menu_warehouse_report"
+              action="action_fifo_valuation_wizard"/>
+
+<!--    <menuitem id="menu_fifo_inventory_root" name="FIFO Valuation" parent="stock.menu_stock_inventory_control" sequence="100"/>-->
+<!--    <menuitem id="menu_fifo_valuation_wizard" name="Inventory Valuation" parent="menu_fifo_inventory_root" action="action_fifo_valuation_wizard"/>-->
+</odoo>

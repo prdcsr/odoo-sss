@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <report string="Appraisal Result" id="action_appraisal_result" model="survey.user_input" report_type="qweb-pdf"
+                name="zz_sss.report_appraisal_result" file="zz_sss.report_appraisal_result"
+                print_report_name="'Appraisal Result - %s' % (object.appraisal_id.display_name)"/>
+    </data>
+
+    <template id="report_appraisal_result">
+        <!-- <t t-call="web.basic_layout"> -->
+        <!-- <div class="page"> -->
+        <t t-foreach="docs" t-as="o">
+            <t t-call="zz_sss.report_appraisal_result_document" t-lang="o.partner_id.lang"/>
+        </t>
+        <!-- </div> -->
+        <!-- </t>    -->
+    </template>
+    <template id="report_appraisal_result_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <h1 t-field="o.survey_id"/>
+                <div class="row mt8 mb8">
+                    <div class="col-6">
+                        Form: F-EVKIN Versi: 1/2023
+                    </div>
+                    <div class="col-6">
+                        Tanggal Penilaian :
+                        <t t-if="o.appraisal_id.check_done">
+                            <span t-field="o.appraisal_id.final_interview"/>
+                        </t>
+                        <t t-else="">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/>
+                        </t>
+                    </div>
+                </div>
+                <table class="table table-sm table-borderless" style="border-color: white">
+                    <tr style="border-color: white">
+                        <td style="width: 30mm; border-color: white">
+                            <span>
+                                Nama
+                            </span>
+                        </td>
+                        <td style="width: 3mm; border-color: white">
+                            :
+                        </td>
+                        <td style="border-color: white">
+                            <span t-field="o.appraisal_id.emp_id"/>
+                        </td>
+                    </tr>
+                    <tr style="border-color: white">
+                        <td style="border-color: white">
+                            <span>
+                                Departemen
+                            </span>
+                        </td>
+                        <td style="border-color: white">
+                            :
+                        </td>
+                        <td style="border-color: white">
+                            <span t-field="o.appraisal_id.emp_id.department_id"/>
+                        </td>
+                    </tr>
+                    <tr style="border-color: white">
+                        <td style="border-color: white">
+                            <span>
+                                N I K
+                            </span>
+                        </td>
+                        <td style="border-color: white">
+                            :
+                        </td>
+                        <td style="border-color: white">
+                            <span t-field="o.appraisal_id.emp_id.identification_id"/>
+                        </td>
+                    </tr>
+                    <tr style="border-color: white">
+                        <td style="border-color: white">
+                            <span>
+                                Jabatan
+                            </span>
+                        </td>
+                        <td style="border-color: white">
+                            :
+                        </td>
+                        <td style="border-color: white">
+                            <span t-field="o.appraisal_id.emp_id.job_id"/>
+                        </td>
+                    </tr>
+                </table>
+                <!--
+                div class="row mt8 mb8">
+                <div class="col-auto">
+                <strong>10 – 19   : </strong>
+                <p class="text-nowrap">Kinerja tidak sesuai ekspektasi</p>
+                </div>
+                <div class="col-auto">
+                <strong>20 – 59   : </strong>
+                <p class="text-nowrap">Kinerja di bawah ekspektasi    </p>
+                </div>
+                <div class="col-auto">
+                <strong>60 – 69   : </strong>
+                <p class="text-nowrap">Kinerja biasa saja</p>
+                </div>
+                <div class="col-auto">
+                <strong>70 – 89   : </strong>
+                <p class="text-nowrap">Kinerja sesuai ekspektasi</p>
+                </div>
+                <div class="col-auto">
+                <strong>90 – 100 : </strong>
+                <p class="text-nowrap">Kinerja melebihi ekspektasi</p>
+                </div>
+                </div
+                -->
+                <table class="table table-sm" name="user_input_line_table">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <t t-set="t_page_id" t-value="0"/>
+                        <t t-set="t_score" t-value="0"/>
+                        <t t-set="t_page_count" t-value="0"/>
+                        <t t-foreach="o.user_input_line_ids" t-as="input">
+                            <t t-if="t_page_id != input.page_id">
+                                <tr>
+                                    <t t-set="t_page_count" t-value="t_page_count + 1"/>
+                                    <th class="bg-primary" colspan="6">
+                                        <strong t-field="input.page_id"/>
+                                    </th>
+                                </tr>
+                                <t t-if="t_page_count == 2">
+                                    <tr>
+                                        <th name="th_sm_question">
+                                            <strong>
+                                                Beri Tanda [X]
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                5
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                4
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                3
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                2
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                1
+                                            </strong>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th/>
+                                        <th class="text-center">
+                                            <strong>
+                                                Puas
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                Baik
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                Cukup
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                Kurang
+                                            </strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>
+                                                Buruk
+                                            </strong>
+                                        </th>
+                                    </tr>
+                                </t>
+                                <t t-set="t_page_id" t-value="input.page_id"/>
+                            </t>
+                            <tr>
+                                <td>
+                                    <span t-field="input.question_id"/>
+                                </td>
+                                <t t-if="input.answer_type == 'free_text'">
+                                    <td colspan="5">
+                                        <span t-field="input.value_free_text"/>
+                                    </td>
+                                </t>
+                                <t t-if="input.answer_type == 'number'">
+                                    <td colspan="5" class="text-center">
+                                        <span t-field="input.value_number"/>
+                                    </td>
+                                </t>
+                                <t t-else="">
+                                    <t t-foreach="[5,4,3,2,1]" t-as="i">
+                                        <t t-if="i == input.answer_score">
+                                            <td class="text-center">
+                                                X
+                                            </td>
+                                            <t t-set="t_score" t-value="t_score + i"/>
+                                        </t>
+                                        <t t-else="">
+                                            <td/>
+                                        </t>
+                                    </t>
+                                </t>
+                            </tr>
+                        </t>
+                        <t t-if="t_score &lt; 20">
+                            <t t-set="t_score_desc" t-value="'Kinerja tidak sesuai ekspektasi'"/>
+                        </t>
+                        <t t-if="t_score &gt;= 20 and t_score &lt; 60">
+                            <t t-set="t_score_desc" t-value="'Kinerja di bawah ekspektasi'"/>
+                        </t>
+                        <t t-if="t_score &gt;= 70 and t_score &lt; 90">
+                            <t t-set="t_score_desc" t-value="'Kinerja sesuai expektasi'"/>
+                        </t>
+                        <t t-if="t_score &gt;= 60 and t_score &lt; 70">
+                            <t t-set="t_score_desc" t-value="'Kinerja biasa saja'"/>
+                        </t>
+                        <t t-if="t_score &gt;= 90">
+                            <t t-set="t_score_desc" t-value="'Kinerja melebihi expektasi'"/>
+                        </t>
+                        <tr class="bg-info">
+                            <td>
+                                <strong>
+                                    Total Score
+                                </strong>
+                            </td>
+                            <td class="text-center" colspan="5">
+                                <strong t-esc="t_score"/>
+                            </td>
+                            <!--
+                            td class="text-center" colspan="3">
+                            <strong t-esc="t_score_desc"/>
+                            </td
+                            -->
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-sm" name="user_input_table">
+                    <tr>
+                        <td>
+                            <bold>
+                                Lokasi :
+                            </bold>
+                        </td>
+                        <td>
+                            <bold>
+                                Dibuat Atasan Langsung :
+                            </bold>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="text-nowrap" t-field="o.appraisal_id.hr_manager_id"/>
+                        </td>
+                        <td>
+                            <bold>
+                                Diketahui Pekerja Bersangkutan :
+                            </bold>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="text-nowrap" t-field="o.appraisal_id"/>
+                        </td>
+                        <td>
+                            <bold>
+                                Disetujui :
+                            </bold>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

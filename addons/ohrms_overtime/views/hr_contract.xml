@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="hr_contract_overtime_view">
+            <field name="name">hr.contract.overtime.form.inherit.view</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='hr_responsible_id']" position="after">
+                    <field name="rest_duration"/>
+                </xpath>
+                <xpath expr="//group[@name='allowances']" position="after">
+                    <group string="Overtime">
+                        <label for="over_day"/>
+                        <div class="o_row" name="day_wage">
+                            <field name="over_day"/>
+                            <span>/day</span>
+                        </div>
+                        <label for="over_hour"/>
+                        <div class="o_row" name="hour_wage">
+                            <field name="over_hour"/>
+                            <span>/hour</span>
+                        </div>
+
+                        <label for="over_jabodetabek"/>
+                        <div class="o_row" name="jabodetabek_wage">
+                            <field name="over_jabodetabek"/>
+                            <span>/travel</span>
+                        </div>
+
+                        <label for="outside_non_overnight"/>
+                        <div class="o_row">
+                            <field name="outside_non_overnight" nolabel="1"/>
+                            <span>/ day</span>
+                        </div>
+                        <label for="outside_non_overnight_far_area"/>
+                        <div class="o_row">
+                            <field name="outside_non_overnight_far_area" nolabel="1"/>
+                            <span>/ day</span>
+                        </div>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

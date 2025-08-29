@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sales_loyalty_program,sale.loyalty.program.user,model_sale_loyalty_program,sales_team.group_sale_salesman,1,0,0,0
+access_sales_loyalty_program,sale.loyalty.program.user,model_sale_loyalty_program,sales_team.group_sale_salesman_all_leads,1,0,0,0
+access_sales_loyalty_program_manager,sale.loyalty.program.manager,model_sale_loyalty_program,sales_team.group_sale_manager,1,1,1,1
+access_sales_loyalty_rule,sale.loyalty.rule.user,model_sale_loyalty_rule,sales_team.group_sale_salesman,1,0,0,0
+access_sales_loyalty_rule,sale.loyalty.rule.user,model_sale_loyalty_rule,sales_team.group_sale_salesman_all_leads,1,0,0,0
+access_sales_loyalty_rule_manager,sale.loyalty.rule.manager,model_sale_loyalty_rule,sales_team.group_sale_manager,1,1,1,1
+access_sales_loyalty_reward,sale.loyalty.reward.user,model_sale_loyalty_reward,sales_team.group_sale_salesman,1,0,0,0
+access_sales_loyalty_reward,sale.loyalty.reward.user,model_sale_loyalty_reward,sales_team.group_sale_salesman_all_leads,1,0,0,0
+access_sales_loyalty_reward_manager,sale.loyalty.reward.manager,model_sale_loyalty_reward,sales_team.group_sale_manager,1,1,1,1
+access_partner_point_history,partner.point.history.user,model_partner_point_history,base.group_user,1,1,1,0

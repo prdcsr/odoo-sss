@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_partner_form_operating_unit" model="ir.ui.view">
+        <field name="name">res.partner.form.operating.unit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add operating unit field in the partner form -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="operating_unit_id"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

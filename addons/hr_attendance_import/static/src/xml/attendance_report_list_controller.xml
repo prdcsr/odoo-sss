@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+     <t t-extend="ListView.buttons">
+          <t t-jquery="button.o_list_button_add" t-operation="after">
+                <button t-if="widget.modelName == 'hr.attendance'" t-name="AttendancesReport.Buttons"
+                        class="btn btn-secondary attendance_import_button" type="button">
+                    Import Attendances
+                </button>
+              <button t-if="widget.modelName == 'hr.attendance'" t-name="AttendancesReport.Buttons"
+                        class="btn btn-secondary attendance_import_button_solution" type="button">
+                    Import Attendances Solution
+                </button>
+          </t>
+     </t>
+
+</templates>

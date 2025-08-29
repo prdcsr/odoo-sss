@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_requisition_sss_form">
+            <field name="name">purchase.requisition.sss.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after" >
+                    <field name="payment_term_id"/>
+                    <field name="incoterm_id"/> 
+                    <field name="qty_container"/>                                
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after" >
+                    <field name="port_of_loading"/>
+                    <field name="port_of_destination"/>                                
+                </xpath>
+            </field>
+        </record>
+         <record id="view_purchase_requisition_line_pivot" model="ir.ui.view">
+            <field name="name">purchase.requisition.line.pivot</field>
+            <field name="model">purchase.requisition.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Agreeement">
+                    <field name="product_id" type="row"/>
+                    <field name="schedule_date" type="col"/>
+                    <field name="product_qty" type="measure"/>                    
+                    <field name="qty_ordered" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+         <record id="purchase_requisition_line_tree" model="ir.ui.view">
+            <field name="name">purchase.requisition.line.tree</field>
+            <field name="model">purchase.requisition.line</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Agreement Lines" create="false">
+                    <field name="requisition_id"/>
+                    <!-- field name="name"/>
+                    <field name="partner_id" string="Vendor" / -->
+                    <field name="product_id"/>
+                    <field name="price_unit"/>
+                    <field name="product_qty"/>
+                    <field name="qty_ordered"/>
+                    <!-- field name="product_uom" groups="uom.group_uom"/>
+                    <field name="price_subtotal" widget="monetary"/ -->
+                    <field name="schedule_date"  widget="date"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

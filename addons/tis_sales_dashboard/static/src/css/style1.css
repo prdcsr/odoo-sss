@@ -1,0 +1,784 @@
+.scroll-one{
+position: absolute;
+width: 100%;
+z-index: 100;
+}
+.first
+{
+    background-color:blue;
+    padding: 72%;
+}
+.second
+{
+    background-color:#982e92;
+    padding: 72%;
+}
+.three
+{
+    background-color:#0ab523;
+    padding: 72%;
+}
+.four
+{
+    background-color:#fbc412;
+    padding: 72%;
+}
+.five
+{
+    background-color:#bd1407;
+    padding: 72%;
+}
+#pieChartDemo {
+    padding: 0px !important;
+}
+.card-header {
+    padding: 0.75rem 0.25rem;
+    }
+.six
+{
+    background-color:#2498b7;
+    padding: 26%;
+}
+.card-stats .card-header.card-header-icon, .card-stats .card-header.card-header-text {
+    text-align: center !important;
+    margin-top: 2%;
+}
+.seven
+{
+    background-color:#bd1407;
+    padding: 26%;
+}
+h3.card-title {
+    color: #c1bbbb !important;
+    font-weight: bold;
+    font-size: 23px;
+}
+.card.card-stats1 {
+    height: 58%;
+    padding: 3%;
+}
+canvas#barChartDemo {
+    height: 195px !important;
+    width: 464px;
+}
+h3.card-title {
+    color: #c1bbbb !important;
+    font-weight: bold;
+    font-size: 23px;
+    padding: 3%;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 12px !important;
+}
+@media screen and (max-width: 2500px)
+{
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 10px !important;
+}
+h3.card-title {
+    color: #c1bbbb !important;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0%;
+}
+.second
+{
+padding: 21px 11px !important;
+}
+.first
+{
+padding: 21px 11px !important;
+}
+.three
+{
+padding: 21px 11px !important;
+}
+.four
+{
+padding: 21px 11px !important;
+}
+.five
+{
+padding: 21px 11px !important;
+}
+}
+@media screen and (max-width: 1024px) {
+    .first {
+        background-color: blue;
+        padding: 103%;
+    }
+    .card-stats .card-header .card-category:not([class*="text-"]) {
+        color: #999999;
+        text-align: left;
+        font-size: 9px;
+    }
+    .second {
+        padding: 103%;
+    }
+    .three {
+        padding: 103%;
+    }
+    .four {
+        padding: 103%;
+    }
+    .five {
+        padding: 103%;
+    }
+    .six {
+        padding: 30%;
+    }
+    canvas#barChartDemo {
+        height: 170px !important;
+    }
+
+}
+@media screen and (max-width: 910px)
+ {
+    .first {
+        padding: 257% 13px;
+   }
+   .second {
+    padding: 257% 13px;
+}
+.three {
+    padding: 257% 13px;
+}
+.four {
+    padding: 257% 13px;
+}
+.five {
+    padding: 257% 13px;
+}
+
+
+h3.card-title {
+    color: #c1bbbb !important;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+   .card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 5px;
+}
+}
+@media screen and (max-width: 812px)
+{
+    .card-stats .card-header .card-category:not([class*="text-"]) {
+        color: #999999;
+        text-align: left;
+        font-size: 8px !important;
+}
+.first-row .card {
+    min-height: 54px;
+}
+.first {
+    padding: 205% 12px;
+}
+.second {
+    padding: 205% 12px;
+}
+.three {
+    padding: 205% 12px;
+}
+.four {
+    padding: 205% 12px;
+}
+.five {
+    padding: 205% 12px;
+}
+.col-md-4 {
+    flex: none;
+    max-width: 95%;
+}
+}
+
+@media screen and (max-width: 800px)
+{
+.col-md-4 {
+    flex: none;
+    max-width: 90%;
+}
+    .first {
+        padding: 38%;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: left;
+    font-size: 17px;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 5px;
+}
+.second {
+    padding: 38%;
+}
+.three {
+    padding: 38%;
+}
+.four {
+    padding: 38%;
+}
+.five {
+    padding: 38%;
+}
+.six {
+    padding: 16% 9%;
+}
+.card-header.card-header-rose.card-header-icon {
+    margin-top: 5%;
+}
+}
+@media screen and (max-width: 768px)
+{
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 8px !important;
+}
+.first {
+    padding: 185%;
+}
+
+
+.six {
+    padding: 30%;
+}
+.seven {
+    padding: 30%;
+}
+.first-row .card {
+    min-height: 55px;
+}
+
+.second {
+    padding: 21px 13px;
+}
+.three {
+    padding: 206%;
+}
+.four {
+    padding: 206%;
+}
+.five {
+    padding: 206%;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: center;
+    font-size: 5px;
+}
+
+}
+
+@media screen and (max-width: 768px)
+{
+.col-md-4 {
+    flex: none;
+    max-width: 90%;
+}
+    .first {
+        padding: 38%;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: left;
+    font-size: 17px;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 5px;
+}
+.second {
+    padding: 38%;
+}
+.three {
+    padding: 38%;
+}
+.four {
+    padding: 38%;
+}
+.five {
+    padding: 38%;
+}
+.six {
+    padding: 16% 9%;
+}
+.card-header.card-header-rose.card-header-icon {
+    margin-top: 5%;
+}
+}
+@media screen and (max-width: 748px)
+{
+.first {
+padding: 11px 37px !important;
+}
+.second {
+  padding: 11px 37px !important;
+}
+.three {
+ padding: 11px 37px !important;
+}
+.four {
+  padding: 11px 37px !important;
+}
+.five {
+  padding: 11px 48% !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 10px !important;
+}
+.six {
+    padding: 4% 48% !important;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    padding: 2%;
+}
+}
+@media screen and (max-width: 736px)
+{
+    .six {
+        padding: 4% 229px;
+    }
+    .first {
+        padding: 39%;
+}
+.second {
+    padding: 39%;
+}
+.three {
+    padding: 39%;
+}
+.four {
+    padding: 39%;
+}
+.five {
+    padding: 39%;
+}
+card-header.card-header-rose.card-header-icon {
+    margin-top: 5%;
+}
+}
+@media screen and (max-width: 674px)
+
+{
+.six {
+    padding: 4% 230px;
+}
+}
+@media screen and (max-width: 583px)
+
+{   .six {
+        padding: 4% 243px;
+    }
+    .first {
+    padding: 11px 67px !important;
+}
+    .second {
+   padding: 11px 67px !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 9px !important;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    padding: 1%;
+}
+    .three {
+   padding: 11px 67px !important;
+}
+.four {
+    padding: 11px 46% !important;
+}
+.five {
+    padding: 11px 46% !important;
+}
+.four {
+    padding: 11px 46% !important;
+}
+}
+@media screen and (max-width: 575px)
+{
+    .six {
+        padding: 4% 243px;
+    }
+    .first {
+    padding: 11px 48px !important;
+}
+    .second {
+   padding: 11px 49px !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 9px !important;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    padding: 1%;
+}
+    .three {
+   padding: 11px 49px !important;
+}
+    .four {
+   padding: 11px 49px !important;
+}
+.five {
+    padding: 11px 48% !important;
+}
+.six {
+    padding: 11px 48% !important;
+}
+}
+@media screen and (max-width:563px)
+{
+.six {
+    padding: 4% 239px;
+}
+.first {
+    padding: 11px 47px !important;
+}
+
+}
+@media screen and (max-width: 560px)
+{
+.first {
+    padding: 11px 34px !important;
+}
+.second {
+    padding: 11px 34px !important;
+}
+.three {
+    padding: 11px 34px !important;
+}
+.four {
+    padding: 11px 34px !important;
+}
+.five {
+    padding: 11px 34px !important;
+}
+}
+
+@media screen and (max-width: 540px)
+{
+.first {
+    padding: 11px 43px !important;
+}
+.second {
+    padding: 11px 43px !important;
+}
+.three {
+    padding: 11px 43px !important;
+}
+.four {
+   padding: 11px 43px !important;
+}
+.five {
+    padding: 11px 34px !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 8px !important;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+    padding: 0%;
+}
+.five {
+    padding: 11px 48% !important;
+}
+}
+
+@media screen and (max-width: 510px)
+{
+.first {
+   padding: 11px 61px !important;
+}
+.second {
+  padding: 11px 61px !important;
+}
+.three {
+   padding: 11px 61px !important;
+}
+.four {
+    padding: 11px 100px !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 8px !important;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+    padding: 0%;
+}
+.five {
+    padding: 11px 45% !important;
+}
+}
+@media screen and (max-width: 498px)
+{
+    .six {
+        padding: 4% 200px;
+}
+
+.five {
+    padding: 11px 48% !important;
+}
+}
+@media screen and (max-width: 458px)
+{
+.three {
+    padding: 11px 78px !important;
+}
+.three {
+    padding: 11px 78px !important;
+}
+.first {
+    padding: 11px 89px !important;
+}
+
+.second {
+    padding: 11px 89px !important;
+}
+
+}
+@media screen and (max-width: 445px)
+{
+    .six {
+        padding: 4% 200px;
+}
+five {
+    padding: 11px 48% !important;
+}
+}
+@media screen and (max-width: 444px)
+{
+.first {
+    padding: 11px 34px !important;
+}
+five {
+    padding: 11px 48% !important;
+}
+.second {
+    padding: 11px 34px !important;
+}
+.three {
+    padding: 11px 34px !important;
+}
+.four {
+    padding: 11px 34px !important;
+}
+
+}
+@media screen and (max-width: 429px)
+{
+.first {
+    padding: 11px 48px !important;
+}
+.second {
+  padding: 11px 48px !important;
+}
+.three {
+   padding: 11px 48px !important;
+}
+.four {
+padding: 11px 45% !important;
+}
+.six {
+   padding: 11px 47% !important;
+}
+.five {
+    padding: 11px 44% !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: center;
+    font-size: 5px;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+}
+
+.card-header.card-header-rose.card-header-icon {
+    margin-top: 5%;
+}
+}
+@media screen and (max-width: 420px)
+{
+.second {
+    padding: 11px 80px !important;
+}
+.first {
+    padding: 11px 79px !important;
+}
+}
+@media screen and (max-width: 414px)
+{
+.first {
+    padding: 11px 39% !important;
+}
+.second {
+padding: 11px 39% !important;
+}
+.three {
+padding: 11px 39% !important;
+}
+.five {
+  padding: 11px 43% !important;
+}
+.four {
+  padding: 11px 43% !important;
+}
+
+.six {
+    padding: 11px 47% !important;
+}
+
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: center;
+    font-size: 5px;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center;
+}
+
+.card-header.card-header-rose.card-header-icon {
+    margin-top: 5%;
+}
+}
+@media screen and (max-width: 375px)
+{
+.first {
+ padding: 11px 37% !important;
+}
+.second {
+padding: 11px 37% !important;
+}
+.three {
+padding: 11px 37% !important;
+}
+.five {
+  padding: 11px 43% !important;
+}
+.four {
+  padding: 11px 43% !important;
+}
+}
+@media screen and (max-width: 360px)
+{
+    .card-stats .card-header .card-category:not([class*="text-"]) {
+        color: #999999;
+        text-align: center;
+        font-size: 3px;
+}.first {
+   padding: 11px 36% !important;
+}
+.second {
+ padding: 11px 36% !important;
+}
+.three {
+padding: 11px 36% !important;
+}
+.four {
+   padding: 11px 41% !important;
+}
+.five {
+    padding: 11px 38% !important;
+}
+}
+@media screen and (max-width: 359px)
+{
+    .five {
+     padding: 11px 47% !important;
+}
+.six {
+    padding: 4% 119px;
+}
+.first {
+    padding: 11px 35% !important;
+}
+.second {
+       padding: 11px 35% !important;
+}
+.three {
+    padding: 11px 35% !important;
+}
+.four {
+    padding: 11px 35% !important;
+}
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 7px !important;
+}
+}
+@media screen and (max-width: 360px)
+{
+.five {
+    padding: 11px 42% !important;
+}
+.four {
+    padding: 11px 43% !important;
+}
+
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: center !important;
+    font-size: 12px;
+}
+.card-stats .card-header.card-header-icon .card-title, .card-stats .card-header.card-header-text .card-title, .card-stats .card-header.card-header-icon .card-category, .card-stats .card-header.card-header-text .card-category {
+    margin: 0;
+    text-align: center !important;
+}
+.card-stats .card-header.card-header-icon, .card-stats .card-header.card-header-text {
+    text-align: center !important;
+}
+}
+@media screen and (max-width: 264px)
+{
+.card-stats .card-header .card-category:not([class*="text-"]) {
+    color: #999999;
+    text-align: left;
+    font-size: 6px !important;
+}
+.five {
+    padding: 11px 40% !important;
+}
+.four {
+    padding: 11px 39% !important;
+}
+
+}

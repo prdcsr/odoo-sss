@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_open_items_wizard_inherit" model="ir.ui.view">
+        <field name="name">open.items.report.wizard.inherit</field>
+        <field name="model">open.items.report.wizard</field>
+        <field name="inherit_id" ref="account_financial_report.open_items_wizard"/>
+        <field name="arch" type="xml">
+            <!-- Add operating unit field after date_from -->
+            <xpath expr="//field[@name='date_from']" position="after">
+                <field name="date_to"/>
+                <field name="operating_unit_id" options="{'no_create': True}"/>
+                <field name="salesperson_id" options="{'no_create': True}"/>
+            </xpath>
+
+            <!-- Add salesperson field in the other_filters group -->
+            <xpath expr="//field[@name='foreign_currency']" position="after">
+                <field name="child_partners_only"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

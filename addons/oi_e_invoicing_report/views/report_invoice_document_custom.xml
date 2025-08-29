@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_company_custom">
+ 	       <div class="header">
+            <div>
+                <div>
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
+                </div>            
+                <div name="company_address" style="text-align:center">
+                	<p><t t-esc="o.company_id.name" />&#160; <t t-esc="o.company_id.country_id.name"/>-<t t-esc="o.company_id.state_id.name"/>&#160; <t t-esc="o.company_id.street"/></p>
+                </div>
+            </div>
+            </div>
+            
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <div class="page">
+                <h2 style="text-align:center">
+                   <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Tax Invoice<br/>فاتورة ضريبية</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice<br/>فاتورة مسودة</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice<br/>فاتورة ملغية</span>
+                        <span t-if="o.type == 'out_refund'">Credit Note</span>
+                        <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                        <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                </h2>
+				<div class="row">
+                <div class="col-6">
+                <table class="table table-bordered table-sm" style="font-size: 12px">
+                <tr><td>Invoice Number</td><td style="text-align:center"><span t-field="o.name"/></td><td dir="RTL" style="text-align:right;">رقم الفاتورة</td></tr>
+                </table>
+                <table class="table table-bordered table-sm" style="font-size: 12px">
+                <tr><td>Invoice Issue Date</td><td style="text-align:center"><span t-field="o.invoice_date"/></td><td dir="RTL" style="text-align:right;">تاريخ إصدار الفاتورة</td></tr>
+                <tr><td>Date of Supply</td><td style="text-align:center"><span t-field="o.invoice_date_due"/></td><td dir="RTL" style="text-align:right;">تاريخ التوريد</td></tr>
+                </table>
+                </div>
+                <div class="col-6">
+                		<span  style="float:right">
+ 				            <t t-set="qr_value" t-value="o.invoice_qr_code"/>
+							<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', qr_value, 120, 120)"/>
+				          </span>
+				 </div>
+				 </div>
+                     <br/>
+                                 
+					<div>
+					<table  class="table table-bordered table-sm" style="font-size:12px">
+					  <colgroup>
+		              <col width= "10%"/>
+		              <col width= "20%"/>
+		              <col width= "10%"/>
+		              <col width= "10%"/>
+		              <col width= "20%"/>
+		              <col width= "10%"/>
+		            </colgroup>
+					<tr style="background-color:#dddddd;">
+					<th colspan="2">Seller:</th>
+					<th dir="RTL" style="text-align:right;">المورد:</th>
+					<th colspan="2">Buyer:</th>
+					<th dir="RTL" style="text-align:right;">العميل:</th>
+					</tr>
+					
+					<tr><td>Name</td>
+					<td style="text-align:center"><span t-field="o.company_id.name"/></td>
+					<td dir="RTL" style="text-align:right;">الاسم</td>
+					<td>Name</td>
+					<td style="text-align:center"><span t-field="o.partner_id.name"/></td>
+					<td dir="RTL" style="text-align:right;">الاسم</td></tr>
+					
+					
+					<tr><td>Building No.</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">رقم المبنى</td>
+					<td>Building No.</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">رقم المبنى</td></tr>
+					
+					<tr><td>Street Name</td>
+					<td style="text-align:center"><span t-field="o.company_id.street"/></td>
+					<td dir="RTL" style="text-align:right;">اسم الطريق</td>
+					<td>Street Name</td>
+					<td style="text-align:center"><span t-field="o.partner_id.street"/></td>
+					<td dir="RTL" style="text-align:right;">اسم الطريق</td></tr>
+					
+					<tr><td>District</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">المقاطعة</td>
+					<td>District</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">المقاطعة</td></tr>
+					
+					<tr><td>City</td>
+					<td style="text-align:center"><span t-field="o.company_id.city"/></td>
+					<td dir="RTL" style="text-align:right;">المدينة</td>
+					<td>City</td>
+					<td style="text-align:center"><span t-field="o.partner_id.city"/></td>
+					<td dir="RTL" style="text-align:right;">المدينة</td></tr>
+					
+					<tr><td>Country</td>
+					<td style="text-align:center"><span t-field="o.company_id.country_id"/></td>
+					<td dir="RTL" style="text-align:right;">البلد</td>
+					<td>Country</td>
+					<td style="text-align:center"><span t-field="o.partner_id.country_id"/></td>
+					<td dir="RTL" style="text-align:right;">البلد</td></tr>
+					
+					<tr><td>Postal Code</td>
+					<td style="text-align:center"><span t-field="o.company_id.zip"/></td>
+					<td dir="RTL" style="text-align:right;">الرقم البريدي</td>
+					<td>Postal Code</td>
+					<td style="text-align:center"><span t-field="o.partner_id.zip"/></td>
+					<td dir="RTL" style="text-align:right;">الرقم البريدي</td></tr>
+					
+					<tr><td>Additional No.</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">الرقم الاضافي للعنوان</td>
+					<td>Additional No.</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">الرقم الاضافي للعنوان</td></tr>
+					
+					<tr><td>Vat No.</td>
+					<td style="text-align:center"><span t-field="o.company_id.vat"/></td>
+					<td dir="RTL" style="text-align:right;">رقم تسجيل ضريبة القمية المضافة</td>
+					<td>Vat No.</td>
+					<td style="text-align:center"><span t-field="o.partner_id.vat"/></td>
+					<td dir="RTL" style="text-align:right;">رقم تسجيل ضريبة القمية المضافة</td></tr>
+					
+					<tr><td>Other Seller ID</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">معرف آخر</td>
+					<td>Other Buyer ID</td>
+					<td></td>
+					<td dir="RTL" style="text-align:right;">معرف آخر</td></tr>
+					</table>
+					</div>
+					
+                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+
+                    <table class="table table-bordered table-sm" style="font-size:12px;" >
+               		<colgroup>
+		              <col width= "15%"/>
+		              <col width= "10%"/>
+		              <col width= "10%"/>
+		              <col width= "12%"/>
+		              <col width= "10%"/>
+		              <col width= "10%"/>
+		              <col width= "10%" />
+		              <col width= "15%" />
+		            </colgroup>
+		            		<tr style="background-color: #dddddd">
+		            		<th colspan="4" >Lines Items:</th>
+		            		<th colspan="4" style="text-align:right;" dir="RTL">توصيف السلعة أو الخدمة:</th>
+		            		</tr>
+                            <tr style="background-color: #A6ACAF; text-align:center">
+                                <t t-set="colspan" t-value="6"/>
+                                <th>Description<br/>البيان</th>
+								<th>Unit Price<br/>سعر الوحدة</th>
+                                <th>Quantity<br/>الكمية</th>
+                                <th>Taxable Amount<br/>المبلغ الخاضع للضريبة</th>
+								<th>Discount<br/>خصومات</th>
+                                <th>Tax Rate<br/>نسبة الضريبة</th>
+								<th>Tax Amount<br/>مبلغ الضريبة</th>
+								<th>Item Subtotal (Including VAT)<br/>المجموع(شامل ضريبة القيمة المضافة)</th>
+                            </tr>
+							
+							<t t-set="taxable_amount" t-value="0"/>
+                            <t t-set="current_subtotal" t-value="0"/>
+                            <t t-set="item_price_taxed" t-value="0"/>
+                            <t t-set="tax_amount" t-value="0"/>
+                            <t t-set="discount_amount" t-value="0"/>
+                            <t t-set="total_exc_vat" t-value="0"/>
+                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+								<tr t-foreach="lines" t-as="line" style="text-align:center">
+								<t t-set="taxable_amount" t-value="line.price_unit*line.quantity" />
+								<t t-set="tax_amount" t-value="line.price_subtotal*line.tax_ids.amount/100" />
+								<t t-set="discount_amount" t-value="discount_amount + ((line.price_unit*line.quantity) * line.discount/100)" />
+								<t t-set="item_price_taxed" t-value="tax_amount+line.price_subtotal"/>
+								<t t-set="current_subtotal" t-value="current_subtotal + line.price_unit * line.quantity" />
+								
+								<td><span t-field="line.product_id.name"/></td>
+								<td><span t-field="line.price_unit"/></td>
+								<td><span t-field="line.quantity"/></td>
+								<td><span t-esc="'{:,.2f}'.format(taxable_amount)"/></td>
+								<td><span t-field="line.discount" /></td>
+								<td><span t-field="line.tax_ids.description" /></td>
+								<td><t t-esc="'{:,.2f}'.format(tax_amount)"/></td>
+								<td><span t-esc="'{:,.2f}'.format(item_price_taxed)"/></td>
+								</tr>
+                    </table>
+                    
+                    <div>
+                        <div id="total">
+                        <div>
+                                <table class="table table-bordered table-sm" style="page-break-inside: avoid; font-size:12px">
+			                      <colgroup>
+					              <col width= "40%"/>
+					              <col width= "15%"/>
+					              <col width= "40%"/>
+					            </colgroup>
+                                	<tr style="background-color: #dddddd">
+				            		<th>Total Amounts:</th>
+				            		<th></th>
+				            		<th style="text-align:right;" dir="RTL">إجمالي المبالغ:</th>
+				            		</tr>
+									<tr>
+									<td>Total(Excluding VAT)</td>
+									<td style="text-align:center"><t t-esc="curr_symbol"/> <span t-esc="'{:,.2f}'.format(current_subtotal)" /></td>
+									<td dir="RTL" style="text-align:right;"> الإجمالي (غير شاملة ضريبة القيمة المضافة) </td>
+									</tr>
+									<tr>
+									<td>Discount</td>
+									<td style="text-align:center"><t t-esc="curr_symbol"/> <span t-esc="'{:,.2f}'.format(discount_amount)" /></td>
+									<td dir="RTL" style="text-align:right;">مجموع الخصومات</td>
+									</tr>
+									<tr>
+									<td>Total Taxable Amount (Excluding VAT)</td>
+									<td style="text-align:center"><span t-field="o.amount_untaxed"/></td>
+									<td dir="RTL" style="text-align:right;">الإجمالي الخاضع للضريبة (غير شاملة ضريبة القيمة المضافة)</td>
+									</tr>
+									<tr>
+									<td>Total VAT</td>
+									<td style="text-align:center"><span t-field="o.amount_tax"/></td>
+									<td dir="RTL" style="text-align:right;">مجموع ضريبة القيمة المضافة</td>
+									</tr>
+									<tr>
+									<td>Total Amount Due</td>
+									<td style="text-align:center"><span t-field="o.amount_total"/></td>
+									<td dir="RTL" style="text-align:right;">إجمالي المبلغ المستحق</td>
+									</tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            </t>
+        </template>
+        
+        <template id="report_invoice_document_person_custom">
+         	       <div class="header">
+            <div>
+                <div>
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
+                </div>            
+                <div name="company_address" style="text-align:center">
+                	<p><t t-esc="o.company_id.name" />&#160; <t t-esc="o.company_id.country_id.name"/>-<t t-esc="o.company_id.state_id.name"/>&#160; <t t-esc="o.company_id.street"/></p>
+                </div>
+            </div>
+            </div>
+            
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <div class="page" style="margin-top:-40px">
+                <hr/>
+                <t t-set="curr_symbol" t-value="o.currency_id.symbol" />
+                    <h2 style="text-align:center">
+                        <span t-if="o.type == 'out_invoice' and o.state == 'posted'">فاتورة ضريبية مبسطة <br/>Simplified Tax Invoice</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice<br/>فاتورة مسودة</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice<br/>فاتورة ملغية</span>
+                        <span t-if="o.type == 'out_refund'">Credit Note</span>
+                        <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                        <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                    </h2>
+
+                <table class="table" style="font-size: 14px">
+				<tr><td>Invoice Number</td><td style="text-align:center;"><span t-field="o.name"/></td><td dir="RTL" style="text-align:right;">رقم الفاتورة</td></tr>
+                <tr><td>Invoice Issue Date</td><td style="text-align:center;"><span t-field="o.invoice_date"/></td><td dir="RTL" style="text-align:right;">تاريخ إصدار الفاتورة</td></tr>
+                </table>
+                
+                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+                    <table class="table table-bordered table-sm" style="font-size:16px;" >
+               		<colgroup>
+		              <col width= "15%"/>
+		              <col width= "10%"/>
+		              <col width= "10%"/>
+		              <col width= "12%"/>
+		              <col width= "10%"/>
+		              <col width= "10%"/>
+		              <col width= "10%" />
+		              <col width= "15%" />
+		            </colgroup>
+                            <tr style="background-color: #dddddd; text-align:center">
+                                <t t-set="colspan" t-value="6"/>
+                                <th>Description<br/>البيان</th>
+								<th>Unit Price<br/>سعر الوحدة</th>
+                                <th>Quantity<br/>الكمية</th>
+								<th>Item Subtotal (Including VAT)<br/>المجموع(شامل ضريبة القيمة المضافة)</th>
+                            </tr>
+							
+                            <t t-set="current_subtotal" t-value="0"/>
+                            <t t-set="item_price_taxed" t-value="0"/>
+                            <t t-set="tax_amount" t-value="0"/>
+                            <t t-set="discount_amount" t-value="0" />
+                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+								<tr t-foreach="lines" t-as="line" style="text-align:center">
+								
+								<t t-set="taxable_amount" t-value="line.price_unit*line.quantity" />
+								<t t-set="tax_amount" t-value="line.price_subtotal*line.tax_ids.amount/100" />
+								<t t-set="discount_amount" t-value="discount_amount + ((line.price_unit*line.quantity) * line.discount/100)" />
+								<t t-set="item_price_taxed" t-value="tax_amount+line.price_subtotal"/>
+								<t t-set="current_subtotal" t-value="current_subtotal + line.price_unit * line.quantity" />
+								
+								<td><span t-field="line.product_id.name"/></td>
+								<td><span t-field="line.price_unit"/></td>
+								<td><span t-field="line.quantity"/></td>
+								<td><span t-esc="'{:,.2f}'.format(item_price_taxed)"/></td>
+								</tr>
+                    </table>
+                    <div>
+                        <div id="total">
+                        <div>
+                     <table class="table table-sm" style="page-break-inside: avoid;">
+									<tr>
+									<td>Total Taxable Amount (Excluding VAT)</td>
+									<td dir="RTL" style="text-align:right;">الإجمالي الخاضع للضريبة (غير شاملة ضريبة القيمة المضافة)</td>
+									<td><t t-esc="curr_symbol"/> <span t-esc="o.amount_untaxed" /></td>
+									</tr>
+									<tr>
+									<td>Total VAT</td>
+									<td dir="RTL" style="text-align:right;">مجموع ضريبة القيمة المضافة</td>
+									<td><span t-field="o.amount_tax"/></td>
+									</tr>
+									<tr>
+									<td>Total Amount Due</td>
+									<td dir="RTL" style="text-align:right;">إجمالي المبلغ المستحق</td>
+									<td><span t-field="o.amount_total"/></td>
+									</tr>
+                                </table>
+                                </div></div></div>
+                <br/>
+                 <span style="margin-left: 40%;"> 
+                 	<t t-set="qr_value" t-value="o.invoice_qr_code"/>
+                 	<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', qr_value, 170, 170)" />
+                 </span>
+                </div>
+            </t>
+            </template>
+            
+	<template id="report_invoice_custom" inherit_id="account.report_invoice">
+		<xpath expr="." position="replace">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-if="o.partner_id.company_type == 'company'">
+                    <t t-call="oi_e_invoicing_report.report_invoice_document_company_custom" t-lang="lang"/>
+                    </t>
+                    <t t-elif="o.partner_id.company_type == 'person'">
+                    <t t-call="oi_e_invoicing_report.report_invoice_document_person_custom" t-lang="lang"/>
+                    </t>
+                </t>
+            </t>
+		</xpath>
+	</template>
+	
+	<template id="report_invoice_document_with_payments_c_custom" inherit_id="oi_e_invoicing_report.report_invoice_document_company_custom" primary="True">
+		<xpath expr="//div[@id='total']/div/table" position="inside">
+			<t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+			<t t-foreach="payments_vals" t-as="payment_vals">
+                    <tr>
+                        <td style="text-align: left;"><i>Paid on <t t-esc="payment_vals['date']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></i></td>
+                        <td dir="RTL" style="text-align: center;"><span t-esc="payment_vals['amount']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
+                        <td dir="RTL" style="text-align: right;">مدفوع في <t t-esc="payment_vals['date']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                    </tr>
+                    </t> 
+                <t t-if="len(payments_vals) &gt; 0">
+                    <tr>
+                        <td style="text-align: left;"><strong>Amount Due</strong></td>
+                        <td dir="RTL" style="text-align: center;"><span t-field="o.amount_residual"/></td>
+                        <td dir="RTL" style="text-align: right;">المبلغ المتبقي</td>
+                    </tr>
+                </t>            
+		</xpath>
+	</template>
+	
+	<template id="report_invoice_document_with_payments_p_custom" inherit_id="oi_e_invoicing_report.report_invoice_document_person_custom" primary="True">
+		<xpath expr="//div[@id='total']/div/table" position="inside">
+			<t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+			<t t-foreach="payments_vals" t-as="payment_vals">
+                    <tr>
+                        <td style="text-align: left;"><i>Paid on <t t-esc="payment_vals['date']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></i></td>
+                        <td dir="RTL" style="text-align: center;"><span t-esc="payment_vals['amount']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
+                        <td dir="RTL" style="text-align: right;">مدفوع في <t t-esc="payment_vals['date']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                    </tr>
+                    </t>
+                <t t-if="len(payments_vals) &gt; 0">
+                    <tr>
+                        <td style="text-align: left;"><strong>Amount Due</strong></td>
+                    	<td dir="RTL" style="text-align: center;"><span t-field="o.amount_residual"/></td>
+                        <td dir="RTL" style="text-align: right;">المبلغ المتبقي</td>
+                    </tr>
+                </t>             
+		</xpath>
+	</template>	
+
+ <template t-name="report_invoice_with_payments_custom" inherit_id="account.report_invoice_with_payments">
+<xpath expr="." position="replace">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-if="o.partner_id.company_type == 'company'">
+                    <t t-call="oi_e_invoicing_report.report_invoice_document_with_payments_c_custom" t-lang="lang"/>
+                    </t>
+                    <t t-elif="o.partner_id.company_type == 'person'">
+                    <t t-call="oi_e_invoicing_report.report_invoice_document_with_payments_p_custom" t-lang="lang"/>
+                    </t>
+                </t>
+            </t>
+            </xpath>
+</template>   		
+    </data>
+</odoo>

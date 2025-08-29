@@ -1,0 +1,95 @@
+import base64
+import math
+
+from odoo import api, fields, models, _
+from xml.dom import minidom
+
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
+
+"""class AccountAccount(models.Model):
+    _inherit = "account.account"
+    tax_group_id = fields.Many2one('account.group')
+    lka_group_id = fields.Many2one('account.group')"""
+
+
+class Efaktur(models.Model):
+    _inherit = "l10n_id_efaktur.efaktur.range"
+
+    operating_unit_id = fields.Many2one(
+        comodel_name="operating.unit",
+        string="Operating Unit",
+        default=lambda self: (
+            self.env["res.users"].operating_unit_default_get(self.env.uid)
+        ),
+    )
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    purchase_id = fields.Many2one('purchase.order', store=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  string='Purchase Order',
+                                  help="purchase order.")
+
+    def _get_report_base_filename(self):
+        if any(not move.is_invoice(include_receipts=True) for move in self):
+            raise UserError(_("Only invoices could be printed."))
+        return self._get_move_display_name()
+
+    def fp_string(self, string):
+        if len(string) == 16:
+            val = string[:3] + '.' + string[3:6] + '-' + string[6:8] + '.' + string[8:16]
+        else:
+            val = string
+        return val
+
+    @api.onchange('purchase_vendor_bill_id', 'purchase_id')
+    def _onchange_purchase_auto_complete(self):
+
+        if not self.type == 'in_invoice':
+            return
+
+        if self.purchase_vendor_bill_id.vendor_bill_id:
+            self.invoice_vendor_bill_id = self.purchase_vendor_bill_id.vendor_bill_id
+            self._onchange_invoice_vendor_bill()
+        elif self.purchase_vendor_bill_id.purchase_order_id:
+            self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
+        self.purchase_vendor_bill_id = False
+
+        if not self.purchase_id:
+            return
+
+        # Copy partner.
+        self.partner_id = self.purchase_id.partner_id
+        self.fiscal_position_id = self.purchase_id.fiscal_position_id
+        self.invoice_payment_term_id = self.purchase_id.payment_term_id
+        self.currency_id = self.purchase_id.currency_id
+
+        # Copy purchase lines.
+        po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
+        new_lines = self.env['account.move.line']
+        for line in po_lines.filtered(lambda l: not l.display_type):
+            new_line = new_lines.new(line._prepare_account_move_line(self))
+            new_line.account_id = new_line._get_computed_account()
+            new_line._onchange_price_subtotal()
+            new_lines += new_line
+        new_lines._onchange_mark_recompute_taxes()
+
+        # Compute invoice_origin.
+        origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
+        self.invoice_origin = ','.join(list(origins))
+
+        # Compute ref.
+        refs = set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref'))
+        refs = [ref for ref in refs if ref]
+        self.ref = ','.join(refs)
+
+        # Compute invoice_payment_ref.
+        if len(refs) == 1:
+            self.invoice_payment_ref = refs[0]
+
+        self.purchase_id = False
+        self._onchange_currency()
+        self.invoice_partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]

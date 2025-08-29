@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_oam_form" model="ir.ui.view">
+            <field name="name">account.move.oam.form</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <form string="Account Entry">
+                    <header>
+                        <!-- Post -->
+                        <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_duplicate" string="Duplicate" type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                        <!-- Cancel -->
+                        <button name="button_cancel" string="Cancel Entry" type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                        <button name="button_draft" string="Reset to Draft" type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', ('restrict_mode_hash_table', '=', True), ('state', 'not in', ('posted', 'cancel'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button name="open_reconcile_view"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    attrs="{'invisible': ['|', '|', ('type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
+                                    string="Reconciled Entries">
+                            </button>
+                        </div>
+
+
+                        <!-- Invisible fields -->
+                        <field name="id" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="invoice_payment_state" invisible="1" force_save="1"/>
+                        <field name="invoice_filter_type_domain" invisible="1"/>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="bank_partner_id" invisible="1"/>
+
+                        <field name="invoice_has_outstanding" invisible="1"/>
+                        <field name="invoice_sent" invisible="1"/>
+                        <field name="invoice_sequence_number_next_prefix" invisible="1"/>
+                        <field name="invoice_sequence_number_next" invisible="1"/>
+                        <field name="invoice_has_matching_suspense_amount" invisible="1"/>
+                        <field name="has_reconciled_entries" invisible="1"/>
+                        <field name="restrict_mode_hash_table" invisible="1"/>
+
+                        <div>
+                            <!-- Invoice draft header -->
+                            <span class="o_form_label">
+                                <field name="type"
+                                       attrs="{'invisible': ['|', ('type', '=', 'entry'), ('state', '=', 'draft')]}"
+                                       readonly="1" nolabel="1"/>
+                            </span>
+
+                            <!-- Select next number header (only invoices) -->
+                            <span class="o_form_label"
+                                  attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">First
+                                Number:
+                            </span>
+
+                            <!-- Number -->
+                            <h1 class="mt0">
+                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+                            </h1>
+
+                            <!-- Select next number header (only invoices) -->
+                            <div attrs="{'invisible': [('invoice_sequence_number_next_prefix', '=', False)]}">
+                                <field name="invoice_sequence_number_next_prefix" class="oe_inline"/>
+                                <field name="invoice_sequence_number_next" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group id="header_left_group">
+                                <div class="o_td_label">
+                                    <label for="partner_id" string="Customer" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="partner_id" string="Vendor" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                </div>
+                                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                                       context="{
+                                            'res_partner_search_mode': (context.get('default_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
+                                            'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                                       options='{"always_reload": True, "no_quick_create": True}'
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                <field name="ref"/>
+                                <field name="purchase_id" domain="[('state','=','done')]" options="{'no_create': True}"
+                                       context="{'show_total_amount': True}"/>
+                            </group>
+                            <group id="header_right_group">
+                                <!-- Invoice date (only invoices / receipts) -->
+                                <div class="o_td_label">
+                                    <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
+                                           attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                </div>
+                                <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                <field name="date" string="Accounting Date"
+                                       attrs="{'invisible': [('type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+
+
+                                <field name="journal_id"
+                                       invisible="context.get('default_journal_id') and context.get('type', 'entry') != 'entry'"
+                                       groups="purchase.group_purchase_user"
+                                       options="{'no_create': True}"
+                                       domain="[('id','=',13)]"
+                                       attrs="{'readonly': [('name', '!=', '/')]}"/>
+
+                                <field name="company_id" groups="base.group_multi_company"/>
+
+                                <field name="currency_id"
+                                       groups="base.group_multi_currency"
+                                       attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page id="aml_tab" string="Journal Items" groups="purchase.group_purchase_user">
+                                <field name="line_ids"
+                                       context="{'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id != company_currency_id and currency_id or False}">
+                                    <tree editable="bottom" string="Journal Items"
+                                          decoration-muted="display_type in ('line_section', 'line_note')"
+                                          default_order="sequence, date desc, move_name desc, id">
+                                        <!-- Displayed fields -->
+                                        <field name="account_id"
+                                               attrs="{
+                                                    'required': [('display_type', 'not in', ('line_section', 'line_note'))],
+                                                    'invisible': [('display_type', 'in', ('line_section', 'line_note'))],
+                                               }"
+                                               domain="[('company_id', '=', parent.company_id)]"/>
+                                        <field name="partner_id"
+                                               domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                               attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
+                                        <field name="name" widget="section_and_note_text" optional="show"/>
+                                        <field name="analytic_account_id"
+                                               optional="hide"
+                                               domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]"
+                                               groups="analytic.group_analytic_accounting"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="analytic_tag_ids"
+                                               optional="show"
+                                               groups="analytic.group_analytic_tags"
+                                               widget="many2many_tags"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="date_maturity"
+                                               optional="hide"
+                                               invisible="context.get('view_no_maturity')"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="amount_currency"
+                                               groups="base.group_multi_currency"
+                                               optional="hide"/>
+                                        <field name="currency_id" options="{'no_create': True}"
+                                               groups="base.group_multi_currency"
+                                               attrs="{'column_invisible': [('parent.type', '!=', 'entry')]}"/>
+                                        <field name="tax_ids" widget="many2many_tags"
+                                               optional="hide"
+                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
+                                               context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
+                                               options="{'no_create': True}"
+                                               force_save="1"
+                                               attrs="{'readonly': [
+                                                    '|', '|',
+                                                    ('display_type', 'in', ('line_section', 'line_note')),
+                                                    ('tax_line_id', '!=', False),
+                                                    '&amp;',
+                                                    ('parent.type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+                                                    ('account_internal_type', 'in', ('receivable', 'payable')),
+                                                ]}"/>
+                                        <field name="debit"
+                                               sum="Total Debit"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="credit"
+                                               sum="Total Credit"
+                                               attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
+                                        <field name="country_id" invisible="1"/>
+                                        <field name="tag_ids" widget="many2many_tags" string="Tax Grids" optional="show"
+                                               domain="[('country_id', '=', country_id), ('applicability', '=', 'taxes')]"/>
+
+                                        <!-- Others fields -->
+                                        <field name="payment_id" invisible="1"/>
+
+                                        <field name="product_id" invisible="1"/>
+                                        <field name="quantity" invisible="1"/>
+                                        <field name="product_uom_id" invisible="1"/>
+                                        <field name="price_unit" invisible="1"/>
+                                        <field name="discount" invisible="1"/>
+                                        <field name="price_subtotal" invisible="1"/>
+                                        <field name="price_total" invisible="1"/>
+
+                                        <field name="sequence" invisible="1"/>
+                                        <field name="move_name" invisible="1"/>
+                                        <field name="date" invisible="1"/>
+                                        <field name="tax_line_id" invisible="1"/>
+                                        <field name="tax_group_id" invisible="1"/>
+                                        <field name="tax_repartition_line_id" invisible="1" force_save="1"/>
+                                        <field name="tax_base_amount" invisible="1" force_save="1"/>
+                                        <field name="tax_exigible" invisible="1" force_save="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
+                                        <field name="display_type" force_save="1" invisible="1"/>
+                                        <field name="is_rounding_line" invisible="1"/>
+                                        <field name="exclude_from_invoice_tab" invisible="1"/>
+                                        <field name="account_internal_type" invisible="1"/>
+                                    </tree>
+                                    <!-- Form view to cover mobile use -->
+                                    <form>
+                                        <group>
+                                            <field name="tax_line_id" invisible="1"/>
+                                            <field name="account_id"
+                                                   domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                                            <field name="partner_id"
+                                                   domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                                            <field name="name"/>
+                                            <field name="analytic_account_id"
+                                                   groups="analytic.group_analytic_accounting"/>
+                                            <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
+                                                   widget="many2many_tags"/>
+                                            <field name="amount_currency" groups="base.group_multi_currency"/>
+                                            <field name="company_currency_id" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                            <field name="currency_id" options="{'no_create': True}"
+                                                   groups="base.group_multi_currency"/>
+                                            <field name="debit" sum="Total Debit"/>
+                                            <field name="credit" sum="Total Credit"/>
+                                            <field name="tax_ids" string="Taxes Applied" widget="many2many_tags"
+                                                   options="{'no_create': True}"/>
+                                            <field name="date_maturity" required="0"
+                                                   invisible="context.get('view_no_maturity', False)"/>
+                                            <field name="recompute_tax_line" invisible="1" readonly="1"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page id="other_tab_entry" string="Other Info" name="other_info"
+                                  attrs="{'invisible': [('type', '!=', 'entry')]}">
+                                <group id="other_tab_entry_group">
+                                    <group name="misc_group">
+                                        <field name="auto_post"
+                                               attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
+                                        <field name="reversed_entry_id"
+                                               attrs="{'invisible': ['|', ('reversed_entry_id', '=', False), ('type', '!=', 'entry')]}"/>
+                                        <field name="to_check"
+                                               attrs="{'invisible': [('type', '!=', 'entry')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" required="1"/>
+                                    </group>
+                                </group>
+                                <!-- Internal note -->
+                                <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Attachment preview -->
+                    <div class="o_attachment_preview"
+                         attrs="{'invisible': ['|', '|',
+                                ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')),
+                                ('state', '!=', 'draft')]}"/>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_oam_tree" model="ir.ui.view">
+            <field name="name">account.oam.tree</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" string="OAM Payment Request"
+                      decoration-muted="state == 'cancel'">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="ref" optional="show"/>
+                    <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_total_signed" sum="Total Amount" string="Total"/>
+                    <field name="state"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_oam_filter" model="ir.ui.view">
+            <field name="name">account.oam.select</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <search string="Search Move">
+                    <field name="name" string="Journal Entry"
+                           filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]"
+                            help="Unposted Journal Entries"/>
+                    <filter string="Posted" name="posted" domain="[('state', '=', 'posted')]"
+                            help="Posted Journal Entries"/>
+                    <separator/>
+                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]"
+                            context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]"
+                            context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank" name="bankoperations" domain="[('journal_id.type', '=', 'bank')]"
+                            context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash" name="cashoperations" domain="[('journal_id.type', '=', 'cash')]"
+                            context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous" name="misc_filter" domain="[('journal_id.type', '=', 'general')]"
+                            context="{'default_journal_type': 'general'}"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}"
+                                help="Journal Entries by Date"/>
+                        <filter string="Company" name="by_company" domain="[]" context="{'group_by': 'company_id'}"
+                                groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!--        <report-->
+        <!--            string="Invoice NCR"-->
+        <!--            id="action_invoice_ncr"-->
+        <!--            model="account.move"-->
+        <!--            report_type="qweb-pdf"-->
+        <!--            name="zz_sss.report_invoice_ncr"-->
+        <!--            file="zz_sss.report_invoice_ncr"-->
+        <!--            print_report_name="'Invoice NCR - %s - %s' % (object.partner_id.name or '', object.name)"-->
+        <!--        />-->
+
+        <record id="action_move_oam_line" model="ir.actions.act_window">
+            <field name="name">OAM Payment Request</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <!-- field name="view_id" ref="view_oam_tree"/ -->
+            <field name="domain">[('journal_id', '=', 13)]</field>
+            <field name="search_view_id" ref="view_account_oam_filter"/>
+            <field name="context">{'default_type': 'entry', 'search_default_misc_filter':1, 'view_no_maturity': True}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a OAM Payment Request
+                </p>
+            </field>
+        </record>
+        <record id="child_action_window_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_oam_tree"/>
+            <field name="act_window_id" ref="action_move_oam_line"/>
+        </record>
+        <record id="child_action_window_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_oam_form"/>
+            <field name="act_window_id" ref="action_move_oam_line"/>
+        </record>
+        <menuitem
+                id="menu_action_move_oam_line_form"
+                action="action_move_oam_line"
+                parent="purchase.menu_procurement_management"
+                sequence="100"/>
+    </data>
+
+    <!--    <template id="report_invoice_ncr">-->
+    <!--        <t t-foreach="docs" t-as="o">-->
+    <!--            <t t-call="zz_sss.report_invoice_ncr_document" t-lang="o.partner_id.lang"/>-->
+    <!--        </t>-->
+    <!--    </template>-->
+
+    <!--    <template id="report_invoice_ncr_document">-->
+    <!--        <t t-call="web.html_container">-->
+
+    <!--            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>-->
+    <!--                    <t t-set="company" t-value="o.company_id"/>-->
+    <!--                    <div t-attf-class="header o_company_#{company.id}_layout">-->
+    <!--                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt; margin-bottom: 4mm">-->
+    <!--                        <div class="row mb8">-->
+    <!--                            <div class="col-9">-->
+    <!--                               <div class="first-page">-->
+    <!--                                <div name="company_address" class="mb4">-->
+    <!--                                      <strong>&lt;!&ndash; img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" class="img-fluid"/ &ndash;&gt; <span t-field="company.name"/></strong>-->
+    <!--                                      <span class="company_address" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>-->
+    <!--                                      <div>-->
+    <!--                                        &lt;!&ndash;Telp. <span t-field="company.phone"/>,&ndash;&gt;-->
+    <!--                                      <t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+    <!--                                </div>-->
+    <!--                              </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+    <!--            <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">-->
+    <!--            <t t-call="web.address_layout"/>-->
+    <!--            <t t-raw="0"/>-->
+
+    <!--            <t t-set="partner" t-value="o.partner_id"/>-->
+    <!--                    <t t-if="partner" name="partner_header">-->
+    <!--                      <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 1mm;">-->
+    <!--                            <div>-->
+    <!--                              <span style="color: black; font-size: 11pt; margin-left: 4.5mm">Kepada YTH : </span> <br/>-->
+    <!--                            <strong class="col-9 mb4" style="color: black; font-size: 10pt">-->
+
+    <!--                              <span style="font-family:'Lato'; font-size:11pt" t-field="o.partner_id.name"/>-->
+    <!--                            </strong>-->
+    <!--                            <t t-if="o.partner_id.vat">-->
+    <!--                              <div class="col-9" style="color: black; font-size: 11pt">NPWP :-->
+    <!--                                <span t-field="o.partner_id.vat"/>-->
+    <!--                              </div>-->
+    <!--                            </t>-->
+    <!--                            <t t-elif="not o.partner_id.vat">-->
+    <!--                                <div class="col-9" style="color: black; font-size: 11pt">NIK :-->
+    <!--                                <span t-field="o.partner_id.l10n_id_nik"/>-->
+    <!--                              </div>-->
+    <!--                              </t>-->
+    <!--                            &lt;!&ndash; <div class="col-auto" style="color: black; font-size: 11pt; width: 95mm; text-transform: uppercase" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/> &ndash;&gt;-->
+    <!--                            <div class="col-auto" style="color: black; font-size: 11pt; width: 100mm; text-transform: uppercase;">-->
+    <!--                                <span t-esc="o.partner_id.street"/>-->
+    <!--                                <span t-esc="o.partner_id.street2"/>-->
+    <!--                                <span t-esc="o.partner_id.city"/>-->
+    <!--                                <span t-esc="o.partner_id.state_id.name"/>-->
+    <!--                                <span t-esc="o.partner_id.zip"/>-->
+    <!--                                <span t-esc="o.partner_id.country_id.name"/>-->
+    <!--                            </div>-->
+    <!--                            </div>-->
+    <!--                      </div>-->
+    <!--                    </t>-->
+
+
+    <!--                    <div class="page" style="font-family:'Lato'; color: black; font-size: 10pt">-->
+    <!--                        <h5 style="text-align: center; font-family:'Lato'; color: black;">-->
+    <!--                            <span t-if="o.type == 'out_invoice' and o.state == 'posted'">INVOICE : </span>-->
+    <!--                            <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft INVOICE</span>-->
+    <!--                            <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled INVOICE</span>-->
+    <!--                            <span t-if="o.type == 'out_refund'">Credit Note</span>-->
+    <!--                            <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>-->
+    <!--                            <span t-if="o.type == 'in_invoice'">Vendor Bill</span>-->
+    <!--                            <span t-if="o.name != '/'" t-field="o.name"/>-->
+    <!--                        </h5>-->
+
+    <!--                    <div id="informations" class="row mt16 mb16">-->
+    <!--                        &lt;!&ndash; div class="col-auto mw-100 mb-2" style="color: black" t-if="o.invoice_date" name="invoice_date">-->
+    <!--                            <strong>Invoice Date:</strong>-->
+    <!--                            <p class="m-0" t-field="o.invoice_date"/>-->
+    <!--                        </div &ndash;&gt;-->
+    <!--                        &lt;!&ndash;<div class="col-auto mw-100 mb-2" style="color: black" t-if="o.invoice_date_due and o.type == 'out_invoice' and o.state == 'posted'" name="due_date">&ndash;&gt;-->
+    <!--                        &lt;!&ndash;    <strong>Due Date:</strong>&ndash;&gt;-->
+    <!--                        &lt;!&ndash;    <p class="m-0" t-field="o.invoice_date_due"/>&ndash;&gt;-->
+    <!--                        &lt;!&ndash;</div>&ndash;&gt;-->
+    <!--                        &lt;!&ndash; div class="col-auto mw-100 mb-2" style="color: black" t-if="o.invoice_origin" name="origin">-->
+    <!--                            <strong>Source:</strong>-->
+    <!--                            <p class="m-0" t-field="o.invoice_origin"/>-->
+    <!--                        </div>-->
+    <!--                        <div class="col-auto mw-100 mb-2" style="color: black" t-if="o.partner_id.ref" name="customer_code">-->
+    <!--                            <strong>Customer Code:</strong>-->
+    <!--                            <p class="m-0" t-field="o.partner_id.ref"/>-->
+    <!--                        </div &ndash;&gt;-->
+    <!--                        &lt;!&ndash; div class="col-auto mw-100 mb-2" style="color: black" t-if="o.ref" name="reference">-->
+    <!--                            <strong>Reference:</strong>-->
+    <!--                            <p class="m-0" t-field="o.ref"/>-->
+    <!--                        </div &ndash;&gt;-->
+    <!--                        <div class="col-auto" style="color: black" t-if="o.l10n_id_tax_number" name="tax_number">-->
+    <!--                            <span style="font-family: Lato; font-size: 10pt">NO. FAKTUR PAJAK :</span>-->
+    <!--                            <span style="font-family: Lato; font-size: 10pt" class="m-0" t-esc="o.fp_string(o.l10n_id_tax_number)"/>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+
+    <!--                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>-->
+
+    <!--                    <table class="table table-sm o_main_table" name="invoice_line_table" style="border-color: black; background-color:white">-->
+    <!--                        <thead style="border-color: black; background-color:white">-->
+    <!--                            <tr style="border-color: black; background-color:white">-->
+    <!--                                &lt;!&ndash; TODO: remove in master &ndash;&gt;-->
+    <!--                                <t t-set="colspan" t-value="6"/>-->
+    <!--                                <th name="th_sequence" class="text-left" style="border-color: black"><span>No.</span></th>-->
+    <!--                                <th name="th_nopart" class="text-left" style="border-color: black"><span>Nomor Part</span></th>-->
+    <!--                                <th name="th_description" class="text-left" style="border-color: black"><span>Nama Barang</span></th>-->
+    <!--                                &lt;!&ndash; TODO: remove in master &ndash;&gt;-->
+    <!--                                <th name="th_source" class="d-none text-left" style="border-color: black" t-if="0"><span>Source Document</span></th>-->
+    <!--                                <th name="th_quantity" class="text-right" style="border-color: black"><span>Quantity</span></th>-->
+    <!--                                <th name="th_priceunit" style="border-color: black" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>-->
+    <!--                                &lt;!&ndash;<th name="th_price_unit" t-if="display_discount" style="border-color: black" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">&ndash;&gt;-->
+    <!--                                &lt;!&ndash;    <span>Disc.%</span>&ndash;&gt;-->
+    <!--                                    &lt;!&ndash; TODO: remove in master &ndash;&gt;-->
+    <!--                                &lt;!&ndash;    <t t-set="colspan" t-value="colspan+1"/>&ndash;&gt;-->
+    <!--                                &lt;!&ndash;</th>-->
+    <!--                                <th name="th_taxes" style="border-color: black" t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span style="color: black; border-color: black">Taxes</span></th &ndash;&gt;-->
+    <!--                                <th name="th_subtotal" class="text-right" style="border-color: black; background-color:white">-->
+    <!--                                    <span style="border-color: black; background-color:white" groups="account.group_show_line_subtotals_tax_excluded">Amount</span>-->
+    <!--                                    <span style="border-color: black; background-color:white" groups="account.group_show_line_subtotals_tax_included">Total Price</span>-->
+    <!--                                </th>-->
+    <!--                            </tr>-->
+    <!--                        </thead>-->
+    <!--                        <tbody class="invoice_tbody" style="color: black; border-color: black; line-height: 4mm">-->
+    <!--                            <t t-set="current_subtotal" t-value="0"/>-->
+    <!--                            <t t-set="t_subtotal" t-value="0"/>-->
+    <!--                            <t t-set="t_disc" t-value="0"/>-->
+    <!--                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>-->
+    <!--                            <t t-set="line_no" t-value="0"/>-->
+    <!--                            <t t-set="tot_price_unitppn" t-value="0"/>-->
+
+    <!--                            <t t-foreach="lines" t-as="line" style="color: black; border-color: black">-->
+    <!--                                <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+    <!--                                <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+    <!--                              <t t-if="line.product_id.categ_id.name == 'Sales Discount'">-->
+    <!--                                <t t-set="t_disc" t-value="t_disc+line.price_total"/>-->
+    <!--                              </t>-->
+    <!--                              <t t-elif="line.product_id.categ_id.name != 'KELENGKAPAN'">-->
+    <!--                                &lt;!&ndash; tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''" style="color: black; border-color: black" &ndash;&gt;-->
+    <!--                                <tr style="color: black; border-color: black">-->
+    <!--                                    <t t-if="not line.display_type" name="account_invoice_line_accountable">-->
+    <!--                                        <t t-set="line_no" t-value="line_no+1"/>-->
+
+    <!--                                &lt;!&ndash; t t-set="t_subtotal" t-value="t_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/ &ndash;&gt;-->
+    <!--                                <t t-set="t_subtotal" t-value="t_subtotal + line.price_total"/>-->
+    <!--                                        <td style="border-color: black" t-esc="line_no"/>-->
+    <!--                                        <t t-set="grp_index" t-value="line.name.find('-')"/>-->
+    <!--                                        <t t-set="grp_index" t-value="grp_index+2"/>-->
+    <!--                                        <t t-set="l_name" t-value="line.name[grp_index:]"/>-->
+    <!--                                        <t t-set="name_index" t-value="l_name.find(']')"/>-->
+    <!--                                        <t t-set="name_index" t-value="name_index+2"/>-->
+    <!--                                        <t t-set="line_name" t-value="l_name[name_index:]"/>-->
+    <!--                                        &lt;!&ndash; td name="account_invoice_line_name" style="border-color: black"><span t-esc="l_name.replace(']',' ')" t-options="{'widget': 'text'}"/></td&ndash;&gt;-->
+    <!--                                        <td name="account_invoice_line_nopart" style="border-color: black"><span t-esc="l_name[:name_index-2]" t-options="{'widget': 'text'}"/></td>-->
+    <!--                                        <td name="account_invoice_line_name" style="border-color: black"><span t-esc="line_name" t-options="{'widget': 'text'}"/></td>-->
+    <!--                                        <td class="text-right" style="border-color: black">-->
+    <!--                                            <span t-esc="int(line.quantity)"/>-->
+    <!--                                            <span t-field="line.product_uom_id" groups="uom.group_uom"/>-->
+    <!--                                        </td>-->
+    <!--                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="border-color: black">-->
+    <!--                                          <t t-if="line.tax_ids">-->
+    <!--                                               <t t-set="price_unitppn" t-value="round(line.price_unit*(1 + line.tax_ids[0].amount/100))"/>-->
+    <!--                                               <t t-set="tot_price_unitppn" t-value="price_unitppn*line.quantity"/>-->
+    <!--                                              <span class="text-nowrap" t-esc="price_unitppn" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+
+    <!--                                            </t>-->
+    <!--                                            <t t-else="">-->
+    <!--                                              <span class="text-nowrap" style="border-color: black" t-field="line.price_unit"/>-->
+    <!--                                              <t t-set="tot_price_unitppn" t-value="line.price_total"/>-->
+    <!--                                            </t>-->
+    <!--                                            &lt;!&ndash; span class="text-nowrap" style="border-color: black" t-field="line.price_unit"/ &ndash;&gt;-->
+    <!--                                        </td>-->
+    <!--                                        &lt;!&ndash;<td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="border-color: black">&ndash;&gt;-->
+    <!--                                        &lt;!&ndash;    <span class="text-nowrap" t-field="line.discount"/>&ndash;&gt;-->
+    <!--                                        &lt;!&ndash;</td>>-->
+    <!--                                        <td t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="border-color: black">-->
+    <!--                                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>-->
+    <!--                                        </td&ndash;&gt;-->
+    <!--                                        <td class="text-right o_price_total" style="border-color: black; background-color:white">-->
+    <!--                                            &lt;!&ndash; span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+    <!--                                            <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/ &ndash;&gt;-->
+    <!--                                            <span class="text-nowrap" style="border-color: black;" t-field="line.price_total"/>-->
+    <!--                                        </td>-->
+    <!--                                    </t>-->
+
+
+    <!--                                    &lt;!&ndash; t t-if="line.display_type == 'line_section'">-->
+    <!--                                        <td colspan="99" style="border-color: black">-->
+    <!--                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>-->
+    <!--                                        </td>-->
+    <!--                                        <t t-set="current_section" t-value="line"/>-->
+    <!--                                        <t t-set="current_subtotal" t-value="0"/>-->
+    <!--                                    </t&ndash;&gt;-->
+    <!--                                    <t t-if="line.display_type == 'line_note'">-->
+    <!--                                      <td/><td/><td/><td/><td/><td/>-->
+    <!--                                        &lt;!&ndash; td colspan="99" style="border-color: black">-->
+
+    <!--                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>-->
+    <!--                                        </td &ndash;&gt;-->
+    <!--                                    </t>-->
+    <!--                                </tr>-->
+
+    <!--                                <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">-->
+    <!--                                    <tr class="is-subtotal text-right" style="color: black">-->
+    <!--                                        <td colspan="99">-->
+    <!--                                            <strong class="mr16" style="color: black; border-color: black">Subtotal</strong>-->
+    <!--                                            <span t-esc="current_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+    <!--                                </t>-->
+    <!--                              </t>-->
+    <!--                              &lt;!&ndash; t t-else="line.product_id.categ_id.name == 'Sales Discount'" &ndash;&gt;-->
+
+    <!--                            </t>-->
+    <!--                        </tbody>-->
+    <!--                    </table>-->
+
+
+    <!--                    <div class="clearfix" style="border-color: black; background-color:white">-->
+    <!--                        <div id="total" class="row" style="color: black; border-color: black">-->
+    <!--                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto" style="border-color: black; background-color:white">-->
+    <!--                                <table class="table table-sm" style="page-break-inside: avoid; color: black; border-color: black">-->
+    <!--                                    <tr class="border-black o_subtotal" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <td style="border-color: black; color: black"><strong style="color: black">Subtotal</strong></td>-->
+    <!--                                        <td class="text-right" style="color: black; border-color: black; background-color:white">-->
+    <!--                                            &lt;!&ndash;span t-field="o.amount_untaxed"/ &ndash;&gt;-->
+    <!--                                            <span style="border-color: black; background-color:white" t-esc="t_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+
+    <!--                                    &lt;!&ndash; t t-if="t_disc !=0" &ndash;&gt;-->
+    <!--                                      <tr class="border-black o_subtotal" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <td><strong style="color: black">Discount</strong></td>-->
+    <!--                                        <td class="text-right" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <span t-esc="t_disc" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+    <!--                                        </td>-->
+    <!--                                      </tr>-->
+    <!--                                      <tr class="border-black o_subtotal" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <td><strong style="color: black">Netto + PPN</strong></td>-->
+    <!--                                        <td class="text-right" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <span class="text-nowrap" t-field="o.amount_total"/>-->
+    <!--                                        </td>-->
+    <!--                                      </tr>-->
+    <!--                                    &lt;!&ndash; /t &ndash;&gt;-->
+
+    <!--                                    <tr class="border-black o_subtotal" style="color: black; border-color: black; background-color:white">-->
+    <!--                                        <td style="color: black"><strong style="color: black">DPP</strong></td>-->
+    <!--                                        <td class="text-right" style="color: black; border-color: black; background-color:white">-->
+    <!--                                            <span style="color: black; border-color: black; background-color:white" t-field="o.amount_untaxed"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+
+    <!--                                    <t t-foreach="o.amount_by_group" t-as="amount_by_group" style="border-color: black; background-color:white">-->
+    <!--                                        <tr style="color: black; border-color: black; background-color:white">-->
+    <!--                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">-->
+    <!--                                                <td><span class="text-nowrap" style="border-color: black; color: black; font-weight: bold" t-esc="amount_by_group[0]"/></td>-->
+    <!--                                                <td class="text-right o_price_total" style="border-color: black; color: black; background-color: white">-->
+    <!--                                                    <span class="text-nowrap" style="border-color: black; color: black; background-color: white" t-esc="amount_by_group[3]"/>-->
+    <!--                                                </td>-->
+    <!--                                            </t>-->
+    <!--                                            <t t-else="">-->
+    <!--                                                <td style="border-color: black; color: black; background-color:white">-->
+    <!--                                                    <span> <strong style="border-color: black; color: black; background-color:white" t-esc="amount_by_group[0]"/> </span>-->
+    <!--                                                </td>-->
+    <!--                                                <td class="text-right o_price_total" style="color: black; border-color: black; background-color:white">-->
+    <!--                                                    <span class="text-nowrap" style="border-color: black; background-color: white" t-esc="amount_by_group[3]"/>-->
+    <!--                                                </td>-->
+    <!--                                            </t>-->
+    <!--                                        </tr>-->
+    <!--                                    </t>-->
+    <!--                                    <tr class="o_total" style="border-color: black; background-color:white">-->
+    <!--                                        <td style="border-color: black; background-color:white"><strong style="border-color: black; background-color:white">Total</strong></td>-->
+    <!--                                        <td class="text-right" style="border-color: black; background-color:white">-->
+    <!--                                            <span class="text-nowrap" style="border-color: black; background-color:white" t-field="o.amount_total"/>-->
+    <!--                                        </td>-->
+    <!--                                    </tr>-->
+    <!--                                </table>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                    <div style="margin-top: 5mm; font-size: 11pt">-->
+    <!--                      Terbilang :-->
+    <!--                    <span style="margin-top: 5mm" t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total)"/></div>-->
+    <!--                    <p style="color: black; margin-bottom: 10mm; margin-top: 3mm; font-size: 11pt">-->
+    <!--                        Mohon Pembayaran pada saat jatuh tempo ditransfer ke rekening <br/>-->
+    <!--                        BCA No.     702-0310868 <span style="margin-left: 24mm">MANDIRI No. 155-00-9873660-9</span> <br/>-->
+    <!--                        DANAMON No. 0088-000-70156 <span style="margin-left: 5mm">BRI No. 0399-01-000365-30-6</span> <br/>-->
+    <!--                        Atas Nama : PT. SAMA SAMA SUKSES <br/>-->
+    <!--                    </p>-->
+
+    <!--                    <div class="col-12 text-right mb3" style="color: black">-->
+    <!--                        <span><strong style="font-size: 10pt">Tangerang, </strong><span t-field="o.invoice_date"/> &lt;!&ndash;span t-esc="time.strftime('%d-%b-%Y')"/ &ndash;&gt;</span><br/>-->
+    <!--                        <span style="margin-right: 1mm; font-size: 10pt">PT. Sama Sama Sukses</span><br/>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <span><strong class="mt-30" style="margin-right: 4mm; margin-top: 30mm; font-size: 10pt">DONNY SUSINTO </strong></span>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </t>-->
+
+
+    <!--    </template>-->
+
+    <!--    <report-->
+    <!--        string="Pelunasan NCR"-->
+    <!--        id="action_pelunasan_ncr"-->
+    <!--        model="account.move"-->
+    <!--        report_type="qweb-pdf"-->
+    <!--        name="zz_sss.report_pelunasan_ncr"-->
+    <!--        file="zz_sss.report_pelunasan_ncr"-->
+    <!--        print_report_name="'Pelunasan NCR - %s - %s' % (object.partner_id.name or '', object.name)"-->
+    <!--    />-->
+
+    <!--    <template id="report_pelunasan_ncr">-->
+    <!--        <t t-call="web.html_container">-->
+    <!--            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>-->
+    <!--                    <t t-set="company" t-value="o.company_id"/>-->
+    <!--                    <div t-attf-class="header o_company_#{company.id}_layout">-->
+    <!--                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt; margin-bottom: 4mm">-->
+    <!--                        <div class="row mb8">-->
+    <!--                            <div class="col-9">-->
+    <!--                                <div name="company_address" class="mb4">-->
+    <!--                                      <strong>&lt;!&ndash; img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" class="img-fluid"/ &ndash;&gt; <span t-field="company.name"/></strong>-->
+    <!--                                      <span class="company_address" t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>-->
+    <!--                                      <div>-->
+    <!--                                        &lt;!&ndash;Telp. <span t-field="company.phone"/>,&ndash;&gt;-->
+    <!--                                      <t t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="company.partner_id.npwp_string(company.vat)"/></t></div>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+    <!--              <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">-->
+    <!--                <t t-call="web.address_layout"/>-->
+    <!--                <t t-raw="0"/>-->
+
+    <!--                <t t-set="partner" t-value="o.partner_id"/>-->
+    <!--                        <t t-if="partner" name="partner_header">-->
+    <!--                          <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">-->
+    <!--                                <div>-->
+    <!--                                  <span style="color: black; font-size: 11pt; margin-left: 4.5mm">Kepada YTH : </span> <br/>-->
+    <!--                                  &lt;!&ndash;<div class="col-6" t-if="o.partner_id.type">&ndash;&gt;-->
+    <!--                                      &lt;!&ndash;<t t-if="o.partner_id.type == 'customer'">&ndash;&gt;-->
+    <!--                                      &lt;!&ndash;    <strong>Customer: </strong>&ndash;&gt;-->
+    <!--                                      &lt;!&ndash;</t>&ndash;&gt;-->
+    <!--                                  &lt;!&ndash;</div>&ndash;&gt;-->
+    <!--                                <strong class="col-12 mb4" style="color: black; font-size: 10pt">-->
+    <!--                                  <span style="font-family:'Lato'; font-size:11pt" t-field="o.partner_id.name">-->
+    <!--                                  </span>-->
+    <!--                                </strong>-->
+    <!--                                [<span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.ref"/>/-->
+    <!--                                <span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.parent_id.ref"/>]-->
+    <!--                                <t t-if="o.partner_id.vat">-->
+    <!--                                  <div class="col-12" style="color: black; font-size: 11pt">NPWP :-->
+    <!--                                    <span t-field="o.partner_id.vat"/>-->
+    <!--                                  </div>-->
+    <!--                                </t>-->
+    <!--                                <t t-elif="not o.partner_id.vat">-->
+    <!--                                    <div class="col-12" style="color: black; font-size: 11pt">NIK :-->
+    <!--                                    <span t-field="o.partner_id.l10n_id_nik"/>-->
+    <!--                                  </div>-->
+    <!--                                  </t>-->
+    <!--                                <div class="col-auto" style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>-->
+    <!--                                </div>-->
+    <!--                          </div>-->
+    <!--                        </t>-->
+    <!--                  <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 11pt; margin-bottom: 3mm">-->
+    <!--                    <span> Perihal:  Pelunasan Faktur</span><br/><br/>-->
+    <!--                    <span>Dengan hormat,</span><br/>-->
+    <!--                    <span>Bersama ini kami kirimkan nota pembelian Bapak/Ibu yang sudah lunas dengan perincian sebagai berikut:</span>-->
+    <!--                  </div>-->
+
+    <!--                  <table class="table table-sm o_main_table" style="border-color: black; background-color:white; font-family:'Lato'; font-size: 11pt;">-->
+    <!--                    <thead style="border-color: black; background-color:white;">-->
+    <!--                      <tr style="border-color: black; background-color:white">-->
+    <!--                        <t t-set="colspan" t-value="0"/>-->
+    <!--                          <th name="th_sequence" class="text-left" style="border-color: black; width: 10mm"><span>No.</span></th>-->
+    <!--                          <th name="th_nota" class="text-left" style="border-color: black"><span>No. Nota</span></th>-->
+    <!--                          <th name="th_date" class="text-left" style="border-color: black"><span>Tanggal</span></th>-->
+    <!--                          <th name="th_price" class="text-left" style="border-color: black"><span>Jumlah</span></th>-->
+    <!--                          <th name="th_notes" class="text-left" style="border-color: black"><span>Keterangan</span></th>-->
+    <!--                      </tr>-->
+    <!--                    </thead>-->
+    <!--                    <tbody style="color: black; border-color: black">-->
+    <!--                      <t t-set="line_no" t-value="0"/>-->
+    <!--                      <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">-->
+    <!--                        <tr style="color: black; border-color: black">-->
+    <!--                            <t t-set="line_no" t-value="line_no+1"/>-->
+    <!--                            <td style="border-color: black" t-esc="line_no"/>-->
+    <!--                            <td><span t-field="doc.name"/></td>-->
+    <!--                            <td><span t-field="doc.date"/></td>-->
+    <!--                            <td><span t-field="doc.amount_total_signed"/></td>-->
+    <!--                            <td/>-->
+    <!--                        </tr>-->
+    <!--                      </t>-->
+    <!--                    </tbody>-->
+    <!--                    &lt;!&ndash;<tfoot style="color: black; border-color: black">&ndash;&gt;-->
+    <!--                    &lt;!&ndash;  <td style="color: black; border-color: black"> </td>&ndash;&gt;-->
+    <!--                    &lt;!&ndash;  <td style="color: black; border-color: black"> </td>&ndash;&gt;-->
+    <!--                    &lt;!&ndash;  <td style="color: black; border-color: black"> <strong> TOTAL</strong> </td>&ndash;&gt;-->
+    <!--                    &lt;!&ndash;  <td style="color: black; border-color: black"> </td>&ndash;&gt;-->
+    <!--                    &lt;!&ndash;  <td style="color: black; border-color: black"> </td>&ndash;&gt;-->
+    <!--                    &lt;!&ndash;</tfoot>&ndash;&gt;-->
+    <!--                  </table>-->
+
+    <!--                  <div style="color: black; font-family:'Lato'; font-size: 11pt; margin-bottom: 3mm; text-align:center">-->
+    <!--                  <strong>DETAIL PEMBAYARAN</strong>-->
+    <!--                  </div>-->
+
+    <!--                  <t t-set="custom_payment_vals" t-value="o._get_reconciled_info_JSON_values()"/>-->
+    <!--                    <table class="table table-sm o_main_table" t-if="custom_payment_vals" style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">-->
+    <!--                        <thead>-->
+    <!--                            <tr style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">-->
+    <!--                                <th style="color: black; border-color: black">No</th>-->
+    <!--                                <th style="color: black; border-color: black">Tanggal</th>-->
+    <!--                                <th style="color: black; border-color: black">Reference</th>-->
+    <!--                                <th style="color: black; border-color: black">No. Invoice</th>-->
+    <!--                                <th class="text-right" style="color: black; border-color: black">Jumlah Pembayaran</th>-->
+    <!--                            </tr>-->
+    <!--                        </thead>-->
+    <!--                        <tbody>-->
+    <!--                          &lt;!&ndash;<t t-foreach="o.reconciled_invoice_ids" t-as="inv">&ndash;&gt;-->
+    <!--                          &lt;!&ndash;  <td><span t-field="inv.invoice_date"/></td>&ndash;&gt;-->
+    <!--                          &lt;!&ndash;</t>&ndash;&gt;-->
+    <!--                          <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">-->
+    <!--                            <tr t-foreach="custom_payment_vals" t-as="payment_detail" style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">-->
+    <!--                                <t t-set="payment_id" t-value="env['account.payment'].browse(payment_detail.get('account_payment_id'))" style="color: black; border-color: black"/>-->
+    <!--                                <td style="color: black; border-color: black">-->
+    <!--                                    <span t-esc="payment_detail_index + 1"/>-->
+    <!--                                </td>-->
+    <!--                                &lt;!&ndash;<td style="color: black; border-color: black">&ndash;&gt;-->
+    <!--                                &lt;!&ndash;    <span t-esc="doc.payment_id.name"/>&ndash;&gt;-->
+    <!--                                &lt;!&ndash;</td>&ndash;&gt;-->
+    <!--                                <td style="color: black; border-color: black">-->
+    <!--                                    <span t-esc="payment_detail.get('date')"/>-->
+    <!--                                </td>-->
+    <!--                                <td style="color: black; border-color: black">-->
+    <!--                                  <t t-set="payment_id" t-value="env['account.journal']"/>-->
+    <!--                                  <t t-if="payment_detail.get('journal_name') == 'Miscellaneous Operations'">-->
+    <!--                                    <span> Potongan</span>-->
+    <!--                                  </t>-->
+    <!--                                  <t t-else="">-->
+    <!--                                    <span t-esc="payment_detail.get('journal_name')"/>-->
+    <!--                                  </t>-->
+    <!--                                </td>-->
+    <!--                                <td>-->
+    <!--                                  &lt;!&ndash;<t t-set="o.inv" t-value="env['account.move']">&ndash;&gt;-->
+    <!--                                    <span t-field="doc.name"/>-->
+    <!--                                  &lt;!&ndash;</t>&ndash;&gt;-->
+    <!--                                </td>-->
+    <!--                                <td class="text-right" style="color: black; border-color: black">-->
+    <!--                                    <span t-esc="payment_detail.get('amount')" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+    <!--                                </td>-->
+    <!--                            </tr>-->
+    <!--                          </t>-->
+    <!--                        </tbody>-->
+    <!--                    </table>-->
+    <!--                    <div class="row" t-if="custom_payment_vals">-->
+    <!--                        <div style="background-color: white" t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">-->
+    <!--                            <table class="table table-sm" style="color: black; border-color: black; font-family:'Lato'; font-size: 11pt">-->
+    <!--                                <tr class="border-black o_subtotal">-->
+    <!--                                    <td colspan="99" style="background-color: white">-->
+    <!--                                        <strong style="background-color: white">Total Pembayaran</strong>-->
+    <!--                                    </td>-->
+    <!--                                    <td colspan="99" class="text-right" style="background-color: white">-->
+    <!--                                        <span t-esc="o.amount_total - o.amount_residual" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+    <!--                                    </td>-->
+    <!--                                </tr>-->
+    <!--                            </table>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+    <!--              </div>-->
+    <!--        </t>-->
+    <!--        &lt;!&ndash; <t t-foreach="docs" t-as="o">-->
+    <!--            <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>-->
+    <!--            <t t-call="zz_sss.report_pelunasan_ncr_document" t-lang="o.partner_id.lang"/>-->
+    <!--        </t> &ndash;&gt;-->
+    <!--    </template>-->
+
+    <!--    <report-->
+    <!--        string="Tagihan NCR"-->
+    <!--        id="action_tagihan_ncr"-->
+    <!--        model="account.move"-->
+    <!--        report_type="qweb-pdf"-->
+    <!--        name="zz_sss.report_tagihan_ncr"-->
+    <!--        file="zz_sss.report_tagihan_ncr"-->
+    <!--        print_report_name="'Tagihan - %s - %s' % (object.partner_id.name or '', object.name)"-->
+    <!--    />-->
+
+    <!--    <template id="report_tagihan_ncr">-->
+    <!--        <t t-call="web.html_container">-->
+    <!--            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>-->
+    <!--                    <t t-set="company" t-value="o.company_id"/>-->
+    <!--                    <div t-attf-class="header o_company_#{company.id}_layout">-->
+    <!--                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt;">-->
+    <!--                        <div class="row">-->
+    <!--                            <div class="col-10">-->
+    <!--                                <div name="company_address">-->
+    <!--                                      <strong><span t-field="company.name"/></strong><br/>-->
+    <!--                                      <span>Tangerang</span>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="pagination ml9" style="font-family: 'Lato'; color: black; font-size: 11pt;">-->
+    <!--                              <div class="text-right">-->
+    <!--                                 <center><span>Halaman: </span><span class="page"/> / <span class="topage"/></center>-->
+    <!--                              </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                      </div>-->
+
+    <!--                      <t t-set="partner" t-value="o.partner_id"/>-->
+    <!--                      <t t-if="partner" name="partner_header">-->
+    <!--                        <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">-->
+    <!--                              <div>-->
+    <!--                                <span style="color: black; font-size: 11pt; margin-left: 4.5mm">Kepada YTH : </span> <br/>-->
+    <!--                              <strong class="col-9 mb4" style="color: black; font-size: 11pt">-->
+    <!--                                <span style="font-family:'Lato'; font-size:12pt" t-field="o.partner_id.name">-->
+    <!--                                </span>-->
+    <!--                              </strong>-->
+    <!--                              <span style="color: black">-->
+    <!--                              [<span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.ref"/>/-->
+    <!--                              <span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.parent_id.ref"/>]-->
+    <!--                              </span>-->
+    <!--                              &lt;!&ndash;<div class="col-auto" style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>&ndash;&gt;-->
+    <!--                              <div class="col-auto" style="color: black; font-size: 11pt; width: 125mm; text-transform: uppercase;">-->
+    <!--                                  <span t-esc="o.partner_id.street"/>-->
+    <!--                                  <span t-esc="o.partner_id.street2"/>-->
+    <!--                                  <span t-esc="o.partner_id.city"/>-->
+    <!--                                  <span t-esc="o.partner_id.state_id.name"/>-->
+    <!--                                  <span t-esc="o.partner_id.zip"/>-->
+    <!--                                  <span t-esc="o.partner_id.country_id.name"/>-->
+    <!--                              </div>-->
+    <!--                              </div>-->
+    <!--                        </div>-->
+    <!--                      </t>-->
+
+    <!--                      <div style="color: black; font-family:'Lato'; font-size: 12pt;">-->
+    <!--                        <div style="margin-bottom: 3mm">-->
+    <!--                            <span> Perihal:  Perincian Faktur</span><br/>-->
+    <!--                        </div>-->
+    <!--                        <div class="first-page">-->
+    <!--                            <span style="margin-bottom: 8mm">Dengan hormat,</span><br/>-->
+    <!--                            <span>Dengan ini kami perincikan nota pembelian Bapak/Ibu sebagai berikut:</span>-->
+    <!--                        </div>-->
+    <!--                      </div>-->
+    <!--                    </div>-->
+
+    <!--              <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">-->
+    <!--                <t t-call="web.address_layout"/>-->
+    <!--                <t t-raw="0"/>-->
+
+    <!--                  <table class="table table-sm o_main_table" style="border-color: black; background-color:white; font-family:'Lato'; font-size: 12pt;">-->
+    <!--                    <thead style="border-color: black; background-color:white;">-->
+    <!--                      <tr style="border-color: black; background-color:white">-->
+    <!--                        <t t-set="colspan" t-value="0"/>-->
+    <!--                          <th name="th_sequence" class="text-center" style="border-color: black; width: 10mm"><span>No.</span></th>-->
+    <!--                          <th name="th_nota" class="text-center" style="border-color: black; width: 30mm"><span>No. Nota</span></th>-->
+    <!--                          <th name="th_date" class="text-center" style="border-color: black; width: 35mm"><span>Tgl Nota</span></th>-->
+    <!--                          <th name="th_date" class="text-center" style="border-color: black; width: 35mm"><span>Tgl Jt. Tempo</span></th>-->
+    <!--                          <th name="th_date" class="text-center" style="border-color: black; width: 10mm"><span>MU</span></th>-->
+    <!--                          <th name="th_price" class="text-right" style="border-color: black; width: 40mm"><span>Jumlah</span></th>-->
+    <!--                          <th name="th_notes" class="text-center" style="border-color: black"><span>Keterangan</span></th>-->
+    <!--                      </tr>-->
+    <!--                    </thead>-->
+
+    <!--                    <tbody style="color: black; border-color: black; line-height: 5mm">-->
+    <!--                      <t t-set="line_no" t-value="0"/>-->
+    <!--                      <t t-set="check_month" t-value="False"/>-->
+    <!--                      <t t-set="current_month" t-value="False"/>-->
+    <!--                      <t t-set="due_check" t-value="False"/>-->
+    <!--                      <t t-set="t_subtotal_month" t-value="0"/>-->
+    <!--                      <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">-->
+    <!--                        <t t-if="check_month and check_month != doc.invoice_date.month">-->
+    <!--                            <tr style="color: black; border-color: black">-->
+    <!--                              <td style="color: black; border-color: black"> </td>-->
+    <!--                              <td style="color: black; border-color: black"> </td>-->
+    <!--                              <td style="color: black; border-color: black"> </td>-->
+    <!--                              <td class="text-right" style="color: black; border-color: black"> <strong> Subtotal</strong> </td>-->
+    <!--                              <td class="text-center" style="border-color: black"> <strong t-esc="o.currency_id.symbol"/></td>-->
+    <!--                              <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">-->
+    <!--                                  <strong t-esc="'{:,.2f}'.format(t_subtotal_month)"/>-->
+    <!--                              </td>-->
+    <!--                              <td style="color: black; border-color: black">-->
+    <!--                                &lt;!&ndash; <t t-if="due_check >= 3">-->
+    <!--                                  <span>Jatuh Tempo</span>-->
+    <!--                                </t>-->
+    <!--                                <t t-else="">-->
+    <!--                                  <span>Pengingat</span>-->
+    <!--                                </t> &ndash;&gt;-->
+    <!--                              </td>-->
+    <!--                            </tr>-->
+    <!--                            <t t-set="date" t-value="datetime.datetime.now()" />-->
+    <!--                            <t t-set="current_month" t-value="date.month" />-->
+    <!--                            <t t-set="check_month" t-value="doc.invoice_date.month"/>-->
+    <!--                            <t t-set="due_check" t-value="0"/>-->
+    <!--                            <t t-set="due_check" t-value="current_month - check_month"/>-->
+    <!--                            <t t-set="t_subtotal_month" t-value="doc.amount_residual_signed"/>-->
+    <!--                        </t>-->
+    <!--                        <t t-else="">-->
+    <!--                          <t t-set="date" t-value="datetime.datetime.now()" />-->
+    <!--                          <t t-set="current_month" t-value="date.month" />-->
+    <!--                          <t t-set="check_month" t-value="doc.invoice_date.month"/>-->
+    <!--                          <t t-set="due_check" t-value="0"/>-->
+    <!--                          <t t-set="due_check" t-value="current_month - check_month"/>-->
+    <!--                          <t t-set="t_subtotal_month" t-value="t_subtotal_month + doc.amount_residual_signed"/>-->
+    <!--                        </t>-->
+
+    <!--                        <tr style="color: black; border-color: black">-->
+    <!--                            <t t-set="line_no" t-value="line_no+1"/>-->
+    <!--                            <td class="text-center" style="border-color: black" t-esc="line_no"/>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black"><span t-field="doc.name"/></td>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black">-->
+    <!--                              <span t-set="date" t-value="datetime.datetime.strptime(str(doc.invoice_date), '%Y-%m-%d')"/>-->
+    <!--                              <span t-esc="date.strftime('%d-%m-%Y')"/>-->
+    <!--                            </td>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black">-->
+    <!--                              <t t-if="doc.invoice_payment_term_id.name == '3 Months'">-->
+    <!--                                  <t t-set="d_delta" t-value="datetime.timedelta(days=60)"/>-->
+    <!--                                  <t t-set="d_dateorder" t-value="datetime.datetime.strptime(str(doc.invoice_date), '%Y-%m-%d')"/>-->
+    <!--                                  <t t-set="d_paydate" t-value="d_dateorder + d_delta"/>-->
+    <!--                                  <span t-esc="d_paydate.strftime('%d-%m-%Y')"/>-->
+    <!--                              </t>-->
+    <!--                              <t t-else="">-->
+    <!--                                <span t-esc="doc.invoice_date_due.strftime('%d-%m-%Y')"/>-->
+    <!--                              </t>-->
+    <!--                            </td>-->
+    <!--                            <td class="text-center" style="border-color: black; width: 10mm"> <span t-esc="doc.currency_id.symbol"/></td>-->
+    <!--                            <td class="text-right" style="color: black; border-color: black"><span t-esc="'{:,.2f}'.format(doc.amount_residual_signed)"/></td>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black">-->
+    <!--                              <t t-if="doc.invoice_payment_term_id.name == 'Cash 14 Days'">-->
+    <!--                              <span>Cash 14 Hari</span></t>-->
+    <!--                              <t t-elif="doc.invoice_payment_term_id.name == 'Cash 7 Days'">-->
+    <!--                                <span>Cash 7 Hari</span></t>-->
+    <!--                              <t t-elif="doc.invoice_payment_term_id.name == '30 Days'">-->
+    <!--                                <span>Cash 30 Hari</span></t>-->
+    <!--                              <t t-else="">-->
+    <!--                                </t>-->
+    <!--                            </td>-->
+    <!--                        </tr>-->
+    <!--                      </t>-->
+
+    <!--                      <t t-if="t_subtotal_month > 0">-->
+    <!--                        <tr style="color: black; border-color: black">-->
+    <!--                          <td style="color: black; border-color: black"> </td>-->
+    <!--                          <td style="color: black; border-color: black"> </td>-->
+    <!--                          <td style="color: black; border-color: black"> </td>-->
+    <!--                          <td class="text-right" style="color: black; border-color: black"> <strong> Subtotal</strong> </td>-->
+    <!--                          <td class="text-center" style="border-color: black"> <strong t-esc="o.currency_id.symbol"/></td>-->
+    <!--                          <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">-->
+    <!--                              <strong t-esc="'{:,.2f}'.format(t_subtotal_month)"/>-->
+    <!--                          </td>-->
+    <!--                          <td style="color: black; border-color: black">-->
+    <!--                            &lt;!&ndash; <t t-if="due_check >= 3">-->
+    <!--                              <span>Jatuh Tempo</span>-->
+    <!--                            </t>-->
+    <!--                            <t t-else="">-->
+    <!--                              <span>Pengingat</span>-->
+    <!--                            </t> &ndash;&gt;-->
+    <!--                          </td>-->
+    <!--                        </tr>-->
+    <!--                        <t t-set="check_month" t-value="False"/>-->
+    <!--                        <t t-set="date" t-value="datetime.datetime.now()" />-->
+    <!--                        <t t-set="current_month" t-value="date.month" />-->
+    <!--                        <t t-set="due_check" t-value="0"/>-->
+    <!--                        <t t-set="due_check" t-value="current_month - check_month"/>-->
+    <!--                        <t t-set="t_subtotal_month" t-value="0"/>-->
+    <!--                      </t>-->
+    <!--                      <t t-else="">-->
+    <!--                        <t t-set="check_month" t-value="doc.invoice_date.month"/>-->
+    <!--                        <t t-set="current_month" t-value="False" />-->
+    <!--                        <t t-set="date" t-value="datetime.datetime.now()" />-->
+    <!--                        <t t-set="current_month" t-value="date.month" />-->
+    <!--                        <t t-set="due_check" t-value="current_month - check_month"/>-->
+    <!--                        <t t-set="t_subtotal_month" t-value="t_subtotal_month + doc.amount_residual_signed"/>-->
+    <!--                      </t>-->
+    <!--                    </tbody>-->
+    <!--                    <tfoot style="color: black; border-color: black; display: table-row-group">-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                        <td class="text-right" style="color: black; border-color: black"> <strong> TOTAL</strong> </td>-->
+    <!--                        <td class="text-center" style="border-color: black"> <strong t-esc="o.currency_id.symbol"/></td>-->
+    <!--                        <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">-->
+    <!--                            <t t-set="total" t-value="sum(docs.mapped('amount_residual_signed'))"/>-->
+    <!--                            <strong t-esc="'{:,.2f}'.format(total)"/>-->
+    <!--                        </td>-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                    </tfoot>-->
+    <!--                  </table>-->
+
+    <!--                  <div style="page-break-inside: avoid">-->
+    <!--                    <div style="page-break-inside: avoid">-->
+    <!--                        <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;">-->
+    <!--                          <span> Untuk pembayaran tersebut diatas kami mohon dapat ditransfer ke rekening kami.</span><br/><br/>-->
+    <!--                        </div>-->
+    <!--                        <p style="color: black; font-family:'Lato'; margin-bottom: 3mm; font-size: 12pt">-->
+    <!--                            BCA No.     702-0310868 <span style="margin-left: 30mm">MANDIRI No. 155-00-9873660-9</span> <br/>-->
+    <!--                            DANAMON No. 0088-000-70156 <span style="margin-left: 10mm">BRI No. 0399-01-000365-30-6</span> <br/>-->
+    <!--                            Atas Nama : PT. SAMA SAMA SUKSES <br/>-->
+    <!--                        </p>-->
+    <!--                    </div>-->
+    <!--                    <div style="color: black; font-family:'Lato'; font-size: 12pt; margin-bottom: 3mm">-->
+    <!--                      <span> Demikianlah perincian ini kami buat, atas perhatian Bapak/Ibu kami ucapkan terima kasih.</span><br/><br/>-->
+    <!--                    </div>-->
+
+    <!--                    <div class="col-12 text-right mb3" style="color: black; font-family:'Lato'; page-break-inside: avoid">-->
+    <!--                        <span style="font-size: 12pt">Tangerang, <span t-esc="time.strftime('%d-%b-%Y')"/></span><br/>-->
+    <!--                        <span style="margin-right: 10mm; font-size: 12pt">Hormat kami</span><br/>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        <br> </br>-->
+    <!--                        &lt;!&ndash;<br> </br>&ndash;&gt;-->
+    <!--                        <span class="mt-30" style="margin-right: 8mm; margin-top: 30mm; font-size: 12pt">Bagian Piutang</span>-->
+    <!--                    </div>-->
+    <!--                  </div>-->
+    <!--              </div>-->
+    <!--        </t>-->
+    <!--    </template>-->
+
+    <!--    <report-->
+    <!--        string="Tanda Terima NCR"-->
+    <!--        id="action_tanda_terima_ncr"-->
+    <!--        model="account.move"-->
+    <!--        report_type="qweb-pdf"-->
+    <!--        name="zz_sss.report_tanda_terima_ncr"-->
+    <!--        file="zz_sss.report_tanda_terima_ncr"-->
+    <!--        print_report_name="'Tanda Terima - %s - %s' % (object.partner_id.name or '', object.name)"-->
+    <!--    />-->
+
+    <!--    <template id="report_tanda_terima_ncr">-->
+    <!--        <t t-call="web.html_container">-->
+    <!--            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>-->
+    <!--                    <t t-set="company" t-value="o.company_id"/>-->
+    <!--                    <div t-attf-class="header o_company_#{company.id}_layout">-->
+    <!--                        <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt;">-->
+    <!--                        <div class="row">-->
+    <!--                            <div class="col-10 ">-->
+    <!--                                <div name="company_address">-->
+    <!--                                      <strong> <span t-field="company.name"/></strong><br/>-->
+    <!--                                      <span>Tangerang</span>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="pagination ml9" style="font-family: 'Lato'; color: black; font-size: 11pt;">-->
+    <!--                              <div class="text-right">-->
+    <!--                                 <center><span>Halaman: </span><span class="page"/> / <span class="topage"/></center>-->
+    <!--                              </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                      </div>-->
+
+    <!--                      <t t-set="partner" t-value="o.partner_id"/>-->
+    <!--                      <t t-if="partner" name="partner_header">-->
+    <!--                        <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">-->
+    <!--                              <div>-->
+    <!--                                <span style="color: black; font-size: 11pt; margin-left: 4.5mm">Kepada YTH : </span> <br/>-->
+    <!--                              <strong class="col-9 mb4" style="color: black; font-size: 10pt">-->
+    <!--                                <span style="font-family:'Lato'; font-size:11pt" t-field="o.partner_id.name">-->
+    <!--                                </span>-->
+    <!--                              </strong>-->
+    <!--                              <span style="color: black">-->
+    <!--                              [<span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.ref"/>/-->
+    <!--                              <span style="font-family:'Lato'; color: black; font-size: 11pt" t-field="o.partner_id.parent_id.ref"/>]-->
+    <!--                              </span>-->
+    <!--                              &lt;!&ndash;<div class="col-auto" style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/>&ndash;&gt;-->
+    <!--                              <div class="col-auto" style="color: black; font-size: 11pt; width: 115mm; text-transform: uppercase;">-->
+    <!--                                  <span t-esc="o.partner_id.street"/>-->
+    <!--                                  <span t-esc="o.partner_id.street2"/>-->
+    <!--                                  <span t-esc="o.partner_id.city"/>-->
+    <!--                                  <span t-esc="o.partner_id.state_id.name"/>-->
+    <!--                                  <span t-esc="o.partner_id.zip"/>-->
+    <!--                                  <span t-esc="o.partner_id.country_id.name"/>-->
+    <!--                              </div>-->
+    <!--                              </div>-->
+    <!--                        </div>-->
+    <!--                      </t>-->
+
+    <!--                      <div style="color: black; font-family:'Lato'">-->
+    <!--                        <h4 class="text-center font-weight-bold">TANDA TERIMA</h4><br/>-->
+    <!--                      </div>-->
+
+    <!--                    </div>-->
+
+
+    <!--              <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">-->
+    <!--                <t t-call="web.address_layout"/>-->
+    <!--                <t t-raw="0"/>-->
+
+    <!--                  <table class="table table-sm o_main_table" style="border-color: black; background-color:white; font-family:'Lato'; font-size: 12pt;">-->
+    <!--                    <thead style="border-color: black; background-color:white;">-->
+    <!--                      <tr style="border-color: black; background-color:white">-->
+    <!--                        <t t-set="colspan" t-value="0"/>-->
+    <!--                          <th name="th_sequence" class="text-center" style="border-color: black; width: 10mm"><span>No.</span></th>-->
+    <!--                          <th name="th_nota" class="text-center" style="border-color: black; width: 30mm"><span>No. Nota</span></th>-->
+    <!--                          <th name="th_date" class="text-center" style="border-color: black; width: 35mm"><span>Tgl Nota</span></th>-->
+    <!--                          <th name="th_date" class="text-center" style="border-color: black; width: 10mm"><span>MU</span></th>-->
+    <!--                          <th name="th_price" class="text-right" style="border-color: black; width: 40mm"><span>Jumlah</span></th>-->
+    <!--                          <th name="th_notes" class="text-center" style="border-color: black"><span>Keterangan</span></th>-->
+    <!--                      </tr>-->
+    <!--                    </thead>-->
+    <!--                    <tbody style="color: black; border-color: black; line-height: 5mm">-->
+    <!--                      <t t-set="line_no" t-value="0"/>-->
+    <!--                      <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">-->
+    <!--                        <tr style="color: black; border-color: black">-->
+    <!--                            <t t-set="line_no" t-value="line_no+1"/>-->
+    <!--                            <td class="text-center" style="border-color: black" t-esc="line_no"/>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black"><span t-field="doc.name"/></td>-->
+    <!--                            <td class="text-center" style="color: black; border-color: black"><span t-esc="doc.date.strftime('%d-%m-%Y')"/></td>-->
+    <!--                            <td class="text-center" style="border-color: black; width: 10mm"> <span t-esc="doc.currency_id.symbol"/></td>-->
+    <!--                            <td class="text-right" style="color: black; border-color: black"><span t-esc="'{:,.2f}'.format(doc.amount_total_signed)"/></td>-->
+    <!--                            <td/>-->
+    <!--                        </tr>-->
+    <!--                      </t>-->
+    <!--                    </tbody>-->
+    <!--                    <tfoot style="color: black; border-color: black; display: table-row-group">-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                        <td class="text-right" style="color: black; border-color: black"> <strong> TOTAL</strong> </td>-->
+    <!--                        <td class="text-center" style="border-color: black"> <strong t-esc="o.currency_id.symbol"/></td>-->
+    <!--                        <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">-->
+    <!--                            <t t-set="total" t-value="sum(docs.mapped('amount_total_signed'))"/>-->
+    <!--                            <strong t-esc="'{:,.2f}'.format(total)"/>-->
+    <!--                        </td>-->
+    <!--                        <td style="color: black; border-color: black"> </td>-->
+    <!--                    </tfoot>-->
+    <!--                  </table>-->
+
+    <!--                  <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;">-->
+    <!--                    <span> Jumlah Faktur = <span t-esc="line_no"/> lembar</span><br/><br/>-->
+    <!--                  </div>-->
+    <!--                  <div style="color: black; font-size: 11pt; font-family:Lato;">-->
+    <!--                      TERBILANG :<br/>-->
+    <!--                    <span style="font-size: 11pt; font-family:'Oswald'; text-transform: uppercase" t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(sum(docs.mapped('amount_total_signed')))"/>-->
+    <!--                  </div>-->
+
+    <!--                  <div style="page-break-inside: avoid">-->
+    <!--                    <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;"><br/>-->
+    <!--                      <span> Untuk pembayaran tersebut diatas kami mohon dapat ditransfer ke rekening kami.</span><br/><br/>-->
+    <!--                    </div>-->
+    <!--                    <p style="color: black; font-family:'Lato';font-size: 12pt">-->
+    <!--                        BCA No.     702-0310868 <span style="margin-left: 30mm">MANDIRI No. 155-00-9873660-9</span> <br/>-->
+    <!--                        DANAMON No. 0088-000-70156 <span style="margin-left: 10mm">BRI No. 0399-01-000365-30-6</span> <br/>-->
+    <!--                        Atas Nama : PT. SAMA SAMA SUKSES <br/>-->
+    <!--                    </p>-->
+    <!--                  </div>-->
+
+    <!--                  <div style="color: black; font-family:'Lato'; font-size: 12pt">-->
+    <!--                    <span> Demikianlah perincian ini kami buat, atas perhatian Bapak/Ibu kami ucapkan terima kasih.</span><br/><br/>-->
+    <!--                  </div>-->
+
+    <!--                  <div style="page-break-inside: avoid; display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: center; color: black; font-family:'Lato'">-->
+    <!--                      <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center; margin-left: 150mm;">-->
+    <!--                          <span style="margin-bottom: 30mm">Tangerang, <span t-esc="time.strftime('%d-%b-%Y')"/></span>-->
+    <!--                          <br/>-->
+    <!--                          <br/>-->
+    <!--                          <br/>-->
+    <!--                          <br/>-->
+    <!--                          <br/>-->
+    <!--                          <span t-field="o.partner_id.name"/>-->
+    <!--                      </div>-->
+    <!--                  </div>-->
+
+
+    <!--              </div>-->
+    <!--        </t>-->
+    <!--    </template>-->
+
+</odoo>

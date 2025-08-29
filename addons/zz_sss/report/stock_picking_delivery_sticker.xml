@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <report
+            string="Delivery Sticker"
+            id="action_delivery_sticker"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="zz_sss.report_deliverysticker"
+            file="zz_sss.report_deliverysticker"
+            print_report_name="'Delivery Sticker - %s - %s' % (object.partner_id.name or '', object.name)"
+    />
+
+    <template id="report_deliverysticker">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="zz_sss.delivery_sticker_document" t-lang="o.partner_id.lang"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="delivery_sticker_document">
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+        <div>
+            <t t-set="qr_value" t-value="o.picking_qr_code"/>
+            <img t-att-src="'/report/qr/?value=%s&amp;error_correction=%s&amp;version=%s' % (qr_value, 3, 10)"
+                 style="width:500;height:500"/>
+            <p t-field="o.origin"/>
+        </div>
+    </template>
+</odoo>

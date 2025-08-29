@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_fifo_inventory_valuation_wizard_form" model="ir.ui.view">
+        <field name="name">fifo.inventory.valuation.wizard.form</field>
+        <field name="model">fifo.inventory.valuation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="FIFO Inventory Valuation">
+                <group>
+                    <field name="valuation_date"/>
+                    <field name="location_id"/>
+                    <field name="include_child"
+                           attrs="{'invisible': [('location_id', '=', False)]}"
+                    />
+                    <field name="show_detailed_operation"/>
+                </group>
+                <footer>
+                    <button name="action_view_report" type="object" string="View Report" class="btn-primary"/>
+                    <button name="action_export_excel" type="object" string="Export to Excel"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fifo_valuation_wizard" model="ir.actions.act_window">
+        <field name="name">FIFO Inventory Valuation</field>
+        <field name="res_model">fifo.inventory.valuation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

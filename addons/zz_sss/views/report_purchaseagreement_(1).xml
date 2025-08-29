@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_purchaseagreemnt">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <t t-set="o" t-value="o.with_context(lang=o.vendor_id.lang)"/>
+                    <t t-set="address">
+                        <div t-field="o.vendor_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                        <p t-if="o.vendor_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.vendor_id.vat"/></p>
+                        <t t-if="o.vendor_id.bank_ids">
+                            <t t-foreach="o.vendor_id.bank_ids" t-as="bank">
+                                <strong>Bank :</strong>
+                                <span t-field="bank.bank_id" />
+                                <strong>, Account Number :</strong>
+                                <p t-field="bank.acc_number"/>
+                            </t>
+                        </t>
+                    </t>
+                    <h2>Purchase Agreement
+                    <br/> <span t-field="o.name"/></h2>
+
+                    <div class="row mt32 mb32">
+                        <div class="col-auto">
+                            <strong>SC Reference:</strong><br/>
+                            <span t-field="o.origin"/>
+                        </div>
+                        <div class="col-auto">
+                            <strong>Shipment Date:</strong><br/>
+                            <span t-field="o.schedule_date"/>
+                        </div>
+                        <div class="col-auto">
+                            <strong>Incoterm:</strong><br/>
+                            <span t-esc="o.incoterm_id">Multiple Requisitions</span>
+                        </div>
+                        <div class="col-auto">
+                            <strong>Payment Term:</strong><br/>
+                            <span t-field="o.payment_term_id"/>
+                        </div>
+                    </div>
+
+                    <t t-if="o.line_ids">
+                        <h3>Products</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th><strong>Description</strong></th>
+                                    <th><strong>Brand</strong></th>
+                                    <th><strong>HS COde</strong></th>
+                                    <th class="text-right"><strong>Qty</strong></th>
+                                    <th class="text-center" groups="uom.group_uom">
+                                        <strong>Product UoM</strong>
+                                    </th>
+                                    <th class="text-right"><strong>Unit Price</strong></th>
+                                    <th class="text-right"><strong>Amount</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line_ids">
+                                    <td>
+                                        [ <span t-field="line_ids.product_id.code"/> ]
+                                        <!-- span t-field="line_ids.product_id.name"/ -->
+                                    </td>
+                                    <td>
+                                        <span t-field="line_ids.product_id.brand_id"/>                                        
+                                    </td>
+                                    <td>
+                                        <span t-field="line_ids.product_id.hs_code_id"/>                                        
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line_ids.product_qty"/>
+                                    </td>
+                                    <t>
+                                        <td class="text-center" groups="uom.group_uom">
+                                            <span t-field="line_ids.product_uom_id.category_id.name"/>
+                                        </td>
+                                    </t>
+                                    <td class="text-right">
+                                        <span t-field="line_ids.price_unit"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line_ids.price_unit"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                               <p>Amount :</p>
+            <!-- span t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total)"/ -->
+            <strong>Note :</strong>
+            <p t-field="o.decription"/>
+            <p id="Sign">
+                <div class="col-4">
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="text-center"  name="PrepBy"><strong>Prepared By</strong></td>
+                            <td class="text-center" name="ApprBy"><strong>Approved By</strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                            </td>
+                            <td>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                            </td> 
+                        </tr>
+                        <tr class="border-black o_total">
+                            <td class="text-center" name="ConfBy" colspan="2" ><strong>Confirmed By Vendor</strong>
+                            <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                              <br>&#160;</br>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </p>
+     
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

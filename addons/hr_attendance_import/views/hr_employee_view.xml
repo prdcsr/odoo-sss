@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_employees_view_form_inherited" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <!--                <xpath expr="//page/group[@name='managers']" position="after">-->
+                <!--                    <group name="salary_info" String="Salary Info">-->
+                <!--                        <field name="food_salary"/>-->
+                <!--                    </group>-->
+                <!--                </xpath>-->
+
+                <div id="o_work_employee_main" position="after">
+                    <div>
+<!--                    <div id="o_employee_right">-->
+                        <group name="absence" string="Absence">
+                            <field name="zk_teco_id"/>
+<!--                            <field name="solution_sparepart_id"/>-->
+<!--                            <field name="solution_compressor_id"/>-->
+<!--                            <field name="solution_unit_warehouse_id"/>-->
+
+                        </group>
+                    </div>
+                </div>
+
+<!--                <xpath expr="//group[@name='managers']" position="after">-->
+<!--                    <field name="zk_teco_id"/>-->
+<!--                </xpath>-->
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

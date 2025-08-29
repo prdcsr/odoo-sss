@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_overtime_form_view_inherited" model="ir.ui.view">
+            <field name="name">hr.overtime.form.view.inherited</field>
+            <field name="model">hr.overtime</field>
+            <field name="inherit_id" ref="ohrms_overtime.hr_overtime_form_view"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='col_right']" position="after">
+                    <group class="mt-2">
+                        <widget name="attendance_stats"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+
+</odoo>

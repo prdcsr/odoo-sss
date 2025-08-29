@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id='view_users_form_wa_inherit' model='ir.ui.view'>
+        <field name="name">res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+                <field name="login" position="after">
+                    <label for="whatsapp" class="oe_edit_only" string="Whatsapp"/>
+                            <h2><field name="whatsapp"/></h2>
+                </field>
+
+
+        </field>
+    </record>
+
+</odoo>

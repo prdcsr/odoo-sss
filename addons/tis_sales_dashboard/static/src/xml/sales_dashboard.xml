@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="SaleDashboarddata">
+        <div class="accounts-dashboard-wrap">
+            <div class="container">
+                <div class="row" style="margin:0px">
+
+                    <div class="col-md-6" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <h3 class="custom-h3 card-title">
+                                        <b>SALES AMOUNT</b>
+                                    </h3>
+                                </div>
+                                <div class="card-body p-0" id="bank_balance_body_hide">
+                                    <ul id="current_sale_amount">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="col-graph">
+                        <div class="card-stats">
+                            <div class="card-header card-header-rose card-header-icon">
+                                <div class="tile">
+                                    <p>Total Sales By Month</p>
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <canvas class="embed-responsive-item" id="barChartDemo"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- div class="container mt-5" -->
+                <div class="row ">
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header card-header-rose card-header-icon">
+                                <div class="card-title">
+                                    <b>
+                                        <h3> Top Sale Team</h3>
+                                    </b>
+                                </div>
+
+                                <div class="card-tools">
+                                    <select id="top__sales_values">
+                                        <option id="top_sales_this_month" value="this_month">This Month</option>
+                                        <option id="top_sales_this_year" value="this_year">This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body" id="ex_body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="chart">
+                                            <canvas id="doughnutChartDemo1" width="400" height="400"></canvas>
+                                            <!-- div class="embed-responsive embed-responsive-16by9">
+                                        <canvas class="embed-responsive-item" id="doughnutChartDemo1"></canvas -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header card-header-rose card-header-icon">
+                                <div class="card-title">
+                                    <b>
+                                        <h3>Top Products </h3>
+                                    </b>
+                                </div>
+                                <div class="card-tools">
+                                    <select id="top__prd_values">
+                                        <option id="top_prd_this_month" value="this_month">This Month</option>
+                                        <option id="top_prd_this_year" value="this_year">This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="card-body" id="prd_body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="chart">
+                                            <canvas id="doughnutChartDemo" width="400" height="400"></canvas>
+                                            <!-- div class="embed-responsive embed-responsive-16by9">
+                                        <canvas class="embed-responsive-item" id="doughnutChartDemo"></canvas -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header card-header-rose card-header-icon">
+                                <div class="card-title">
+                                    <b>
+                                        <h3>Top Customers </h3>
+                                    </b>
+                                </div>
+
+                                <div class="card-tools">
+                                    <select id="top__cs_values">
+                                        <option id="top_cs_this_month" value="this_month">This Month</option>
+                                        <option id="top_cs_this_year" value="this_year">This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="card-body" id="cs_body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="chart">
+                                            <canvas id="pieChartDemo" width="400" height="400"></canvas>
+                                            <!-- div class="embed-responsive embed-responsive-16by9">
+                                                <canvas class="embed-responsive-item" id="pieChartDemo" style="padding: 20px;"></canvas -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ div -->
+            </div>
+        </div>
+    </t>
+</template>

@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_picking_form_restrict_add_ready" model="ir.ui.view">
+        <field name="name">stock.picking.form.restrict.add.ready</field>
+        <field name="model">stock.picking</field>
+        <field name="groups_id" eval="[(4, ref('hms_restrict_user.group_inventory_alsut')), (4, ref('hms_restrict_user.group_inventory_btr')), (4, ref('hms_restrict_user.group_inventory_gs'))]"/>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- Ensure picking_type_code is available (safe addition) -->
+            <field name="partner_id" position="after">
+                <field name="picking_type_code" invisible="1"/>
+            </field>
+
+            <!-- Make the field container readonly for receipts -->
+            <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
+                <attribute name="attrs">{'readonly': [('picking_type_code', '=', 'incoming')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

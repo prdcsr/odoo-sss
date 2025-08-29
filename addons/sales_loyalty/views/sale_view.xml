@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_order_form_loyalty" model="ir.ui.view">
+        <field name="name">sale.order.form.loyalty</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="loyalty_id"/>
+                <field name="loyalty_points" readonly="1" attrs="{'invisible': [('loyalty_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

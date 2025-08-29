@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="product_stock">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="sale_product_report.internal_layout">
+                    <t t-call="sale_product_report.report_product_stock_base"/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="sale_product_report.report_product_stock_base">
+        <!-- Defines global variables used by internal layout -->
+        <t t-set="title">-
+            <t t-raw="company_name"/>
+        </t>
+        <t t-set="company_name" t-value="Company_Name"/>
+        <div class="page">
+            <div class="row">
+                <h4
+                        class="mt0"
+                        t-esc="title or 'Odoo Report'"
+                        style="text-align: center;"
+                />
+            </div>
+            <!-- Display filters -->
+
+            <t t-foreach="stock_quants.keys()" t-as="quant_id">
+                <div class="page_break">
+                    <div class="act_as_caption account_title">
+                        <span t-esc="location_data[quant_id]['name']"/>
+                    </div>
+                </div>
+
+                <div class="act_as_table data_table" style="width: 100%;">
+                    <t
+                            t-call="sale_product_report.product_stock_report_lines_header"
+                    />
+
+                    <t
+                            t-foreach="stock_quants[quant_id]"
+                            t-as="quant"
+                    >
+                        <t
+                                t-call="sale_product_report.product_stock_report_lines"
+                        />
+                    </t>
+                </div>
+            </t>
+
+        </div>
+    </template>
+
+    <template id="sale_product_report.product_stock_report_lines_header">
+        <!-- Display table headers for lines -->
+        <div class="act_as_thead">
+            <div class="act_as_row labels">
+                <!--## date-->
+<!--                <div class="act_as_cell first_column" style="width: 5.51%;">-->
+<!--                    Group-->
+<!--                </div>-->
+                <!--## move-->
+                <div class="act_as_cell" style="width: 9.76%;">Nomor Part</div>
+                <!--## journal-->
+                <div class="act_as_cell" style="width: 4.78%;">Nama Barang</div>
+                <!--## partner-->
+                <div class="act_as_cell" style="width: 15.07%;">Saldo Akhir
+                </div>
+                <!--## ref - label-->
+            </div>
+        </div>
+    </template>
+    <template id="sale_product_report.product_stock_report_lines">
+        <!-- # lines or centralized lines -->
+        <div class="act_as_row lines">
+
+            <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="quant['product_id']"
+                        res-model="product.product"
+                        view-type="form"
+                >
+                    <t t-esc="products_data[quant['product_id']]['product_code']"/>
+                </span>
+
+            </div>
+
+             <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="quant['product_id']"
+                        res-model="product.product"
+                        view-type="form"
+                >
+                    <t t-esc="products_data[quant['product_id']]['name']"/>
+                </span>
+
+            </div>
+
+            <div class="act_as_cell left">
+                <!--                <span t-esc="products_data[quant['product_id']]['name']"/>-->
+                <span
+                        t-att-res-id="quant['product_id']"
+                        res-model="product.product"
+                        view-type="form"
+                >
+                    <t t-esc="quant['quantity']"/>
+                </span>
+
+            </div>
+
+            <!--## move-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span-->
+            <!--                        t-att-res-id="line['entry_id']"-->
+            <!--                        res-model="account.move"-->
+            <!--                        view-type="form"-->
+            <!--                >-->
+            <!--                    <t t-esc="line['move_name']"/>-->
+            <!--                </span>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## journal&ndash;&gt;-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span-->
+            <!--                        t-att-res-id="journals_data[line['journal_id']]['id']"-->
+            <!--                        res-model="account.journal"-->
+            <!--                        view-type="form"-->
+            <!--                >-->
+            <!--                    <t t-esc="journals_data[line['journal_id']]['code']"/>-->
+            <!--                </span>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## account code&ndash;&gt;-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span-->
+            <!--                        t-att-res-id="accounts_data[account_id]['id']"-->
+            <!--                        res-model="account.account"-->
+            <!--                        view-type="form"-->
+            <!--                >-->
+            <!--                    <t t-esc="accounts_data[account_id]['code']"/>-->
+            <!--                </span>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## partner&ndash;&gt;-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span-->
+            <!--                        t-if="line.get('partner_id', False)"-->
+            <!--                        t-att-res-id="line['partner_id']"-->
+            <!--                        res-model="res.partner"-->
+            <!--                        view-type="form"-->
+            <!--                >-->
+            <!--                    <t t-esc="line['partner_name']"/>-->
+            <!--                </span>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## ref - label&ndash;&gt;-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span t-esc="line['ref_label']"/>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## date_due&ndash;&gt;-->
+            <!--            <div class="act_as_cell left">-->
+            <!--                <span t-esc="line['date_maturity']"/>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## amount_total_due&ndash;&gt;-->
+            <!--            <div class="act_as_cell amount">-->
+            <!--                <span-->
+            <!--                        t-if="line.get('original', False)"-->
+            <!--                        t-esc="line['original']"-->
+            <!--                        t-options="{'widget': 'monetary', 'display_currency': company_currency}"-->
+            <!--                />-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;## amount_residual&ndash;&gt;-->
+            <!--            <div class="act_as_cell amount">-->
+            <!--                <span-->
+            <!--                        t-esc="line['amount_residual']"-->
+            <!--                        t-options="{'widget': 'monetary', 'display_currency': company_currency}"-->
+            <!--                />-->
+            <!--            </div>-->
+            <!--            <t t-if="foreign_currency">-->
+            <!--                <t t-if="line['currency_id']">-->
+            <!--                    &lt;!&ndash;## currency_name&ndash;&gt;-->
+            <!--                    <div class="act_as_cell amount">-->
+            <!--                        <span t-esc="line['currency_name']"/>-->
+            <!--                    </div>-->
+            <!--                    &lt;!&ndash;## amount_total_due_currency&ndash;&gt;-->
+            <!--                    <div class="act_as_cell amount">-->
+            <!--                        <span t-esc="line['amount_currency']"/>-->
+            <!--                    </div>-->
+            <!--                    &lt;!&ndash;## amount_residual_currency&ndash;&gt;-->
+            <!--                    <div class="act_as_cell amount">-->
+            <!--                        <span t-esc="line['amount_residual_currency']"/>-->
+            <!--                    </div>-->
+            <!--                </t>-->
+            <!--                <t t-if="not line['currency_id']">-->
+            <!--                    &lt;!&ndash;## currency_name&ndash;&gt;-->
+            <!--                    <div class="act_as_cell"/>-->
+            <!--                    &lt;!&ndash;## amount_total_due_currency&ndash;&gt;-->
+            <!--                    <div class="act_as_cell"/>-->
+            <!--                    &lt;!&ndash;## amount_residual_currency&ndash;&gt;-->
+            <!--                    <div class="act_as_cell"/>-->
+            <!--                </t>-->
+            <!--            </t>-->
+        </div>
+    </template>
+
+</odoo>

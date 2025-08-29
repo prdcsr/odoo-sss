@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_account_form_inherit_yearly_fx" model="ir.ui.view">
+    <field name="name">account.account.form.yearly.fx</field>
+    <field name="model">account.account</field>
+    <field name="inherit_id" ref="account.view_account_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='deprecated']" position="after">
+        <group string="Yearly FX">
+          <field name="use_yearly_rate"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

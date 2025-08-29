@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inherited_view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree.inherited</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="import">0</attribute>
+                    <!--                    <attribute name="js_class">attendance_tree_import</attribute>-->
+                </xpath>
+
+                <xpath expr="//field[@name='worked_hours']" position="after">
+                    <field name="is_late"/>
+                    <field name="check_out_status"/>
+                    <field name="information"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherited_view_hr_attendance_kanban" model="ir.ui.view">
+            <field name="name">hr.attendance.kanban.inherited</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_hr_attendance_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="import">0</attribute>
+                    <!--                    <attribute name="js_class">attendance_kanban_import</attribute>-->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_filter_inherited" model="ir.ui.view">
+            <field name="name">hr_attendance_view_filter_inherited</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='nocheckout']" position="replace">
+                    <filter string="No Check Out" name="nocheckout"
+                            domain="['|', ('check_out', '=', False), ('check_out_status', '=', False)]"/>
+
+                </xpath>
+                <!--                <search string="Hr Attendance Search">-->
+                <!--                    <field name="employee_id"/>-->
+                <!--                    <field name="department_id" operator="child_of"/>-->
+                <!--                    <filter string="My Attendances" name="myattendances"-->
+                <!--                            domain="[('employee_id.user_id.id', '=', uid)]"/>-->
+                <!--                    <separator/>-->
+                <!--                    <filter string="Check In" name="check_in_filter" date="check_in" default_period="last_month"/>-->
+                <!--                    <group expand="0" string="Group By">-->
+                <!--                        <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>-->
+                <!--                        <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in'}"/>-->
+                <!--                        <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>-->
+                <!--                    </group>-->
+                <!--                </search>-->
+            </field>
+        </record>
+
+        <record id="view_attendance_tree_self" model="ir.ui.view">
+            <field name="name">hr.attendance.tree.self</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="edit">0</attribute>
+                </xpath>
+
+                <!--                <xpath expr="//field[@name='worked_hours']" position="after">-->
+                <!--                    <field name="is_late"/>-->
+                <!--                    <field name="check_out_status"/>-->
+                <!--                    <field name="information"/>-->
+                <!--                </xpath>-->
+            </field>
+        </record>
+
+        <record id="hr_attendance_self_action" model="ir.actions.act_window">
+            <field name="name">My Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_attendance_tree_self"/>
+            <field name="domain">[('employee_id.user_id','=', uid)]</field>
+        </record>
+
+        <menuitem id="menu_hr_attendance_self_list" name="My Attendance List"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  sequence="20" groups="hr_attendance.group_hr_attendance"
+                  action="hr_attendance_self_action"/>
+    </data>
+</odoo>

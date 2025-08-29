@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <!-- QWeb Report Declaration -->
+  <report
+      id="report_food_cost_table_action"
+      model="food.cost.report.wizard"
+      string="Food Cost Table Report"
+      report_type="qweb-html"
+      name="foodcost_table_report.report_food_cost_table"
+      file="foodcost_table_report.report_food_cost_table"
+      print_report_name="Food Cost Table Report"
+  />
+
+</odoo>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="contrib_register_employees" model="hr.contribution.register">
+            <field name="name">Employees</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+
+        <record id="ALW" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+        </record>
+
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Gross</field>
+            <field name="code">GROSS</field>
+        </record>
+
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+
+        <record id="HRA" model="hr.salary.rule.category">
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+        </record>
+
+         <record id="DA" model="hr.salary.rule.category">
+            <field name="name">Dearness Allowance</field>
+            <field name="code">DA</field>
+        </record>
+
+         <record id="Travel" model="hr.salary.rule.category">
+            <field name="name">Travel Allowance</field>
+            <field name="code">Travel</field>
+        </record>
+
+         <record id="Meal" model="hr.salary.rule.category">
+            <field name="name">Meal Allowance</field>
+            <field name="code">Meal</field>
+        </record>
+
+        <record id="Medical" model="hr.salary.rule.category">
+            <field name="name">Medical Allowance</field>
+            <field name="code">Medical</field>
+        </record>
+
+        <record id="Other" model="hr.salary.rule.category">
+            <field name="name">Other Allowance</field>
+            <field name="code">Other</field>
+        </record>
+
+
+<!--        <record id="DEDUCTION" model="hr.salary.rule.category">-->
+<!--            <field name="name">Deduction</field>-->
+<!--            <field name="code">DED</field>-->
+<!--            <field name="parent_id" eval="False"/>-->
+<!--        </record>-->
+
+        <record id="hr_rule_basic" model="hr.salary.rule">
+            <field name="name">Basic Salary</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">BASIC</field>
+            <field name="category_id" ref="hr_payroll_community.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+        </record>
+
+        <record id="hr_rule_taxable" model="hr.salary.rule">
+            <field name="name">Gross</field>
+            <field name="sequence" eval="100"/>
+            <field name="code">GROSS</field>
+            <field name="category_id" ref="hr_payroll_community.GROSS"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+        </record>
+
+        <record id="hr_rule_net" model="hr.salary.rule">
+            <field name="name">Net Salary</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll_community.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
+            <field name="register_id" ref="contrib_register_employees"/>
+        </record>
+
+        <record id="hr_rule_hra" model="hr.salary.rule">
+            <field name="name">House Rent Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">HRA</field>
+            <field name="category_id" ref="hr_payroll_community.HRA"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.hra</field>
+        </record>
+
+        <record id="hr_rule_da" model="hr.salary.rule">
+            <field name="name">Dearness Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">DA</field>
+            <field name="category_id" ref="hr_payroll_community.DA"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.da</field>
+        </record>
+
+        <record id="hr_rule_travel" model="hr.salary.rule">
+            <field name="name">Travel Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">Travel</field>
+            <field name="category_id" ref="hr_payroll_community.Travel"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.travel_allowance</field>
+        </record>
+
+        <record id="hr_rule_meal" model="hr.salary.rule">
+            <field name="name">Meal Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">Meal</field>
+            <field name="category_id" ref="hr_payroll_community.Meal"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.meal_allowance</field>
+        </record>
+
+        <record id="hr_rule_medical" model="hr.salary.rule">
+            <field name="name">Medical Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">Medical</field>
+            <field name="category_id" ref="hr_payroll_community.Medical"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.medical_allowance</field>
+        </record>
+
+        <record id="hr_rule_other" model="hr.salary.rule">
+            <field name="name">Other Allowance</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">Other</field>
+            <field name="category_id" ref="hr_payroll_community.Other"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.other_allowance</field>
+        </record>
+
+<!--        <record id="hr_rule_outside_salary" model="hr.salary.rule">-->
+<!--            <field name="name">Uang Makan Luar Kota</field>-->
+<!--            <field name="sequence" eval="1"/>-->
+<!--            <field name="code">dinasluarkota_23</field>-->
+<!--            <field name="category_id" ref="hr_payroll_community.Travel"/>-->
+<!--            <field name="condition_select">none</field>-->
+<!--            <field name="amount_select">code</field>-->
+<!--            <field name="amount_python_compute">-->
+<!--number_of_days = 0-->
+<!--for line in payslip.worked_days_line_ids:-->
+<!--    if line.code == 'dinasluarkota_23' or line.code == 'dinasluarkota_24':-->
+<!--        number_of_days += line.number_of_days-->
+<!--result = contract.outside_meal_allowance * number_of_days-->
+<!--            </field>-->
+<!--        </record>-->
+
+         <record id="hr_rule_meal_allowance" model="hr.salary.rule">
+            <field name="name">Uang Makan</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">WORK100</field>
+            <field name="category_id" ref="hr_payroll_community.Meal"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+number_of_days = 0
+for line in payslip.worked_days_line_ids:
+    if line.code ==  'WORK100':
+         number_of_days += line.number_of_days
+result = contract.meal_allowance/20 * number_of_days
+            </field>
+        </record>
+
+         <record id="hr_rule_off_late_deduction" model="hr.salary.rule">
+            <field name="name">CUTI,IZIN,TELAT</field>
+            <field name="sequence" eval="5"/>
+            <field name="code">CDT</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+number_of_days = 0
+for line in payslip.worked_days_line_ids:
+    if  line.code=="cuti2025" or line.code=="cuti_tdk_byr_25":
+         number_of_days += line.number_of_days
+    if  line.code=="skt_2025":
+         number_of_days += line.number_of_days
+    if  line.code=="telat_dpt_um_2025" or line.code=="telat_ptg_um_2025":
+         number_of_days += line.number_of_days*0.5
+    if  line.code=="izin_dpt_um_2025":
+         number_of_days += line.number_of_days
+    if  line.code=="izin_ptg_um_2025":
+         number_of_days += line.number_of_days*0.5
+    if  line.code=="GLOBAL":
+          number_of_days += 1
+    if line.code=='dinas_ln':
+        number_of_days += line.number_of_days
+    if line.code=="dinasluarkota_25":
+        number_of_days += line.number_of_days
+    if line.code == 'skt_pot_kerajinan':
+        number_of_days += line.number_of_days
+result = contract.meal_allowance/20  * number_of_days * -1
+            </field>
+        </record>
+
+         <record id="hr_rule_meal_allowance_net" model="hr.salary.rule">
+            <field name="name">Net Uang Makan</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll_community.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.Meal + categories.Travel + categories.ALW +categories.DED</field>
+        </record>
+
+        <record id="hr_rule_diligence_allowance" model="hr.salary.rule">
+            <field name="name">Uang Kerajinan</field>
+            <field name="sequence" eval="5"/>
+            <field name="code">DILIGENCE</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+                result = contract.diligence_allowance
+            </field>
+        </record>
+
+        <!-- Salary Structure -->
+
+<!--         <record id="structure_base" model="hr.payroll.structure">-->
+<!--            <field name="code">BASE</field>-->
+<!--            <field name="name">Base for new structures</field>-->
+<!--            <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>-->
+<!--            <field name="company_id" ref="base.main_company"/>-->
+<!--        </record>-->
+        <record id="structure_base" model="hr.payroll.structure">
+            <field name="code">BASE</field>
+            <field name="name">Base for new structures</field>
+            <field eval="[(6, 0, [
+                    ref('hr_rule_meal_allowance_net'),
+                    ref('hr_rule_meal_allowance'),
+                    ref('hr_rule_off_late_deduction'),
+                    ])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- Decimal Precision -->
+
+        <record forcecreate="True" id="decimal_payroll" model="decimal.precision">
+            <field name="name">Payroll</field>
+            <field name="digits">2</field>
+        </record>
+
+        <record forcecreate="True" id="decimal_payroll_rate" model="decimal.precision">
+            <field name="name">Payroll Rate</field>
+            <field name="digits">4</field>
+        </record>
+
+
+    </data>
+</odoo>

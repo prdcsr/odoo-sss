@@ -1,0 +1,21 @@
+<odoo>
+    <report
+        id="inventory_movement_report_action"
+        model="inventory.movement.wizard"
+        string="Inventory Movement Report"
+        report_type="qweb-html"
+        name="inventory_movement_report.report_inventory_movement_template"
+        file="inventory_movement_report.report_inventory_movement_template"
+        print_report_name="'Inventory Movement Report - %s' % (object.report_date)"
+    />
+
+    <report
+        id="inventory_movement_report_pdf"
+        model="inventory.movement.wizard"
+        string="Inventory Movement Report PDF"
+        report_type="qweb-pdf"
+        name="inventory_movement_report.report_inventory_movement_template"
+        file="inventory_movement_report.report_inventory_movement_template"
+        print_report_name="'Inventory Movement Report - %s' % (object.report_date)"
+    />
+</odoo>

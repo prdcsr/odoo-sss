@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_attendance_import_form_solution" model="ir.ui.view">
+            <field name="name">view.hr.attendance.import.form.solution</field>
+            <field name="model">attendance.import.form.solution</field>
+            <field name="arch" type="xml">
+
+                <form>
+                    <group>
+                        <field name="attendance_file"/>
+
+                    </group>
+<!--                    <group>-->
+<!--                        <field name="department_id"/>-->
+
+<!--                    </group>-->
+
+                    <!--                    <templates>-->
+                    <!--                        <t t-name='HrAttendanceImportFormSolution' class="input-group mb-3">-->
+
+                    <!--                            <input type="hidden" name="csrf_token" id="csrf_token" t-att-value="request.csrf_token()"/>-->
+
+                    <!--                            <input-->
+                    <!--                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"-->
+                    <!--                                    id="attendance_file_solution"-->
+                    <!--                                    t-att-value="attendance_file_solution"-->
+                    <!--                                    type="file"-->
+                    <!--                                    name="file"-->
+                    <!--                                    aria-describedby="inputGroupFileAddon01"-->
+                    <!--                            />-->
+                    <!--                        </t>-->
+
+                    <!--                        <footer>-->
+                    <!--                            <button-->
+                    <!--                                    type="submit"-->
+                    <!--                                    value="submit"-->
+                    <!--                                    id="attendance_import_button_submit_solution"-->
+                    <!--                                    string="Submit"-->
+                    <!--                                    default_focus="1"-->
+                    <!--                                    class="oe_highlight attendance_import_button_submit_solution"-->
+                    <!--                            />-->
+                    <!--                            <button string="Cancel" class="btn btn-secondary" special="cancel"/>-->
+                    <!--                        </footer>-->
+
+                    <!--                    </templates>-->
+
+                    <footer>
+                        <button name="act_import" string="Import" type="object" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" type="object" class="btn-secondary"/>
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="hr_attendance_import_action" model="ir.actions.act_window">
+            <field name="name">Attendance Import</field>
+            <field name="res_model">attendance.import.form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

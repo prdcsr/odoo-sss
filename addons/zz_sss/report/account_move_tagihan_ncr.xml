@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <report
+            string="Tagihan NCR"
+            id="action_tagihan_ncr"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="zz_sss.report_tagihan_ncr"
+            file="zz_sss.report_tagihan_ncr"
+            print_report_name="'Tagihan - %s - %s' % (object.partner_id.name or '', object.name)"
+    />
+
+    <template id="report_tagihan_ncr">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>
+            <t t-set="company" t-value="o.company_id"/>
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt;">
+                    <div class="row">
+                        <div class="col-10">
+                            <div name="company_address">
+                                <strong>
+                                    <span t-field="company.name"/>
+                                </strong>
+                                <br/>
+                                <span>
+                                    Tangerang
+                                </span>
+                            </div>
+                        </div>
+                        <div class="pagination ml9" style="font-family: 'Lato'; color: black; font-size: 11pt;">
+                            <div class="text-right">
+                                <center>
+                                    <span>
+                                        Halaman:
+                                    </span>
+                                    <span class="page"/>
+                                    /
+                                    <span class="topage"/>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-if="partner" name="partner_header">
+                    <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">
+                        <div>
+                            <span style="color: black; font-size: 11pt; margin-left: 4.5mm">
+                                Kepada YTH :
+                            </span>
+                            <br/>
+                            <strong class="col-9 mb4" style="color: black; font-size: 11pt">
+                                <span style="font-family:'Lato'; font-size:12pt" t-field="o.partner_id.name">
+                                </span>
+                            </strong>
+                            <span style="color: black">
+                                [
+                                <span style="font-family:'Lato'; color: black; font-size: 11pt"
+                                      t-field="o.partner_id.ref"/>
+                                /
+                                <span style="font-family:'Lato'; color: black; font-size: 11pt"
+                                      t-field="o.partner_id.parent_id.ref"/>
+                                ]
+                            </span>
+                            <!-- <div class="col-auto" style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/> -->
+                            <div class="col-auto"
+                                 style="color: black; font-size: 11pt; width: 125mm; text-transform: uppercase;">
+                                <span t-esc="o.partner_id.street"/>
+                                <span t-esc="o.partner_id.street2"/>
+                                <span t-esc="o.partner_id.city"/>
+                                <span t-esc="o.partner_id.state_id.name"/>
+                                <span t-esc="o.partner_id.zip"/>
+                                <span t-esc="o.partner_id.country_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div style="color: black; font-family:'Lato'; font-size: 12pt;">
+                    <div style="margin-bottom: 3mm">
+                        <span>
+                            Perihal: Perincian Faktur
+                        </span>
+                        <br/>
+                    </div>
+                    <div class="first-page">
+                        <span style="margin-bottom: 8mm">
+                            Dengan hormat,
+                        </span>
+                        <br/>
+                        <span>
+                            Dengan ini kami perincikan nota pembelian Bapak/Ibu sebagai berikut:
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+                <table class="table table-sm o_main_table"
+                       style="border-color: black; background-color:white; font-family:'Lato'; font-size: 12pt;">
+                    <thead style="border-color: black; background-color:white;">
+                        <tr style="border-color: black; background-color:white">
+                            <t t-set="colspan" t-value="0"/>
+                            <th name="th_sequence" class="text-center" style="border-color: black; width: 10mm">
+                                <span>
+                                    No.
+                                </span>
+                            </th>
+                            <th name="th_nota" class="text-center" style="border-color: black; width: 30mm">
+                                <span>
+                                    No. Nota
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-center" style="border-color: black; width: 35mm">
+                                <span>
+                                    Tgl Nota
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-center" style="border-color: black; width: 35mm">
+                                <span>
+                                    Tgl Jt. Tempo
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-center" style="border-color: black; width: 10mm">
+                                <span>
+                                    MU
+                                </span>
+                            </th>
+                            <th name="th_price" class="text-right" style="border-color: black; width: 40mm">
+                                <span>
+                                    Jumlah
+                                </span>
+                            </th>
+                            <th name="th_notes" class="text-center" style="border-color: black">
+                                <span>
+                                    Keterangan
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: black; border-color: black; line-height: 5mm">
+                        <t t-set="line_no" t-value="0"/>
+                        <t t-set="check_month" t-value="False"/>
+                        <t t-set="current_month" t-value="False"/>
+                        <t t-set="due_check" t-value="False"/>
+                        <t t-set="t_subtotal_month" t-value="0"/>
+                        <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">
+                            <t t-if="check_month and check_month != doc.invoice_date.month">
+                                <tr style="color: black; border-color: black">
+                                    <td style="color: black; border-color: black"/>
+                                    <td style="color: black; border-color: black"/>
+                                    <td style="color: black; border-color: black"/>
+                                    <td class="text-right" style="color: black; border-color: black">
+                                        <strong>
+                                            Subtotal
+                                        </strong>
+                                    </td>
+                                    <td class="text-center" style="border-color: black">
+                                        <strong t-esc="o.currency_id.symbol"/>
+                                    </td>
+                                    <td class="text-right"
+                                        style="color: black; border-color: black; font-weight: semi bold">
+                                        <strong t-esc="'{:,.2f}'.format(t_subtotal_month)"/>
+                                    </td>
+                                    <td style="color: black; border-color: black">
+                                        <!--
+                                        <t t-if="due_check >= 3">
+                                        <span>Jatuh Tempo</span>
+                                        </t>
+                                        <t t-else="">
+                                        <span>Pengingat</span>
+                                        </t>
+                                        -->
+                                    </td>
+                                </tr>
+                                <t t-set="date" t-value="datetime.datetime.now()"/>
+                                <t t-set="current_month" t-value="date.month"/>
+                                <t t-set="check_month" t-value="doc.invoice_date.month"/>
+                                <t t-set="due_check" t-value="0"/>
+                                <t t-set="due_check" t-value="current_month - check_month"/>
+                                <t t-set="t_subtotal_month" t-value="doc.amount_residual_signed"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="date" t-value="datetime.datetime.now()"/>
+                                <t t-set="current_month" t-value="date.month"/>
+                                <t t-set="check_month" t-value="doc.invoice_date.month"/>
+                                <t t-set="due_check" t-value="0"/>
+                                <t t-set="due_check" t-value="current_month - check_month"/>
+                                <t t-set="t_subtotal_month" t-value="t_subtotal_month + doc.amount_residual_signed"/>
+                            </t>
+                            <tr style="color: black; border-color: black">
+                                <t t-set="line_no" t-value="line_no+1"/>
+                                <td class="text-center" style="border-color: black" t-esc="line_no"/>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <span t-field="doc.name"/>
+                                </td>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <span t-set="date"
+                                          t-value="datetime.datetime.strptime(str(doc.invoice_date), '%Y-%m-%d')"/>
+                                    <span t-esc="date.strftime('%d-%m-%Y')"/>
+                                </td>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <t t-if="doc.invoice_payment_term_id.name == '3 Months'">
+                                        <t t-set="d_delta" t-value="datetime.timedelta(days=60)"/>
+                                        <t t-set="d_dateorder"
+                                           t-value="datetime.datetime.strptime(str(doc.invoice_date), '%Y-%m-%d')"/>
+                                        <t t-set="d_paydate" t-value="d_dateorder + d_delta"/>
+                                        <span t-esc="d_paydate.strftime('%d-%m-%Y')"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="doc.invoice_date_due.strftime('%d-%m-%Y')"/>
+                                    </t>
+                                </td>
+                                <td class="text-center" style="border-color: black; width: 10mm">
+                                    <span t-esc="doc.currency_id.symbol"/>
+                                </td>
+                                <td class="text-right" style="color: black; border-color: black">
+                                    <span t-esc="'{:,.2f}'.format(doc.amount_residual_signed)"/>
+                                </td>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <t t-if="doc.invoice_payment_term_id.name == 'Cash 14 Days'">
+                                        <span>
+                                            Cash 14 Hari
+                                        </span>
+                                    </t>
+                                    <t t-elif="doc.invoice_payment_term_id.name == 'Cash 7 Days'">
+                                        <span>
+                                            Cash 7 Hari
+                                        </span>
+                                    </t>
+                                    <t t-elif="doc.invoice_payment_term_id.name == '30 Days'">
+                                        <span>
+                                            Cash 30 Hari
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="t_subtotal_month &gt; 0">
+                            <tr style="color: black; border-color: black">
+                                <td style="color: black; border-color: black"/>
+                                <td style="color: black; border-color: black"/>
+                                <td style="color: black; border-color: black"/>
+                                <td class="text-right" style="color: black; border-color: black">
+                                    <strong>
+                                        Subtotal
+                                    </strong>
+                                </td>
+                                <td class="text-center" style="border-color: black">
+                                    <strong t-esc="o.currency_id.symbol"/>
+                                </td>
+                                <td class="text-right"
+                                    style="color: black; border-color: black; font-weight: semi bold">
+                                    <strong t-esc="'{:,.2f}'.format(t_subtotal_month)"/>
+                                </td>
+                                <td style="color: black; border-color: black">
+                                    <!--
+                                    <t t-if="due_check >= 3">
+                                    <span>Jatuh Tempo</span>
+                                    </t>
+                                    <t t-else="">
+                                    <span>Pengingat</span>
+                                    </t>
+                                    -->
+                                </td>
+                            </tr>
+                            <t t-set="check_month" t-value="False"/>
+                            <t t-set="date" t-value="datetime.datetime.now()"/>
+                            <t t-set="current_month" t-value="date.month"/>
+                            <t t-set="due_check" t-value="0"/>
+                            <t t-set="due_check" t-value="current_month - check_month"/>
+                            <t t-set="t_subtotal_month" t-value="0"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="check_month" t-value="doc.invoice_date.month"/>
+                            <t t-set="current_month" t-value="False"/>
+                            <t t-set="date" t-value="datetime.datetime.now()"/>
+                            <t t-set="current_month" t-value="date.month"/>
+                            <t t-set="due_check" t-value="current_month - check_month"/>
+                            <t t-set="t_subtotal_month" t-value="t_subtotal_month + doc.amount_residual_signed"/>
+                        </t>
+                    </tbody>
+                    <tfoot style="color: black; border-color: black; display: table-row-group">
+                        <td style="color: black; border-color: black"/>
+                        <td style="color: black; border-color: black"/>
+                        <td style="color: black; border-color: black"/>
+                        <td class="text-right" style="color: black; border-color: black">
+                            <strong>
+                                TOTAL
+                            </strong>
+                        </td>
+                        <td class="text-center" style="border-color: black">
+                            <strong t-esc="o.currency_id.symbol"/>
+                        </td>
+                        <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">
+                            <t t-set="total" t-value="sum(docs.mapped('amount_residual_signed'))"/>
+                            <strong t-esc="'{:,.2f}'.format(total)"/>
+                        </td>
+                        <td style="color: black; border-color: black"/>
+                    </tfoot>
+                </table>
+                <div style="page-break-inside: avoid">
+                    <div style="page-break-inside: avoid">
+                        <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;">
+                            <span>
+                                Untuk pembayaran tersebut diatas kami mohon dapat ditransfer ke rekening kami.
+                            </span>
+                            <br/>
+                            <br/>
+                        </div>
+                        <p style="color: black; font-family:'Lato'; margin-bottom: 3mm; font-size: 12pt">
+                            BCA No. 702-0310868
+                            <span style="margin-left: 30mm">
+                                MANDIRI No. 155-00-9873660-9
+                            </span>
+                            <br/>
+                            DANAMON No. 0088-000-70156
+                            <span style="margin-left: 10mm">
+                                BRI No. 0399-01-000365-30-6
+                            </span>
+                            <br/>
+                            Atas Nama : PT. SAMA SAMA SUKSES
+                            <br/>
+                        </p>
+                    </div>
+                    <div style="color: black; font-family:'Lato'; font-size: 12pt; margin-bottom: 3mm">
+                        <span>
+                            Demikianlah perincian ini kami buat, atas perhatian Bapak/Ibu kami ucapkan terima kasih.
+                        </span>
+                        <br/>
+                        <br/>
+                    </div>
+                    <div class="col-12 text-right mb3"
+                         style="color: black; font-family:'Lato'; page-break-inside: avoid">
+                        <span style="font-size: 12pt">
+                            Tangerang,
+                            <span t-esc="time.strftime('%d-%b-%Y')"/>
+                        </span>
+                        <br/>
+                        <span style="margin-right: 10mm; font-size: 12pt">
+                            Hormat kami
+                        </span>
+                        <br/>
+                        <br>
+
+                        </br>
+                        <br>
+
+                        </br>
+                        <br>
+
+                        </br>
+                        <br>
+
+                        </br>
+                        <!-- <br> </br> -->
+                        <span class="mt-30" style="margin-right: 8mm; margin-top: 30mm; font-size: 12pt">
+                            Bagian
+                            Piutang
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

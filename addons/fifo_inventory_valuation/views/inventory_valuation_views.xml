@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_fifo_inventory_valuation" model="ir.actions.act_window">
+        <field name="name">FIFO Inventory Valuation</field>
+        <field name="res_model">fifo.inventory.valuation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_inventory_fifo_root" name="Location Inventory Valuation"
+              parent="stock.menu_warehouse_report"
+              action="action_fifo_inventory_valuation"/>
+</odoo>

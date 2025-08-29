@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_food_cost,product.food.cost,model_product_food_cost,base.group_user,1,1,1,1
+access_fnb_promo_user,FNB Promo User,model_fnb_promo_schedule,base.group_user,1,1,1,0
+access_fnb_holiday_user,FNB Holiday User,model_fnb_holiday_schedule,base.group_user,1,1,1,0
+access_fnb_weekday_user,FNB Weekday User,model_fnb_weekday,base.group_user,1,1,1,0
+access_fnb_promo_line_user,FNB Promo Line User,model_fnb_promo_line,base.group_user,1,1,1,0
+

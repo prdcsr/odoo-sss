@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_purchase_" model="ir.ui.view">
+        <field name="name">Payment Request</field>
+        <field name="model">purchase.payment.request.customs</field>
+        <field name="arch" type="xml">
+            <form string="Customs Payment Request">
+                <p class="oe_grey">
+                    Payment will be created and RFQ Status Will be updated to "On Port"
+                </p>
+                <!-- field name="lpo_num" />
+                <field name="company"/>
+                <field name="payment_term"/>
+                <field name="prepared"/ -->
+                <group>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="amount_exch"/>
+                </group>    
+                <group>
+                    <field name="fp_no" />
+                    <field name="pib_no"/>
+                    <field name="pib_date"/>
+                </group>
+                <group>
+                    <field name="amount_dpp" widget="monetary"/>
+                    <field name="amount_duty" widget="monetary"/> 
+                    <field name="amount_tax_vat" widget="monetary"/>
+                    <field name="amount_tax_income" widget="monetary"/>                    
+                </group>
+      
+                <footer>                
+                    <button
+                        name="create_payments_request"
+                        string="Create Payment Request"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_purchase_payment_request_customs" model="ir.actions.act_window">
+        <field name="name">Payment Request</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.payment.request.customs</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

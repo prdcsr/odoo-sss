@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="discount_purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="notes" position="before">
+                    <group class="oe_subtotal_footer oe_right_demo"
+                           inherit_id="purchase.oe_subtotal_footer oe_right">
+                        <field name="extra_discount_in_price" widget="monetary"
+                               style="padding-right: 250px;margin-left: 0px;border-left-style: solid;border-left-width: 5px;"/>
+                        <field name="extra_discount_percentage"
+                               style="padding-right: 250px;margin-left: 0px;border-left-style: solid;border-left-width: 5px;text-align:30px"
+                               force_save="1"/>
+                        <field name="ex_dis_perc_eql_price"
+                               style="padding-right: 250px;margin-left: 0px;border-left-style: solid;border-left-width: 5px;"
+                               force_save="1"/>
+                    </group>
+                </field>
+                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                <field name="price_unit" force_save="1"/>
+                <field name="product_qty" force_save="1"/>
+                <xpath expr="//field[@name= 'price_unit']" position="after">
+                    <field name="discount"/>
+                </xpath>
+                <xpath expr="//field[@name= 'price_unit']" position="after">
+                    <field name="discs_price" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name= 'price_unit']" position="after">
+                    <field name="discount_in_percentage"/>
+                </xpath>
+                <xpath expr="//field[@name= 'amount_tax']" position="after">
+                    <field name="ex_disc_price" widget="monetary" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name= 'amount_tax']" position="after">
+                    <field name="ex_disc_perc" widget="percentage" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name= 'amount_tax']" position="after">
+                    <field name="discounts" widget="monetary" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name= 'amount_tax']" position="after">
+                    <field name="discs_price" widget="monetary" force_save="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

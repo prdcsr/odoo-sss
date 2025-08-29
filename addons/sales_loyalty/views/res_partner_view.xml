@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="partner_property_form_view" model="ir.ui.view">
+        <field name="name">partner.property.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='purchase']" position="after">
+                <group name="loyalty" string="Sales Loyalty Programs">
+                    <field name="loyalty_points"/>
+                </group>
+            </xpath>
+
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="point_history" string="Point History">
+                    <field
+                            name="point_history"
+                            widget="section_and_note_one2many"
+                            mode="tree"
+                            attrs="{'readonly': True}"
+                    >
+                        <tree
+                                string="Point History"
+                                editable="False"
+                        >
+                            <field name="ref_code" />
+                            <field name="loyalty_id" />
+                            <field name="point" />
+
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

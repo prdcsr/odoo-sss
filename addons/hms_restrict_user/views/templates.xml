@@ -1,0 +1,17 @@
+<odoo>
+    <template id="assets_backend" name="stock move backend assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hms_restrict_user/static/src/js/stock_picking_form.js"></script>
+            </xpath>
+    </template>
+<!--    <template id="custom_stock_picking_breadcrumb" inherit_id="web.Breadcrumbs" name="Custom Stock Picking Breadcrumb">-->
+<!--        <xpath expr="//li[last()]" position="replace">-->
+<!--            <li class="breadcrumb-item active">-->
+<!--                <t t-if="object and object.picking_type_id">-->
+<!--                    <t t-esc="object.picking_type_id[1]"/> - -->
+<!--                </t>-->
+<!--                <t t-esc="object and (object.name or 'New')"/>-->
+<!--            </li>-->
+<!--        </xpath>-->
+<!--    </template>-->
+</odoo>

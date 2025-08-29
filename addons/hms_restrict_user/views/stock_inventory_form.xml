@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_inventory_form_restrict">
+            <field name="name">stock.inventory_form.restrict</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_start']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,hms_restrict_user.group_inventory_alsut_manager,hms_restrict_user.group_inventory_btr_manager,hms_restrict_user.group_inventory_gs_manager,hms_restrict_user.group_inventory_alsut,hms_restrict_user.group_inventory_btr,hms_restrict_user.group_inventory_gs</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_open_inventory_lines']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,hms_restrict_user.group_inventory_alsut_manager,hms_restrict_user.group_inventory_btr_manager,hms_restrict_user.group_inventory_gs_manager,hms_restrict_user.group_inventory_alsut,hms_restrict_user.group_inventory_btr,hms_restrict_user.group_inventory_gs</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_validate']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,hms_restrict_user.group_inventory_alsut_manager,hms_restrict_user.group_inventory_btr_manager,hms_restrict_user.group_inventory_gs_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="hr_attendance_import_assets_backend" name="hr_attendance_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript"
+                        src="/hr_attendance_import/static/src/js/attendance_report_list_controller.js"></script>
+
+                <script type="text/javascript"
+                        src="/hr_attendance_import/static/src/js/attendance_report_dialog_controller.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

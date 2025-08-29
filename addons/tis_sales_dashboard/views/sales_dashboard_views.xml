@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <template id="assets_backend" name="Sale assets backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+           <!-- <script src="/tis_sales_dashboard/static/src/js/core/jquery.min.js"></script>
+            <script src="/tis_sales_dashboard/static/src/js/core/popper.min.js"></script>-->
+            <script type="text/javascript" src="/tis_sales_dashboard/static/src/js/Chart.bundle.min.js"></script>
+
+            <script type="text/javascript" src="/tis_sales_dashboard/static/src/js/Chart.min.js"></script>
+            <script type="text/javascript" src="/tis_sales_dashboard/static/src/js/sales_dashboard.js"/>
+             <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/>
+            <!-- CSS Files -->
+            <link href="/tis_sales_dashboard/static/src/css/material-dashboard.css" rel="stylesheet"/>
+            <link rel="stylesheet" type="text/css" href="/tis_sales_dashboard/static/src/css/style.css"/>
+            
+            <link rel="stylesheet" type="text/scss" href="/base_accounting_kit/static/lib/bootstrap-toggle-master/css/bootstrap-toggle.min.css"/>
+            
+            <script type="text/javascript" src="/base_accounting_kit/static/lib/bootstrap-toggle-master/js/bootstrap-toggle.min.js"/>
+         </xpath>
+    </template>
+
+
+    <record id="action_sale_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">sale_dashboard</field>
+    </record>
+
+
+    <menuitem id="sale.sale_dashboard_menu"
+              name="Dashboard"
+              parent="sale.sale_menu_root"
+              action="action_sale_dashboard"
+              sequence="0"/>
+</odoo>

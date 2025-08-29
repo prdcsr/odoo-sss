@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_purchase_requisition_history_tree" model="ir.ui.view">
+        <field name="name">purchase.requisition.history.tree</field>
+        <field name="model">purchase.requisition.history</field>
+        <field name="arch" type="xml">
+            <tree string="Requisition History">
+                <field name="date"/>
+                <field name="requisition_id"/>
+                <field name="line_id"/>
+                <field name="old_status"/>
+                <field name="new_status"/>
+                <field name="old_ordered_qty"/>
+                <field name="new_ordered_qty"/>
+                <field name="changed_by"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_requisition_history_tree" model="ir.actions.act_window">
+        <field name="name">Requisition History</field>
+        <field name="res_model">purchase.requisition.history</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('requisition_id', '=', active_id)]</field>
+    </record>
+
+    <record id="view_purchase_requisition_history_search" model="ir.ui.view">
+        <field name="name">purchase.requisition.history.search</field>
+        <field name="model">purchase.requisition.history</field>
+        <field name="arch" type="xml">
+            <search string="Requisition History Search">
+                <field name="date"/>
+                <field name="old_status"/>
+                <field name="new_status"/>
+                <field name="requisition_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_view_all_requisition_history" model="ir.actions.act_window">
+        <field name="name">All Requisition History</field>
+        <field name="res_model">purchase.requisition.history</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_all_requisition_history"
+              name="Requisition History"
+              parent="purchase.purchase_report"
+              action="action_view_all_requisition_history"/>
+</odoo>

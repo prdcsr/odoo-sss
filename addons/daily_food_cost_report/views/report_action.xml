@@ -1,0 +1,10 @@
+<odoo>
+    <report
+        id="action_daily_food_cost_report"
+        string="Daily Food Cost Report"
+        model="account.move.line"
+        report_type="qweb-pdf"
+        name="daily_food_cost_report.report_template"
+        file="daily_food_cost_report.report_template"
+    />
+</odoo>

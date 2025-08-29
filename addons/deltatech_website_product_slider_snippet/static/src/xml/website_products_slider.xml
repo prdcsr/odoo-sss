@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <!-- Products Carousel -->
+    <t t-name="deltatech_website_product_slider_snippet.productsSlider">
+        <div t-att-id="uniqueId" class="carousel slide o_not_editable" data-interval="false">
+            <div class="carousel-inner">
+                <t t-foreach="productsGroups" t-as="products">
+                    <div t-attf-class="carousel-item #{!products_index and 'active' or ''}">
+                        <div class="row">
+                            <t t-foreach="products" t-as="product">
+                                <div t-attf-class="o_carousel_product_card_wrap  d-flex mt-1" style="margin-right: 10px;">
+                                <!-- div t-attf-class="o_carousel_product_card_wrap col-md-12"-->
+                                    <div class="o_carousel_product_card card h-100 flex-fill" style="width: 11rem;">
+                                        <input type="hidden" name="product-id" t-att-data-product-id="product.id" />
+                                        <a class="o_carousel_product_img_link" t-att-href="product.website_url">
+                                            <img
+                                                class="o_carousel_product_card_img_top card-img-top img-responsive"
+                                                t-attf-src="/web/image/product.product/#{product.id}#{productFrame == 1 ? '/image_256' : '/image_512'}"
+                                                t-att-alt="product.display_name"
+                                            />
+                                        </a>
+                                        <div class="o_carousel_product_card_body card-body">                                        
+                                                                                            
+                                                 <h6>
+                                                 <a t-att-href="product.website_url" class="text-decoration-none">
+                                                 <span class="text-muted font-weight-bold" 
+                                                        t-raw="product.categ_name" />
+                                                        <br/>
+                                                         <t t-if="product.brand_id">
+                                                            <span t-field="product.brand_id.brand_image"
+                                                            t-options="{&quot;widget&quot;: &quot;image&quot;, 
+                                                            &quot;qweb_img_responsive&quot;: True, 
+                                                            &quot;class&quot;: &quot;o_image_64_max pt0 pb0  w-50&quot;, 
+                                                            &quot;alt-field&quot;: &quot;name&quot;}"
+                                                            />
+                                                            <!-- img class="img-responsive" style="width: 1rem;" src="/zz_sss/static/img/logo_ysk.png"/ -->
+                                                        </t>
+                                                        <t t-else="">
+                                                            <img class="img-responsive pt0 pb0" style="width: 6rem;" src="/zz_sss/static/img/logo.png"/>
+                                                        </t>                                                       
+                                                        <t t-if="product.web_pro_name">
+                                                                <h4 class="text-black font-weight-bold pt0 pb0"  
+                                                                style="font-family: 'Inter',sans-serif;font-weight: 800;"
+                                                                t-raw="product.web_pro_name"/>
+                                                        </t>
+                                                        <t t-else=" ">
+                                                                <h4 class="text-black font-weight-bold card-title" 
+                                                                        t-raw="product.display_name" />
+                                                        </t>
+                                                        </a>
+                                                </h6>
+                                                <!-- h6
+                                                    class="card-title mb-0 text-truncate"
+                                                    t-raw="product.display_name"
+                                                / -->
+                                                                                        
+                                        </div>
+                                        <!-- div class="bg-whiate card-header">
+                                           
+                                        </div -->
+                                        <div
+                                            class="bg-primary o_carousel_product_card_footer card-footer align"
+                                        >
+                                             <!-- div class="product_price text-black text-left font-weight-bold" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                        <del t-attf-class="text-danger mr-2 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                        <span t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
+                        <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+                    </div -->        
+                                            <!-- div class="font-weight-bold" >Rp <t t-raw="product.price"/></div -->
+                                            <div  t-if="product.rating" t-raw="product.rating" />
+                                            <!-- button
+                                                type="button"
+                                                role="button"
+                                                class="btn btn-primary js_add_cart ml-auto"
+                                                title="Add to Cart"
+                                            >
+                                                <i class="fa fa-fw fa-shopping-cart" />
+                                            </button-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-if='productsGroups.length > 1'>
+                <!-- a
+                    class="o_carousel_product_control carousel-control-prev"
+                    t-att-href="'#' + uniqueId"
+                    role="button"
+                    data-slide="prev"
+                >
+                    <span class="carousel-control-prev-icon" />
+                    <span class="sr-only">Previous</span>
+                </a -->
+                <a
+                    class="o_carousel_product_control carousel-control-next"
+                    t-att-href="'#' + uniqueId"
+                    role="button"
+                    data-slide="next"
+                >
+                    <span class="carousel-control-next-icon" />
+                    <!-- span class="glyphicon glyphicon-chevron-right"/ -->
+                    <span class="sr-only">Next</span>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>

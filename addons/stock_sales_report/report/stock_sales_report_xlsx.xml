@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <report
+        id="action_stock_sales_report_xlsx"
+        model="stock.sales.report.wizard"
+        string="Generate Stock Sales Report"
+        report_type = 'xlsx'
+        name="stock_sales_report.stock_sales_report_xlsx"
+        file="stock_sales_report"
+        attachment_use="False"
+        />
+</odoo>

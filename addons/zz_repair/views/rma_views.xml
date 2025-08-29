@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_rma_form_inherit_lines" model="ir.ui.view">
+            <field name="name">rma.form.inherit.lines</field>
+            <field name="model">rma</field>
+            <!-- CHANGE inherit_id below if your base RMA form id is different -->
+            <field name="inherit_id" ref="rma.rma_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Try to insert as a new notebook page; fallback xpath targets explained below -->
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="RMA Lines">
+                        <field name="line_ids" context="{'default_rma_id': active_id}">
+                            <tree editable="bottom" string="RMA Lines" create="1" delete="1">
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="damage_type"/>
+                                <field name="severity"/>
+                                <field name="product_uom"/>
+                                <field name="quantity"/>
+                                <field name="requisition_id"/>
+                                <field name="purchase_id"/>
+                                <field name="note"/>
+                                <button name="action_order_stock" type="object" string="Request Import Stock"
+                                        attrs="{'invisible': [('requisition_id', '!=', False)]}"
+                                />
+                                <button name="action_purchase_stock" type="object" string="Request Order Stock"
+                                        attrs="{'invisible': [('purchase_id', '!=', False)]}"
+                                />
+                            </tree>
+                            <form string="RMA Line">
+                                <group>
+                                    <group>
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="product_uom"/>
+                                        <field name="quantity"/>
+                                    </group>
+                                    <group>
+                                        <field name="damage_type"/>
+                                        <field name="severity"/>
+                                        <field name="requisition_id"/>
+                                        <field name="purchase_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="note" colspan="2"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

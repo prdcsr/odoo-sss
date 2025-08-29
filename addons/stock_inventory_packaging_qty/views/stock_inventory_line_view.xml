@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="stock_inventory_line_view_form_packaging" model="ir.ui.view">
+            <field name="name">stock.inventory.line.tree.form</field>
+            <field name="model">stock.inventory.line</field>
+            <field name="inherit_id" ref="stock.stock_inventory_line_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree//field[@name='product_qty']" position="after">
+                    <field name="product_packaging" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                    <field name="product_packaging_qty" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

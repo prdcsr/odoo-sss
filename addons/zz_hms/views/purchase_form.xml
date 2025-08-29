@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_sss_form">
+            <field name="name">purchase.sss.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="before">
+                <button
+                    name="%(zz_sss.action_view_purchase_onport)d"
+                    type="action"
+                    string="On Port"
+                    attrs="{'invisible': ['|',('state','!=','pib'),('order_type', '!=', 1)]}"
+                />
+                
+                <button
+                    name="%(zz_sss.action_view_purchase_payment_request_customs)d"
+                    type="action"
+                    string="Payment Request Customs"
+                    attrs="{'invisible': ['|',('state','!=','purchase'),('order_type', '!=', 1)]}"
+                />
+                <button name="button_done" 
+                type="object" string="Received" 
+
+                attrs="{'invisible': ['|',('state','!=','purchase'),('order_type', '=', 1)]}"
+                />
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after" >
+                    <field name="bl_no"/>
+                    <field name="bl_date"/>      
+                    <field name="vendor_inv_no"/>               
+                                            
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after" >
+                       
+                    <field name="fp_no" readonly="1"/>
+                    <field name="pib_no" readonly="1"/>
+                    <field name="pib_date" readonly="1"/>
+                                         
+                </xpath>
+                <!-- xpath expr="//field[@name='order_line']" position="attributes" >
+                    <attribute name="attrs">{'readonly': [('state', 'in',('pib','onport','purchase',
+                    'to approve',''done', 'cancel'))]}</attribute>
+                </xpath -->
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes" >
+                    <attribute name="attrs">{'readonly': ['|',('invoice_lines', '!=', []),('state', 'in',
+                     ('purchase', 'to approve','done', 'cancel'))],'required': [('display_type', '=', False)],}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="attributes" >
+                    <attribute name="attrs">{'readonly': [('invoice_lines', '!=', [])]}</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_purchase_order_filter" model="ir.ui.view">
+            <field name="name">request.quotation.select</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+            <xpath expr="//filter[@name='approved']" position="replace">            
+                <filter name="approved" string="Purchase Order" domain="[('state', '=', 'purchase')]"/>
+            </xpath>    
+            <xpath expr="//filter[@name='approved']" position="after">            
+                <filter name="onport" string="On Port" domain="[('state', 'in', ['onport','pib'])]"/>
+                <filter name="done" string="Received" domain="[('state', '=', 'done')]"/>
+            </xpath>    
+
+            </field>
+        </record>    
+    </data>
+</odoo>

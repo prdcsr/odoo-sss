@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+    
+    
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.zz_sss</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_date']" position="after">
+                 <field name="check_date_due"/>
+            </xpath>
+			</field>
+		</record>
+
+<!--        <report-->
+<!--            string="Bukti Pembayaran NCR"-->
+<!--            id="action_bukti_pembayaran_ncr"-->
+<!--            model="account.payment"-->
+<!--            report_type="qweb-pdf"-->
+<!--            name="zz_sss.report_bukti_pembayaran_ncr"-->
+<!--            file="zz_sss.report_bukti_pembayaran_ncr"-->
+<!--            print_report_name="'Bukti Pembayaran - %s - %s' % (object.partner_id.name or '', object.name)"-->
+<!--        />-->
+    </data>
+
+<!--    <template id="report_bukti_pembayaran_ncr">-->
+<!--        <t t-foreach="docs" t-as="o">-->
+<!--            <t t-call="zz_sss.report_bukti_pembayaran_ncr_document" t-lang="o.partner_id.lang"/>-->
+<!--        </t>-->
+<!--    </template>-->
+
+<!--    <template id="report_bukti_pembayaran_ncr_document">-->
+<!--        <t t-call="web.html_container">-->
+<!--          <t t-set="doc" t-value="doc"/>-->
+<!--            <t t-set="o" t-value="o.with_context(lang=lang)"/>-->
+<!--            <div class="page">-->
+<!--              <div t-attf-class="article o_report_layout_boxed">-->
+<!--                  <t t-call="web.address_layout"/>-->
+<!--                  <t t-raw="0"/>-->
+<!--                  -->
+<!--                <div style="color: black; font-family:'Lato'; text-align: center">-->
+<!--                    <h5 class="text-center font-weight-bold">BUKTI PENERIMAAN PIUTANG</h5><br/>-->
+<!--                </div>-->
+<!--                -->
+<!--                -->
+<!--                <div class="row" style="color: black; font-family:'Lato'">-->
+<!--                    <div class="col-6" t-if="o.payment_date">-->
+<!--                        <strong>Tgl. Terima    :</strong> <span t-esc="o.payment_date"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                -->
+<!--                <div style="display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: center; color: black; font-family:'Lato'; margin-bottom: 3mm">-->
+<!--                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1;">-->
+<!--                        <strong>Terima Dari : </strong>-->
+<!--                        <span t-esc="o.partner_id.ref"/>- -->
+<!--                        <span t-esc="o.partner_id.name"/>-->
+<!--                    </div>-->
+<!--                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; margin-right: 0; text-align: right">-->
+<!--                        <strong>No. Bukti : </strong><span t-field="o.name"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                -->
+<!--                &lt;!&ndash;<div class="row" style="color: black; font-family:'Lato'; margin-bottom: 3mm">&ndash;&gt;-->
+<!--                &lt;!&ndash;    <div class="col-6" t-if="o.amount">&ndash;&gt;-->
+<!--                &lt;!&ndash;        <strong>Jumlah Pembayaran  : </strong> <span t-field="o.amount"/>&ndash;&gt;-->
+<!--                &lt;!&ndash;    </div>&ndash;&gt;-->
+<!--                &lt;!&ndash;</div>&ndash;&gt;-->
+<!--                -->
+<!--                <table class="table table-sm o_main_table" style="border-color: black; background-color:white; font-family:'Lato'; font-size: 12pt;">-->
+<!--                    <thead style="border-color: black; background-color:white;">-->
+<!--                        <tr style="border-color: black; background-color:white;">-->
+<!--                            <th class="text-center" style="border-color: black; width: 10mm"><span>No</span></th>-->
+<!--                            <th class="text-center" style="border-color: black; width: 30mm"><span>No Nota</span></th>-->
+<!--                            <th class="text-right" style="border-color: black; width: 40mm"><span>Nominal</span></th>-->
+<!--                            <th class="text-left" style="border-color: black;"><span>Keterangan</span></th>-->
+<!--                            <th class="text-right" style="border-color: black; width: 40mm"><span>Jumlah Dibayar</span></th>-->
+<!--                            <th class="text-right" style="border-color: black; width: 40mm"><span>Saldo</span></th>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody style="color: black; border-color: black; line-height: 5mm">-->
+<!--                      <t t-set="line_no" t-value="0"/>-->
+<!--                      <t t-set="t_total" t-value="0"/>-->
+<!--                        <tr t-foreach="o.reconciled_invoice_ids" t-as="inv" style="color: black; border-color: black">-->
+<!--                          <t t-set="line_no" t-value="line_no+1"/>-->
+<!--                          <t t-set="t_total" t-value="t_total + o._get_invoice_payment_amount(inv)"/>-->
+<!--                            <td class="text-center" style="border-color: black" t-esc="line_no"/>-->
+<!--                            <td class="text-center" style="border-color: black"> <span t-field="inv.name"/></td>-->
+<!--                            <td class="text-right" style="border-color: black"> <span t-field="inv.amount_total"/></td>-->
+<!--                            <td class="text-left" style="border-color: black"> -->
+<!--                              &lt;!&ndash;<t t-set="payment_id" t-value="env['account.payment'].browse(payment_detail.get('account_payment_id'))"/>&ndash;&gt;-->
+<!--                              &lt;!&ndash;<t t-set="payment_id" t-value="env['account.journal']"/>&ndash;&gt;-->
+<!--                                  <t t-if="o.journal_id.name == 'Piutang Giro'">-->
+<!--                                    <span>Giro </span><span t-field="o.bank_reference"/> / <span t-field="o.cheque_reference"/>-->
+<!--                                  </t>-->
+<!--                                  <t t-elif="o.journal_id.name == 'BCA SSS 6888'">-->
+<!--                                    <span>Transfer via </span><span t-field="o.bank_reference"/> / <span t-field="o.cheque_reference"/>-->
+<!--                                  </t>-->
+<!--                                  <t t-else="">-->
+<!--                                    <span>Transfer via Bank </span><span t-field="o.journal_id.name"/>-->
+<!--                                  </t>-->
+<!--                            </td>-->
+<!--                            <td class="text-right" style="border-color: black"> <span t-esc="o._get_invoice_payment_amount(inv)" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id}"/></td>-->
+<!--                            <td class="text-right" style="border-color: black"> <span t-field="inv.amount_residual"/></td>-->
+<!--                        </tr>-->
+<!--                    </tbody>-->
+<!--                    <tfoot style="color: black; border-color: black">-->
+<!--                      <td style="color: black; border-color: black"/>-->
+<!--                      <td style="color: black; border-color: black"/>-->
+<!--                      <td style="color: black; border-color: black"/>-->
+<!--                      <td class="text-right" style="color: black; border-color: black"> <strong> Total Pembayaran</strong> </td>-->
+<!--                      <td class="text-right" style="color: black; border-color: black; font-weight: semi bold" t-if="o.amount">-->
+<!--                        &lt;!&ndash;<t  t-foreach="o.reconciled_invoice_ids" t-as="inv">&ndash;&gt;-->
+<!--                        &lt;!&ndash;<t t-set="total_payment" t-value="o._get_invoice_payment_amount(inv)" />&ndash;&gt;-->
+<!--                        <span t-esc="t_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>-->
+<!--                        &lt;!&ndash;</t>&ndash;&gt;-->
+<!--                      </td>-->
+<!--                      <td style="color: black; border-color: black"/>-->
+<!--                    </tfoot>-->
+<!--                </table>-->
+<!--                -->
+<!--                <div style="display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: center; color: black; font-family:'Lato'; margin-bottom: 3mm">-->
+<!--                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                        <span>Disetujui oleh</span>-->
+<!--                    </div>-->
+<!--                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                        <span>Diperiksa oleh</span>-->
+<!--                    </div>-->
+<!--                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center">-->
+<!--                        <span>Dibukukan oleh</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                -->
+<!--              </div>-->
+<!--            </div>-->
+<!--        </t>-->
+<!--    </template>-->
+
+    
+</odoo>

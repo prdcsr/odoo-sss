@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_purchase_order_history_tree" model="ir.ui.view">
+        <field name="name">purchase.order.history.tree</field>
+        <field name="model">purchase.order.history</field>
+        <field name="arch" type="xml">
+            <tree string="Order History">
+                <field name="date"/>
+                <field name="order_id"/>
+                <field name="line_id"/>
+                <field name="old_status"/>
+                <field name="new_status"/>
+                <field name="old_received_qty"/>
+                <field name="new_received_qty"/>
+                <field name="changed_by"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_order_history_tree" model="ir.actions.act_window">
+        <field name="name">Order History</field>
+        <field name="res_model">purchase.order.history</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('order_id', '=', active_id)]</field>
+    </record>
+
+    <record id="view_purchase_order_history_search" model="ir.ui.view">
+        <field name="name">purchase.order.history.search</field>
+        <field name="model">purchase.order.history</field>
+        <field name="arch" type="xml">
+            <search string="Order History Search">
+                <field name="date"/>
+                <field name="old_status"/>
+                <field name="new_status"/>
+                <field name="order_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_view_all_order_history" model="ir.actions.act_window">
+        <field name="name">All Order History</field>
+        <field name="res_model">purchase.order.history</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_all_order_history"
+              name="Order History"
+              parent="purchase.purchase_report"
+              action="action_view_all_order_history"/>
+</odoo>

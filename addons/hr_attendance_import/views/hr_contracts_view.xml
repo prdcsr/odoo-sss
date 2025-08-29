@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_contract_view_form_inherited" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherited</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+
+                <!--                <xpath expr="//page/group[@name='managers']" position="after">-->
+                <!--                    <group name="salary_info" String="Salary Info">-->
+                <!--                        <field name="food_salary"/>-->
+                <!--                    </group>-->
+                <!--                </xpath>-->
+
+                <xpath expr="//group[@name='salary_and_advantages']" position="after">
+                    <group name="daily_allowances" string='Luar Kota'>
+                        <label for="outside_meal_allowance"/>
+                        <div class="o_row">
+                            <field name="outside_meal_allowance" nolabel="1"/>
+                            <span>/ day</span>
+                        </div>
+
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

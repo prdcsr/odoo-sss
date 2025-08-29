@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_fnb_root" name="FNB Scheduling" parent="calendar.mail_menu_calendar" sequence="95"/>
+    <menuitem id="menu_fnb_promo" name="Promotion Schedules" parent="menu_fnb_root" action="action_fnb_promo_schedule" sequence="10"/>
+    <menuitem id="menu_fnb_holiday" name="Holiday Schedules" parent="menu_fnb_root" action="action_fnb_holiday_schedule" sequence="20"/>
+</odoo>

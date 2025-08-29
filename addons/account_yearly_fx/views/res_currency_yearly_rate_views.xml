@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_res_currency_yearly_rate_tree" model="ir.ui.view">
+    <field name="name">res.currency.yearly.rate.tree</field>
+    <field name="model">res.currency.yearly.rate</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom">
+        <field name="company_id"/>
+        <field name="currency_id"/>
+        <field name="year"/>
+        <field name="rate"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_res_currency_yearly_rate_form" model="ir.ui.view">
+    <field name="name">res.currency.yearly.rate.form</field>
+    <field name="model">res.currency.yearly.rate</field>
+    <field name="arch" type="xml">
+      <form string="Yearly FX Rate">
+        <group>
+          <field name="company_id"/>
+          <field name="currency_id"/>
+          <field name="year"/>
+          <field name="rate"/>
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_res_currency_yearly_rate" model="ir.actions.act_window">
+    <field name="name">Yearly FX Rates</field>
+    <field name="res_model">res.currency.yearly.rate</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="menu_res_currency_yearly_rate"
+            name="Yearly FX Rates"
+            parent="menu_yearly_fx_root"
+            action="action_res_currency_yearly_rate"
+            sequence="10"/>
+</odoo>

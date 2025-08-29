@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_picking_barcode_kanban_restrict">
+            <field name="name">stock_barcodes.picking_kanban.restrict</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock_barcodes.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_barcode_scan']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

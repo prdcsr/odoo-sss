@@ -1,0 +1,30 @@
+# See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Green API Whatsapp Account',
+    'version': '13.0.0.1.0',
+    'license': 'OPL-1',
+    'author': "SSS",
+    'sequence': 1,
+    'website': 'https://www.yasukapower.com/',
+    'images':  ['images/main_screenshot.png'],
+    'summary': 'This module is used for Green Api Whatsapp Account',
+    'category': 'Extra Tools',
+    'depends': ['base_automation', 'account', 'green_api_whatsapp'],
+    'data': [
+        'data/invoice_data.xml',
+        'views/account_invoice.xml',
+        'views/account_payment.xml',
+        'wizard/whatsapp_compose_view.xml',
+    ],
+    'external_dependencies': {'python': ['html2text']},
+    'demo': [],
+    'test': [],
+    'css': [],
+    'js': [],
+    'price': 0,
+    'currency': 'EUR',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

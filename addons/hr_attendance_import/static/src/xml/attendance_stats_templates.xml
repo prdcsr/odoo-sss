@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_attendance_import.attendance_per_leave">
+        <table class="o_group o_inner_group table-striped">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <div class="o_horizontal_separator">
+                            Kehadiran
+                            <t t-esc="widget.employee.data.display_name"/>
+                            Tanggal
+                            <t t-esc="widget.start_date"/>
+                            -
+                            <t t-esc="widget.end_date"/>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <t t-if="widget.attendancePerLeave.length === 0">
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                </t>
+                <t t-foreach="widget.attendancePerLeave" t-as="attendance_data">
+<!--                    <tr>-->
+<!--                        <td>-->
+<!--                            <t t-esc="attendance_data.check_in.format('L')"/>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+                    <tr>
+                        <td><t t-esc="attendance_data.check_in"/>
+                            -
+                            <t t-esc="attendance_data.check_out"/></td>
+
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </t>
+
+    <div t-name="hr_attendance_import.attendance_stats" class="o_attendance_stats">
+        <t t-if="widget.employee">
+            <t t-if="widget.attendancePerLeave">
+                <t t-call="hr_attendance_import.attendance_per_leave"/>
+            </t>
+        </t>
+    </div>
+</templates>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_purchase_order_type_form_inherit" model="ir.ui.view">
+        <field name="model">purchase.order.type</field>
+        <field name="inherit_id" ref="purchase_order_type.view_purchase_order_type_form" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="is_import" />
+            </field>
+        </field>
+    </record>
+</odoo>

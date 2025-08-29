@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_sale_advance_payment_inv">
+            <field name="name">sss.view_sale_advance_payment_inv</field>
+            <field name="model">sale.advance.payment.inv</field>
+            <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='deduct_down_payments']" position="after" >
+                    <field name="group_by_so"/>            
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

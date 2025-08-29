@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <report
+            string="Tanda Terima NCR"
+            id="action_tanda_terima_ncr"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="zz_sss.report_tanda_terima_ncr"
+            file="zz_sss.report_tanda_terima_ncr"
+            print_report_name="'Tanda Terima - %s - %s' % (object.partner_id.name or '', object.name)"
+    />
+    <template id="report_tanda_terima_ncr">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="docs[0].with_context(lang=docs[0].partner_id.lang)"/>
+            <t t-set="company" t-value="o.company_id"/>
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="o_boxed_header" style="font-family: 'Lato'; color: black; font-size: 11pt;">
+                    <div class="row">
+                        <div class="col-10 ">
+                            <div name="company_address">
+                                <strong>
+                                    <span t-field="company.name"/>
+                                </strong>
+                                <br/>
+                                <span>
+                                    Tangerang
+                                </span>
+                            </div>
+                        </div>
+                        <div class="pagination ml9" style="font-family: 'Lato'; color: black; font-size: 11pt;">
+                            <div class="text-right">
+                                <center>
+                                    <span>
+                                        Halaman:
+                                    </span>
+                                    <span class="page"/>
+                                    /
+                                    <span class="topage"/>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-if="partner" name="partner_header">
+                    <div class="row d-flex mb10" style="font-family:'Lato'; margin-bottom: 5mm;">
+                        <div>
+                            <span style="color: black; font-size: 11pt; margin-left: 4.5mm">
+                                Kepada YTH :
+                            </span>
+                            <br/>
+                            <strong class="col-9 mb4" style="color: black; font-size: 10pt">
+                                <span style="font-family:'Lato'; font-size:11pt" t-field="o.partner_id.name">
+                                </span>
+                            </strong>
+                            <span style="color: black">
+                                [
+                                <span style="font-family:'Lato'; color: black; font-size: 11pt"
+                                      t-field="o.partner_id.ref"/>
+                                /
+                                <span style="font-family:'Lato'; color: black; font-size: 11pt"
+                                      t-field="o.partner_id.parent_id.ref"/>
+                                ]
+                            </span>
+                            <!-- <div class="col-auto" style="color: black; font-size: 11pt; width: 110mm; text-transform: uppercase;" t-esc="partner" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}"/> -->
+                            <div class="col-auto"
+                                 style="color: black; font-size: 11pt; width: 115mm; text-transform: uppercase;">
+                                <span t-esc="o.partner_id.street"/>
+                                <span t-esc="o.partner_id.street2"/>
+                                <span t-esc="o.partner_id.city"/>
+                                <span t-esc="o.partner_id.state_id.name"/>
+                                <span t-esc="o.partner_id.zip"/>
+                                <span t-esc="o.partner_id.country_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div style="color: black; font-family:'Lato';">
+                    <h4 class="text-center font-weight-bold">
+                        TANDA TERIMA
+                    </h4>
+                </div>
+            </div>
+            <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout"
+                 t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')" style="margin-top:100px">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+                <table class="table table-sm o_main_table"
+                       style="border-color: black; background-color:white; font-family:'Lato'; font-size: 12pt">
+                    <thead style="border-color: black; background-color:white;">
+                        <tr style="border-color: black; background-color:white">
+                            <t t-set="colspan" t-value="0"/>
+                            <th name="th_sequence" class="text-center" style="border-color: black; width: 10mm">
+                                <span>
+                                    No.
+                                </span>
+                            </th>
+                            <th name="th_nota" class="text-center" style="border-color: black; width: 30mm">
+                                <span>
+                                    No. Nota
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-center" style="border-color: black; width: 35mm">
+                                <span>
+                                    Tgl Nota
+                                </span>
+                            </th>
+                            <th name="th_date" class="text-center" style="border-color: black; width: 10mm">
+                                <span>
+                                    MU
+                                </span>
+                            </th>
+                            <th name="th_price" class="text-right" style="border-color: black; width: 40mm">
+                                <span>
+                                    Jumlah
+                                </span>
+                            </th>
+                            <th name="th_notes" class="text-center" style="border-color: black">
+                                <span>
+                                    Keterangan
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="color: black; border-color: black; line-height: 5mm">
+                        <t t-set="line_no" t-value="0"/>
+                        <t t-foreach="docs" t-as="doc" style="color: black; border-color: black">
+                            <tr style="color: black; border-color: black">
+                                <t t-set="line_no" t-value="line_no+1"/>
+                                <td class="text-center" style="border-color: black" t-esc="line_no"/>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <span t-field="doc.name"/>
+                                </td>
+                                <td class="text-center" style="color: black; border-color: black">
+                                    <span t-esc="doc.date.strftime('%d-%m-%Y')"/>
+                                </td>
+                                <td class="text-center" style="border-color: black; width: 10mm">
+                                    <span t-esc="doc.currency_id.symbol"/>
+                                </td>
+                                <td class="text-right" style="color: black; border-color: black">
+                                    <span t-esc="'{:,.2f}'.format(doc.amount_total_signed)"/>
+                                </td>
+                                <td/>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot style="color: black; border-color: black; display: table-row-group">
+                        <td style="color: black; border-color: black"/>
+                        <td style="color: black; border-color: black"/>
+                        <td class="text-right" style="color: black; border-color: black">
+                            <strong>
+                                TOTAL
+                            </strong>
+                        </td>
+                        <td class="text-center" style="border-color: black">
+                            <strong t-esc="o.currency_id.symbol"/>
+                        </td>
+                        <td class="text-right" style="color: black; border-color: black; font-weight: semi bold">
+                            <t t-set="total" t-value="sum(docs.mapped('amount_total_signed'))"/>
+                            <strong t-esc="'{:,.2f}'.format(total)"/>
+                        </td>
+                        <td style="color: black; border-color: black"/>
+                    </tfoot>
+                </table>
+                <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;">
+                    <span>
+                        Jumlah Faktur =
+                        <span t-esc="line_no"/>
+                        lembar
+                    </span>
+                    <br/>
+                    <br/>
+                </div>
+                <div style="color: black; font-size: 11pt; font-family:Lato;">
+                    TERBILANG :
+                    <br/>
+                    <span style="font-size: 11pt; font-family:'Oswald'; text-transform: uppercase" t-if="o.currency_id"
+                          t-esc="o.currency_id.amount_to_text(sum(docs.mapped('amount_total_signed')))"/>
+                </div>
+                <div style="page-break-inside: avoid">
+                    <div class="row col-auto" style="color: black; font-family:'Lato'; font-size: 12pt;">
+                        <br/>
+                        <span>
+                            Untuk pembayaran tersebut diatas kami mohon dapat ditransfer ke rekening kami.
+                        </span>
+                        <br/>
+                        <br/>
+                    </div>
+                    <p style="color: black; font-family:'Lato';font-size: 12pt">
+                        BCA No. 702-0310868
+                        <span style="margin-left: 30mm">
+                            MANDIRI No. 155-00-9873660-9
+                        </span>
+                        <br/>
+                        DANAMON No. 0088-000-70156
+                        <span style="margin-left: 10mm">
+                            BRI No. 0399-01-000365-30-6
+                        </span>
+                        <br/>
+                        Atas Nama : PT. SAMA SAMA SUKSES
+                        <br/>
+                    </p>
+                </div>
+                <div style="color: black; font-family:'Lato'; font-size: 12pt">
+                    <span>
+                        Demikianlah perincian ini kami buat, atas perhatian Bapak/Ibu kami ucapkan terima kasih.
+                    </span>
+                    <br/>
+                    <br/>
+                </div>
+                <div style="page-break-inside: avoid; display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: center; color: black; font-family:'Lato'">
+                    <div style="border: 0px solid #ccc; flex: 1; -webkit-box-flex: 1; -webkit-flex: 1; text-align: center; margin-left: 150mm;">
+                        <span style="margin-bottom: 30mm">
+                            Tangerang,
+                            <span t-esc="time.strftime('%d-%b-%Y')"/>
+                        </span>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <span t-field="o.partner_id.name"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

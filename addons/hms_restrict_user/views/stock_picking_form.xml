@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="stock_picking_form_restrict">
+            <field name="name">stock.picking.restrict</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_td_label')]" position="attributes">
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_dest_id']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,stock.group_stock_multi_locations</attribute>
+                </xpath>
+                <xpath expr="//field[@name='picking_type_id']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager,stock.group_stock_multi_locations</attribute>
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='reserved_availability']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_validate']" position="attributes" >
+                    <attribute name="groups">
+                        stock.group_stock_user,
+                        stock.group_stock_manager,
+                        hms_restrict_user.group_inventory_alsut_manager,
+                        hms_restrict_user.group_inventory_btr_manager,
+                        hms_restrict_user.group_inventory_gs_manager,
+                        hms_restrict_user.group_production_alsut,
+                        hms_restrict_user.group_production_btr,
+                        hms_restrict_user.group_production_gs
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_scrap']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+                <xpath expr="//button[@name='do_unreserve']" position="attributes" >
+                    <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

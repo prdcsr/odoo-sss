@@ -1,0 +1,15 @@
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_food_cost_report" model="mail.template">
+            <field name="name">Daily Food Cost Report</field>
+            <field name="email_from">${(user.email or 'noreply@example.com')}</field>
+            <field name="subject">Daily Food Cost Report - ${object.report_date}</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+                <p>Hello,</p>
+                <p>Please find attached the Daily Food Cost Report for ${object.report_date}.</p>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

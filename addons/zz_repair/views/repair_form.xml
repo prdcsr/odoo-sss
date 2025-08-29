@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_repair_order_form">
+            <field name="name">view_repair_order_sss_form</field>
+            <field name="model">repair.order</field>
+            <field name="inherit_id" ref="repair.view_repair_order_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//field[@name='address_id']" position="after">
+                    <field name="cust_name"/>
+                    <br/>
+                    <field name="sales_id"/>
+                </xpath>
+                <xpath expr="//field[@name='guarantee_limit']" position="before">
+                    <field name="is_garansi"/>
+                </xpath>
+
+                <xpath expr="//field[@name='guarantee_limit']" position="after">
+                    <br/>
+                    <field name="is_complete"/>
+                    <br/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="technician_id"/>
+                    <br/>
+                    <field name="is_garansi_selection"/>
+                    <br/>
+                    <field name="form_number"/>
+                    <br/>
+                    <field name="reason"/>
+                    <br/>
+                    <field name="is_damage_nature" attrs="{'invisible': [('is_garansi_selection', '=', 'garansi')]}"/>
+                    <br/>
+                    <field name="is_card_gone" attrs="{'invisible': [('is_garansi_selection', '=', 'garansi')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="is_damage_self" attrs="{'invisible': [('is_garansi_selection', '=', 'garansi')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="is_modified" attrs="{'invisible': [('is_garansi_selection', '=', 'garansi')]}"/>
+                    <br/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="is_garansi_passed" attrs="{'invisible': [('is_garansi_selection', '=', 'garansi')]}"/>
+                    <br/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_method']" position="after">
+                    <field name="is_paid_by_customer"/>
+                    <br/>
+                </xpath>
+
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="is_consumables"/>
+                    <br/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="is_delivery_cost"/>
+                    <br/>
+                </xpath>
+                <!-- <xpath expr="//field[@name='tag_ids']" position="after" >    
+                  <field name="is_warranty_expired"/>
+                </xpath> -->
+                <xpath expr="//field[@name='operations']/tree" position="inside">
+                    <field name="insufficient_qty" invisible="1"/>
+                    <field name="vendor_id"/>
+                    <field name="requisition_id" readonly="1"/>
+                    <field name="purchase_id" readonly="1"/>
+                    <button name="action_order_stock" type="object" string="Request Import Stock"
+                            attrs="{'invisible': [('requisition_id', '!=', False)]}"
+                    />
+                    <button name="action_purchase_stock" type="object" string="Request Order Stock"
+                            attrs="{'invisible': [('purchase_id', '!=', False)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_repair_line_pivot" model="ir.ui.view">
+            <field name="name">repair.line.pivot</field>
+            <field name="model">repair.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Repair Line Report">
+                    <field name="repair_id" type="row"/>
+                    <field name="product_id" type="col"/> <!-- Component used -->
+                    <field name="product_uom_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_repair_line_report" model="ir.actions.act_window">
+            <field name="name">Repair Order Line Report</field>
+            <field name="res_model">repair.line</field>
+            <field name="view_mode">pivot</field>
+            <field name="context">{'search_default_state_repaired': 1, 'group_by': 'create_date:month'}</field>
+
+        </record>
+
+        <record id="view_repair_line_search" model="ir.ui.view">
+            <field name="name">repair.line.search</field>
+            <field name="model">repair.line</field>
+            <field name="arch" type="xml">
+                <search string="Repair Line Search">
+                    <filter name="state_repaired" string="Repaired"
+                            domain="[('repair_id.state', '=', 'done')]"/>
+                    <field name="repair_id"/>
+                    <field name="product_id"/>
+                </search>
+            </field>
+        </record>
+
+        <menuitem id="menu_repair_line_report" name="Repair Line Pivot Report"
+                  parent="repair.repair_menu_reporting"
+                  action="action_repair_line_report"/>
+    </data>
+</odoo>

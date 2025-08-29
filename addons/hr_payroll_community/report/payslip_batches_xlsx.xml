@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017-19 ForgeFlow S.L. (https://www.forgeflow.com)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <report
+        id="payslip_batches_xlsx"
+        model="hr.payslip.run"
+        string="Export PaySlip batches to Excel"
+        report_type="xlsx"
+        name="hr_payslip_run.payslip_batches_xlsx"
+        file="payslip_batches"
+        attachment_use="False"
+    />
+</odoo>

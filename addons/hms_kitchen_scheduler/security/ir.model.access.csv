@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hms_kitchen_scheduler_hms_kitchen_scheduler,hms_kitchen_scheduler.hms_kitchen_scheduler,model_hms_kitchen_scheduler_hms_kitchen_scheduler,base.group_user,1,1,1,1

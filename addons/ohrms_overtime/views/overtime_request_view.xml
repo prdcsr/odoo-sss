@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_overtime_filter" model="ir.ui.view">
+        <field name="name">hr.overtime.filter</field>
+        <field name="model">hr.overtime</field>
+        <field name="arch" type="xml">
+            <search string="Search Time Off">
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', '=', 'Unit'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur CBC To Approve"
+                        name="cbc_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'in', ('Gudang', 'Teknisi')), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur Gudang To Approve" name="warehouse_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'ilke', 'Compressor'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur Compressor To Approve" name="compressor_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'ilke', 'Sparepart'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur Sparepart To Approve" name="sparepart_to_approve"/>
+                <separator/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', '=', 'Unit'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur CBC Second Approve"
+                        name="cbc_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'in', ('Gudang', 'Teknisi')), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur Gudang Second Approve" name="warehouse_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'ilke', 'Compressor'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur compressor Second Approve" name="compressor_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'ilke', 'Sparepart'), ('overtime_type_id.name', 'ilke', 'LEMBUR')]"
+                        string="Lembur Sparepart Second Approve" name="sparepart_sec_approve"/>
+
+                <separator/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', '=', 'Unit'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas CBC To Approve"
+                        name="outside_cbc_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'in', ('Gudang', 'Teknisi')), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas Gudang To Approve" name="outside_warehouse_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'ilke', 'Compressor'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas Compressor To Approve" name="outside_compressor_to_approve"/>
+                <filter domain="[('state','ilke','f_approve'), ('department_id.name', 'ilke', 'Sparepart'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas Sparepart To Approve" name="outside_sparepart_to_approve"/>
+                <separator/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', '=', 'Unit'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas CBC Second Approve"
+                        name="outside_cbc_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'in', ('Gudang', 'Teknisi')), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas Gudang Second Approve" name="outside_warehouse_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'ilke', 'Compressor'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas compressor Second Approve" name="outside_compressor_sec_approve"/>
+                <filter domain="[('state','ilke','approved1'), ('department_id.name', 'ilke', 'Sparepart'), ('overtime_type_id.name', 'ilke', 'DINAS')]"
+                        string="Dinas Sparepart Second Approve" name="outside_sparepart_sec_approve"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_department" string="Department" context="{'group_by':'department_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by':'overtime_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="overtime_action_manager_approval">
+        <field name="name">HR Approval</field>
+        <field name="model_id" ref="model_hr_overtime"/>
+        <field name="binding_model_id" ref="model_hr_overtime"/>
+        <field name="groups_id"
+               eval="[(4, ref('ohrms_overtime.group_hr_overtime_user')), (4, ref('ohrms_overtime.group_hr_overtime_managed_approver')), (4, ref('ohrms_overtime.group_hr_overtime_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            records.approve()
+        </field>
+    </record>
+    <record model="ir.actions.server" id="overtime_action_hr_approval">
+        <field name="name">Manager Approval</field>
+        <field name="model_id" ref="model_hr_overtime"/>
+        <field name="binding_model_id" ref="model_hr_overtime"/>
+        <field name="groups_id"
+               eval="[(4, ref('ohrms_overtime.group_hr_overtime_user')), (4, ref('ohrms_overtime.group_hr_overtime_managed_approver')), (4, ref('ohrms_overtime.group_hr_overtime_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            records.validate()
+        </field>
+    </record>
+
+    <data noupdate="1">
+        <record id="seq_overtime_req" model="ir.sequence">
+            <field name="name">Overtime Sequencer</field>
+            <field name="code">hr.overtime</field>
+            <field name="prefix">OVT-</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="padding">5</field>
+        </record>
+    </data>
+    <data>
+        <!-- Views -->
+        <!-- Form View -->
+        <record id="hr_overtime_form_view" model="ir.ui.view">
+            <field name="name">hr.overtime.form.view</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <form string="Overtime Request">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="f_approve,approved,done"/>
+                        <button name="submit_to_f" string="Submit To Finance" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="approve" string="Approve" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'f_approve')]}"/>
+
+                        <button name="validate" string="Validate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'approved1')]}" groups="ohrms_overtime.group_hr_overtime_user"/>
+                        <button name="reject" string="Refuse" type="object" class="btn btn-secondary" attrs="{'invisible': ['|',('state', 'not in', ['f_approve', 'approved1', 'approved']),('current_user_boolean', '=', True)]}"/>
+                        <button name="reset_to_draft" string="Reset to draft" type="object" class="btn btn-secondary" attrs="{'invisible': ['|',('state', 'in', ['approved1', 'approved', 'draft']),('current_user_boolean', '=', True)]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" required="0" placeholder="Reference ...."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="manager_id"/>
+                                <field name="overtime_officer_id"/>
+                                <field name="duration_type" attrs="{'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                                <field name="current_user_boolean" invisible="1"/>
+                            </group>
+                            <group name="col_right">
+                                <field name="current_user" invisible="1"/>
+                                <field name="contract_id"/>
+                                <field name="attchd_copy" filename="attchd_copy_name" attrs="{'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                                <field name="type" attrs="{'readonly': ['|', ( 'state', '!=', 'draft'), ('state', '!=', 'f_approve')]}"/>
+                                <field name="overtime_type_id" attrs="{'readonly': [('state', 'in', ('approved1','approved', 'refused'))],                                  'required': [('state', 'in', ('f_approve', 'draft'))]}"/>
+                                <field name="cash_hrs_amount" force_save="1" attrs="{'invisible': ['|',('type','!=', 'cash'),('duration_type','!=','hours')]}"/>
+                                <field name="cash_day_amount" force_save="1" attrs="{'invisible': ['|',('type','!=', 'cash'),('duration_type','!=','days')]}"/>
+                                <field name="attchd_copy_name" invisible="1"/>
+                                <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)],'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                                <field name="holiday_id" attrs="{'invisible': [('holiday_id', '=', False)],'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="date_from" required="1" class="oe_inline" attrs="{'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                                <field name="date_to" required="1" class="oe_inline" attrs="{'readonly': [('state', 'in', ('approved', 'approved1', 'refused'))]}"/>
+                                <field name="days_no_tmp" string="Hours" attrs="{'invisible': [('duration_type', '=', 'days')]}"/>
+                                <field name="days_no_tmp" string="Days" attrs="{'invisible': [('duration_type', '=', 'hours')]}"/>
+                                <field name="payslip_paid" readonly="1" attrs="{'invisible': [('type','!=', 'cash')]}" widget="toggle_button" groups="hr.group_hr_manager"/>
+                                <field name="days_no" readonly="1" invisible="1"/>
+                                <field name="rest_duration" string="Rest Duration" attrs="{'invisible': [('duration_type', '=', 'days')]}"/>
+                            </group>
+                            <group>
+                                <div>
+                                    <separator string="Public Holiday"/>
+                                    <field name="public_holiday" force_save="1"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Work Description" name="work_description">
+                                <field name="desc" attrs="{'readonly': [('state', 'in', ('approved','approved1', 'refused'))]}"/>
+                            </page>
+                            <page string="Attendance">
+                                <field name="attendance_ids" readonly="1"/>
+                            </page>
+                            <page string="Work Schedule">
+                                <field name="work_schedule" readonly="1"/>
+                            </page>
+                            <page string="Global Leaves">
+                                <field name="global_leaves"/>
+                            </page>
+                        </notebook>
+
+                        <!--                        <group string="Refuse Reason"-->
+                        <!--                               attrs="{'invisible': [('cancel_reason', '=', False)]}">-->
+                        <!--                            <field name="cancel_reason" readonly="1"/>-->
+                        <!--                        </group>-->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_overtime_view_form_self" model="ir.ui.view">
+            <field name="name">hr.overtime.self</field>
+            <field name="model">hr.overtime</field>
+            <field name="inherit_id" ref="hr_overtime_form_view"/>
+            <field name="mode">primary</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="hr_overtime_tree_view" model="ir.ui.view">
+            <field name="name">Overtime</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <tree string="Overtime Request">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="overtime_type_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="days_no_tmp"/>
+                    <field name="desc"/>
+                    <field name="state"/>
+                    <field name="type" invisible="1"/>
+                    <field name="payslip_paid" groups="hr.group_hr_manager" readonly="1"
+                           attrs="{'invisible': [('type','!=', 'cash')]}" widget="toggle_button"/>
+                    <button string="Approve" name="approve" type="object"
+                            icon="fa-check text-success"
+                            states="f_approve"
+                            groups="ohrms_overtime.group_hr_overtime_user, ohrms_overtime.group_hr_overtime_managed_approver, ohrms_overtime.group_hr_overtime_manager"/>
+                    <button string="Validate" name="validate" type="object"
+                            icon="fa-check text-success"
+                            states="approved1"
+                            groups="ohrms_overtime.group_hr_overtime_user, ohrms_overtime.group_hr_overtime_managed_approver, ohrms_overtime.group_hr_overtime_manager"/>
+                    <button string="Refuse" name="reject" type="object"
+                            icon="fa-ban text-danger"
+                            states="f_approve,approved1,approved"
+                            groups="ohrms_overtime.group_hr_overtime_user, ohrms_overtime.group_hr_overtime_managed_approver, ohrms_overtime.group_hr_overtime_manager"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_overtime_tree_self" model="ir.ui.view">
+            <field name="name">hr.overtime.tree.self</field>
+            <field name="model">hr.overtime</field>
+            <field name="inherit_id" ref="hr_overtime_tree_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='approve']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='validate']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='reject']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='payslip_paid']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!--        Action window views-->
+        <record id="hr_overtime_action_my_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="hr_overtime_self_action"/>
+            <field name="view_id" ref="hr_overtime_tree_self"/>
+        </record>
+
+        <record id="hr_overtime_action_my_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr_overtime_self_action"/>
+            <field name="view_id" ref="hr_overtime_view_form_self"/>
+        </record>
+
+        <!-- Actions -->
+        <!-- overtime -->
+        <record id="hr_overtime_action" model="ir.actions.act_window">
+            <field name="name">Overtime Request</field>
+            <field name="res_model">hr.overtime</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create new Pre Approval Overtime Request.
+                </p>
+            </field>
+        </record>
+        <record id="hr_overtime_self_action" model="ir.actions.act_window">
+            <field name="name">My Request</field>
+            <field name="res_model">hr.overtime</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create new Pre Approval Overtime Request.
+                </p>
+            </field>
+            <field name="domain">[('employee_id.user_id','=', uid)]</field>
+        </record>
+
+
+        <!-- MenuItems -->
+        <menuitem id="overtime_submenu" name="Overtime Request"
+                  groups="base.group_user" web_icon="ohrms_overtime,static/description/overtime_icon.png"/>
+        <menuitem id="my_overtime" name="My Overtime"
+                  parent="overtime_submenu"
+                  action="hr_overtime_self_action"
+                  sequence="1"
+                  groups="base.group_user"/>
+        <menuitem id="overtime" name="Overtime Request"
+                  parent="overtime_submenu"
+                  action="hr_overtime_action"
+                  sequence="2"
+                  groups="group_hr_overtime_user,group_hr_overtime_manager,group_hr_overtime_managed_approver"/>
+
+
+    </data>
+</odoo>

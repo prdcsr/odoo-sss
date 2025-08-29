@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report 
+        string="Purchase Agreeemnt" 
+        id="action_report_purchase_agreement" 
+        model="purchase.requisition" 
+        report_type="qweb-pdf"
+        name="zz_sss.report_purchaseagreemnt" 
+        file="zz_sss.report.report_purchaseagreement"
+        print_report_name="'PA - %s' % (object.name)"
+    />
+</odoo>

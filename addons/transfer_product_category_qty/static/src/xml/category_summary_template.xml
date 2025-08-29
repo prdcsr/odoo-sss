@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="transfer_product_category_qty.product_category_summary">
+        <table class="o_group o_inner_group table-striped">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <div class="o_horizontal_separator">Transfer Summary</div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-if="!widget.categorySummary or widget.categorySummary.length == 0">
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                </t>
+
+                <t t-else="">
+                    <t t-foreach="widget.categorySummary" t-as="product_category">
+    <!--                    <tr t-if=" product_category[0].find('PLATE') != -1">-->
+                        <tr>
+                            <td><t t-esc="product_category[0]"/></td>
+                            <td class="w-50"><t t-esc="product_category[1]"/> Pcs</td>
+                        </tr>
+                    </t>
+
+                </t>
+
+                <t t-log="widget.categorySummary"/>
+
+            </tbody>
+        </table>
+    </t>
+
+    <div t-name="transfer_product_category_qty.category_summary" class="o_category_stats">
+<!--        <t t-if="widget.employee">-->
+<!--            <t t-if="widget.leaveSummary">-->
+                <t t-call="transfer_product_category_qty.product_category_summary"/>
+<!--            </t>-->
+<!--        </t>-->
+    </div>
+
+</templates>
